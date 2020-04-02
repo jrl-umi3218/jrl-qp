@@ -28,7 +28,11 @@ classdef DualQPSolver < handle
                         output = SolverStatus.Success;
                         return
                     end
-                    np = C(:,p);
+                    if status == ActivationStatus.Lower
+                        np = C(:,p);
+                    else
+                        np = -C(:,p);
+                    end
                     u = [u;0];
                 end
 
@@ -53,7 +57,7 @@ classdef DualQPSolver < handle
                     f = f + t*(z'*np)*(0.5*t + u(end));
                     u = u + t*[-r;1];
                     if t==t2
-                        obj.add(p,status)
+                        obj.add(p,np,status)
                         skipStep1 = false;
                     else
                         u = obj.drop(l,u);

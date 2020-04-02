@@ -76,23 +76,23 @@ classdef GoldfarbIdaniQP < DualQPSolver
             obj.A = obj.A([1:(l-1),(l+1):end]);
             u = u([1:(l-1),(l+1):end]);
             obj.act(k) = ActivationStatus.Inactive;
+            obj.q = obj.q - 1;
             
             %update R and J
             obj.R = obj.R(:,[1:(l-1),(l+1):end]);
-            for i=l:(obj.q2)
+            for i=l:obj.q
                 Qi = givens(obj.R(i,i),obj.R(i+1,i));
                 obj.R([i,i+1],i:end) = Qi*obj.R([i,i+1],i:end);
                 obj.J(:,[i,i+1]) = obj.J(:,[i,i+1])*Qi';
             end
-            obj.q = obj.q - 1;
+            obj.R = obj.R(1:obj.q,1:obj.q);
         end
         
-        function add(obj,p,status)
+        function add(obj,p,np,status)
             obj.A = [obj.A, p];
             obj.act(p) = status;
             
             %update R and J
-            np = obj.C(:,p);
             d = obj.J'*np; %Todo: duplicate with computeStep
             for i=obj.n-1:-1:obj.q+1
                 Qi = givens(d(i),d(i+1));

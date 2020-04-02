@@ -72,7 +72,7 @@ classdef BasicQP < DualQPSolver
             obj.act(k) = ActivationStatus.Inactive;
         end
         
-        function add(obj,p,status)
+        function add(obj,p,np,status)
             obj.A = [obj.A, p];
             obj.q = obj.q + 1;
             obj.act(p) = status;
