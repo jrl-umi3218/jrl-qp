@@ -34,6 +34,8 @@ classdef DualQPSolver < handle
 
                 %step 2
                 [z,r] = obj.computeStep(np);
+                %disp(['z=' num2str(z')])
+                %disp(['r=' num2str(r')])
                 [t1,t2,l] = obj.computeStepLength(p,status,x,u,z,r);
                 t = min(t1,t2);
 

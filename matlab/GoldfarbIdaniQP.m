@@ -1,13 +1,16 @@
-classdef BasicQP < DualQPSolver
+classdef GoldfarbIdaniQP < DualQPSolver
     properties
         G,
         a,
         C,
         b
+        L
+        R
+        J
     end
     
     methods
-        function obj = BasicQP()
+        function obj = GoldfarbIdaniQP()
             obj@DualQPSolver();
         end
         
@@ -26,6 +29,10 @@ classdef BasicQP < DualQPSolver
             u = zeros(0,1);
             obj.A = zeros(1,0);
             obj.act = repmat([ActivationStatus.Inactive],1,obj.m);
+            
+            obj.L = chol(G)';
+            obj.R = zeros(obj.q,obj.q);
+            obj.J = inv(obj.L');
         end
         
         function [p,status] = selectViolatedConstraint(obj, x)
@@ -40,9 +47,9 @@ classdef BasicQP < DualQPSolver
         end
         
         function [z,r] = computeStep(obj,np)
-            y = [obj.G -obj.C(:,obj.A); obj.C(:,obj.A)' zeros(obj.q)]\[np;zeros(obj.q,1)];
-            z = y(1:obj.n);
-            r = -y(obj.n+(1:obj.q));
+            d = obj.J'*np;
+            z = obj.J(:,obj.q+1:end)*d(obj.q+1:end);
+            r = obj.R\d(1:obj.q);
         end
         
         function [t1,t2,l] = computeStepLength(obj,p,status,x,u,z,r)
@@ -68,14 +75,32 @@ classdef BasicQP < DualQPSolver
             k = obj.A(l);
             obj.A = obj.A([1:(l-1),(l+1):end]);
             u = u([1:(l-1),(l+1):end]);
-            obj.q = obj.q - 1;
             obj.act(k) = ActivationStatus.Inactive;
+            
+            %update R and J
+            obj.R = obj.R(:,[1:(l-1),(l+1):end]);
+            for i=l:(obj.q2)
+                Qi = givens(obj.R(i,i),obj.R(i+1,i));
+                obj.R([i,i+1],i:end) = Qi*obj.R([i,i+1],i:end);
+                obj.J(:,[i,i+1]) = obj.J(:,[i,i+1])*Qi';
+            end
+            obj.q = obj.q - 1;
         end
         
         function add(obj,p,status)
             obj.A = [obj.A, p];
-            obj.q = obj.q + 1;
             obj.act(p) = status;
+            
+            %update R and J
+            np = obj.C(:,p);
+            d = obj.J'*np; %Todo: duplicate with computeStep
+            for i=obj.n-1:-1:obj.q+1
+                Qi = givens(d(i),d(i+1));
+                d(i:i+1) = Qi*d(i:i+1);
+                obj.J(:,[i,i+1]) = obj.J(:,[i,i+1])*Qi';
+            end
+            obj.R = [[obj.R; zeros(1,obj.q)] d(1:obj.q+1)];
+            obj.q = obj.q + 1;
         end
     end
 end
