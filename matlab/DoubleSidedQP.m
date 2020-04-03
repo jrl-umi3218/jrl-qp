@@ -8,6 +8,7 @@ classdef DoubleSidedQP < DualQPSolver
         L
         R
         J
+        me
     end
     
     methods
@@ -18,22 +19,32 @@ classdef DoubleSidedQP < DualQPSolver
         function [x,f,u] = init_(obj,G,a,C,bl,bu,xl,xu)
             assert(isempty(xl));
             assert(isempty(xu));
-            assert(all(bl<bu));
+            assert(all(bl<=bu));
             obj.G = G;
             obj.a = a;
             obj.C = C;
             obj.bl = bl;
             obj.bu = bu;
             
-            x = -G\a;
-            f = 0.5*a'*x;
-            u = zeros(0,1);
             obj.A = zeros(1,0);
             obj.act = repmat([ActivationStatus.Inactive],1,obj.m);
+            for i=1:obj.m
+                if bl(i)==bu(i)
+                    obj.A = [obj.A i];
+                    obj.act(i) = ActivationStatus.Equality;
+                    obj.q = obj.q+1;
+                end
+            end
+            obj.me = obj.q;
             
             obj.L = chol(G)';
-            obj.R = zeros(obj.q,obj.q);
-            obj.J = inv(obj.L');
+            [Qb,Rb] = qr(obj.L\obj.C(:,obj.A));
+            obj.R = Rb(1:obj.q,1:obj.q);
+            obj.J = (obj.L')\Qb;
+            
+            x = obj.J*[(obj.R')\obj.bl(obj.A); -obj.J(:,obj.q+1:end)'*a];
+            f = x'*(0.5*G*x +a);
+            u = obj.R\(obj.J(:,1:obj.q)'*(G*x+a));
         end
         
         function [p,status] = selectViolatedConstraint(obj, x)
@@ -67,7 +78,7 @@ classdef DoubleSidedQP < DualQPSolver
         function [t1,t2,l] = computeStepLength(obj,p,status,x,u,z,r)
             t1 = Inf;
             l = 0;
-            for i=1:obj.q
+            for i=(obj.me+1):obj.q
                 if r(i)>0
                     ti = u(i)/r(i);
                     if ti < t1
