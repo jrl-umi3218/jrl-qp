@@ -29,9 +29,17 @@ classdef DualQPSolver < handle
                         return
                     end
                     if status == ActivationStatus.Lower
-                        np = C(:,p);
+                        if p<=obj.m
+                            np = C(:,p);
+                        else
+                            np = zeros(obj.n,1); np(p-obj.m) = 1;
+                        end
                     else
-                        np = -C(:,p);
+                        if p<=obj.m
+                            np = -C(:,p);
+                        else
+                            np = zeros(obj.n,1); np(p-obj.m) = -1;
+                        end
                     end
                     u = [u;0];
                 end

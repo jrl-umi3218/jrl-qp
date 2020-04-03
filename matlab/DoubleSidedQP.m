@@ -5,10 +5,13 @@ classdef DoubleSidedQP < DualQPSolver
         C,
         bl
         bu
+        xl
+        xu
         L
         R
         J
         me
+        nb %number of bound
     end
     
     methods
@@ -17,17 +20,26 @@ classdef DoubleSidedQP < DualQPSolver
         end
         
         function [x,f,u] = init_(obj,G,a,C,bl,bu,xl,xu)
-            assert(isempty(xl));
-            assert(isempty(xu));
+            assert(isempty(xl) || length(xl) == obj.n);
+            assert(length(xl) == length(xu));
             assert(all(bl<=bu));
             obj.G = G;
             obj.a = a;
             obj.C = C;
             obj.bl = bl;
             obj.bu = bu;
+            obj.xl = xl;
+            obj.xu = xu;
+            
+            if isempty(xl)
+                obj.nb = 0;
+                obj.act = repmat([ActivationStatus.Inactive],1,obj.m);
+            else
+                obj.nb = obj.n;
+                obj.act = repmat([ActivationStatus.Inactive],1,obj.m+obj.n);
+            end
             
             obj.A = zeros(1,0);
-            obj.act = repmat([ActivationStatus.Inactive],1,obj.m);
             for i=1:obj.m
                 if bl(i)==bu(i)
                     obj.A = [obj.A i];
@@ -67,6 +79,22 @@ classdef DoubleSidedQP < DualQPSolver
                     end
                 end
             end
+            for i=1:obj.nb
+                if obj.act(obj.m+i) == ActivationStatus.Inactive
+                    sl = x(i) - obj.xl(i);
+                    su = obj.xu(i) - x(i);
+                    if sl<smin
+                        smin = sl;
+                        p = obj.m+i;
+                        status = ActivationStatus.Lower;
+                    end
+                    if su<smin
+                        smin = su;
+                        p = obj.m+i;
+                        status = ActivationStatus.Upper;
+                    end
+                end
+            end
         end
         
         function [z,r] = computeStep(obj,np)
@@ -89,9 +117,17 @@ classdef DoubleSidedQP < DualQPSolver
             end
             if norm(z)>1e-14
                 if status == ActivationStatus.Lower
-                    t2 = (obj.bl(p)-obj.C(:,p)'*x)/(z'*obj.C(:,p));
+                    if p<=obj.m
+                        t2 = (obj.bl(p)-obj.C(:,p)'*x)/(z'*obj.C(:,p));
+                    else
+                        t2 = (obj.xl(p-obj.m)-x(p-obj.m))/z(p-obj.m);
+                    end
                 else
-                    t2 = (obj.bu(p)-obj.C(:,p)'*x)/(z'*obj.C(:,p));
+                    if p<=obj.m
+                        t2 = (obj.bu(p)-obj.C(:,p)'*x)/(z'*obj.C(:,p));
+                    else
+                        t2 = (obj.xu(p-obj.m)-x(p-obj.m))/z(p-obj.m);
+                    end
                 end
             else
                 t2 = Inf;
