@@ -1,0 +1,63 @@
+cmake_minimum_required(VERSION 3.1.3)
+
+set(PROJECT_NAME JRL-QP)
+set(PROJECT_DESCRIPTION "...")
+set(PROJECT_URL "")
+set(PROJECT_DEBUG_POSTFIX "_d")
+set(PROJECT_VERSION 0.0.0)
+set(PROJECT_USE_CMAKE_EXPORT TRUE)
+
+set(CMAKE_CXX_STANDARD 17)
+
+include(cmake/base.cmake)
+include(cmake/msvc-specific.cmake)
+
+# Disable -Werror on Unix for now.
+set(CXX_DISABLE_WERROR True)
+set(DOXYGEN_USE_MATHJAX "YES")
+set(DOXYGEN_DISTRIBUTE_GROUP_DOC YES)
+
+project(JRL-QP CXX)
+
+if(NOT WIN32)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-sign-conversion -pedantic")
+else()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_SILENCE_CXX17_NEGATORS_DEPRECATION_WARNING")
+endif()
+
+# If we were given coverage options, we will only pass them to the core
+# library.
+set(GENERATE_COVERAGE FALSE CACHE BOOL "Generate coverage data")
+if("${CMAKE_CXX_FLAGS}" MATCHES "--coverage")
+  set(GENERATE_COVERAGE TRUE CACHE BOOL "Generate coverage data" FORCE)
+  string(REPLACE "--coverage" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+  string(REPLACE "--coverage" "" CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
+  string(REPLACE "--coverage" "" CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS}")
+endif()
+
+#############################
+# - External dependencies - #
+#############################
+
+#############
+# - Eigen - #
+#############
+add_project_dependency(Eigen3 REQUIRED)
+
+# For MSVC, set local environment variable to enable finding the built dll
+# of the main library when launching ctest with RUN_TESTS
+if(MSVC)
+  set(CMAKE_MSVCIDE_RUN_PATH "\$(SolutionDir)/src/\$(Configuration);${CMAKE_INSTALL_PREFIX}/bin")
+endif(MSVC)
+
+
+option(BUILD_BENCHMARKS "Build benchmarks" ON)
+
+add_subdirectory(3rd-party)
+add_subdirectory(src)
+if(${BUILD_TESTING})
+  add_subdirectory(tests)
+endif()
+if(${BUILD_BENCHMARKS})
+  add_subdirectory(benchmarks)
+endif()
