@@ -20,6 +20,8 @@ macro(addUnitTest name)
   GENERATE_MSVC_DOT_USER_FILE(${name} "${CMAKE_INSTALL_PREFIX}/bin")
 endmacro(addUnitTest)
 
+addUnitTest(ActiveSetTest)
+
 
 set(TESTSOURCES
     main.cpp

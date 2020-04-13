@@ -15,6 +15,7 @@ namespace jrlqp::internal
   public:
     ActiveSet();
     ActiveSet(int nCstr, int nBnd = 0);
+    ActiveSet(const std::vector<ActivationStatus>& as, int nBnd);
 
     void resize(int nCstr, int nBnd = 0);
     void reset();
@@ -23,9 +24,16 @@ namespace jrlqp::internal
     bool isActiveBnd(int bndIdx) const;
     ActivationStatus activationStatus(int cstrIdx) const;
     ActivationStatus activationStatusBnd(int bndIdx) const;
+    const std::vector<ActivationStatus>& activationStatus() const;
+
+    int operator[](int activeIdx) const { return activeSet_[activeIdx]; }
 
     void activate(int cstrIdx, ActivationStatus status);
     void deactivate(int activeIdx);
+
+    int nbCstr()                  const { return nbCstr_; }
+    int nbBnd()                   const { return nbBnd_; }
+    int nbAll()                   const { return nbCstr_ + nbBnd_; }
 
     int nbActiveCstr()            const { return me_+mi_+mb_; }
     int nbActiveEquality()        const { return me_; }

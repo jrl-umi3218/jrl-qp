@@ -17,6 +17,20 @@ namespace jrlqp::internal
     resize(nCstr, nBnd);
   }
 
+  ActiveSet::ActiveSet(const std::vector<ActivationStatus>& as, int nBnd)
+  {
+    int n = static_cast<int>(as.size());
+    resize(n - nBnd, nBnd);
+
+    for (int i = 0; i < n; ++i)
+    {
+      if (as[i] != ActivationStatus::INACTIVE)
+      {
+        activate(i, as[i]);
+      }
+    }
+  }
+
   void ActiveSet::resize(int nCstr, int nBnd)
   {
     assert(nCstr >= 0);
@@ -65,6 +79,12 @@ namespace jrlqp::internal
     assert(bndIdx < nbBnd_);
     return status_[static_cast<size_t>(nbCstr_) + bndIdx];
   }
+
+  const std::vector<ActivationStatus>& ActiveSet::activationStatus() const
+  {
+    return status_;
+  }
+
   void ActiveSet::activate(int cstrIdx, ActivationStatus status)
   {
     assert(cstrIdx < nbCstr_ + nbBnd_);
