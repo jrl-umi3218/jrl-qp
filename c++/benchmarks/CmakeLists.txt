@@ -40,6 +40,7 @@ file(MAKE_DIRECTORY out)
 
 addEigenBenchmark(BasicEigen)
 addEigenBenchmark(Decomposition)
+addEigenBenchmark(LinearSystemSolving)
 
 add_custom_command(TARGET jrlqp_benchmarks
     COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/generatePlot.py"
