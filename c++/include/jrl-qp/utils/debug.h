@@ -60,12 +60,12 @@
 #define ENABLE_LOG_(macro, ...) do { if (!NO_LOG_) {PP_ID(macro(__VA_ARGS__));} } while (0)
 #define ENABLE_DEBUG_(macro, ...) do { if (DEBUG_OUTPUT) {PP_ID(macro(__VA_ARGS__));} } while (0)
 
-#define LOG_(logger, flags, ...) PP_ID(logger.log(flags, PP_ID(AUTO_NAME_ARG(__VA_ARGS__))))
+#define LOG_(logger, flags, ...) PP_ID(logger.log(static_cast<uint32_t>(flags), PP_ID(AUTO_NAME_ARG(__VA_ARGS__))))
 #define LOG(...) PP_ID(ENABLE_LOG_(LOG_, __VA_ARGS__))
 #define DBG(...) PP_ID(ENABLE_DEBUG_(LOG_, __VA_ARGS__))
 
-#define LOG_COMMENT(logger, flag, s) ENABLE_LOG_(logger.comment, flag, s)
-#define DBG_COMMENT(logger, flag, s) ENABLE_DEBUG_(logger.comment, flag, s)
+#define LOG_COMMENT(logger, flag, s) ENABLE_LOG_(logger.comment, static_cast<uint32_t>(flag), s)
+#define DBG_COMMENT(logger, flag, s) ENABLE_DEBUG_(logger.comment, static_cast<uint32_t>(flag), s)
 
 #define LOG_NEW_ITER(logger, it) ENABLE_LOG_(logger.startIter, it)
 #define DBG_NEW_ITER(logger, it) ENABLE_DEBUG_(logger.startIter, it)
