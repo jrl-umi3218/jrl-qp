@@ -25,4 +25,9 @@ namespace jrlqp
     MAX_ITER_REACHED,
     LINEAR_DEPENDENCY_DETECTED
   };
+
+  enum class LogFlags: uint32_t
+  {
+    TERMINATION = 1
+  };
 }
