@@ -8,6 +8,7 @@ set(JRLQP_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include/jrl-qp)
 set(JRLQP_HEADERS
   ${JRLQP_INCLUDE_DIR}/api.h
   ${JRLQP_INCLUDE_DIR}/defs.h
+  ${JRLQP_INCLUDE_DIR}/DualSolver.h
   ${JRLQP_INCLUDE_DIR}/enums.h
   ${JRLQP_INCLUDE_DIR}/internal/ActiveSet.h
   ${JRLQP_INCLUDE_DIR}/internal/meta.h
