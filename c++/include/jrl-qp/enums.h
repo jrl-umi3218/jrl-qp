@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <jrl-qp/defs.h>
+
 namespace jrlqp
 {
   /** Activation status of a constraint. */
@@ -26,8 +28,20 @@ namespace jrlqp
     LINEAR_DEPENDENCY_DETECTED
   };
 
-  enum class LogFlags: uint32_t
+  enum class LogFlags: std::uint32_t
   {
-    TERMINATION = 1
+    NONE = 0,
+    INPUT = 1 << 0,
+    TERMINATION = 1 << 1,
+    ITERATION_BASIC_DETAILS = 1 << 2,
+    ITERATION_ADVANCE_DETAILS = 1 << 3,
+    ACTIVE_SET = 1 << 4,
+    MISC = 1 << 30,
+    NO_ITER = constant::noIterationFlag
   };
+
+  inline std::uint32_t operator| (LogFlags a, LogFlags b) 
+  { 
+    return static_cast<std::uint32_t>(a) | static_cast<std::uint32_t>(b); 
+  }
 }

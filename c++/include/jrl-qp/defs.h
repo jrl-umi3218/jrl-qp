@@ -12,5 +12,9 @@ namespace jrlqp
   using MatrixRef = Eigen::Ref<Eigen::MatrixXd>;
   using VectorConstRef = Eigen::Ref<const Eigen::VectorXd>;
   using VectorRef = Eigen::Ref<Eigen::VectorXd>;
-  using EigenHead = decltype(Eigen::VectorXd().head(1));
+
+  namespace constant
+  {
+    inline constexpr std::uint32_t noIterationFlag = 1 << 31;
+  }
 }

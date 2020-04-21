@@ -14,10 +14,16 @@ namespace jrlqp::utils
     return *this;
   }
 
+  Logger& Logger::setOutputStream(std::ostream& os)
+  {
+    os_ = &os;
+    return *this;
+  }
+
   void Logger::comment(std::uint32_t flag, const std::string& c) const
   {
     if (flag & flags_) 
-      os_ << "% " << c << "\n";
+      *os_ << "% " << c << "\n";
   }
 
   void Logger::startIter(int i)
@@ -28,6 +34,6 @@ namespace jrlqp::utils
 
   Logger Logger::subLog(const std::string& name) const
   {
-    return { os_, name_ + "(" + std::to_string(iter_ + 1) + ")." + name, flags_ };
+    return { *os_, name_ + "(" + std::to_string(iter_ + 1) + ")." + name, flags_ };
   }
 }
