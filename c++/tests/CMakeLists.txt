@@ -21,7 +21,7 @@ macro(addUnitTest name)
 endmacro(addUnitTest)
 
 addUnitTest(ActiveSetTest)
-
+addUnitTest(GoldfarbIdnaniSolverTest)
 
 set(TESTSOURCES
     main.cpp
