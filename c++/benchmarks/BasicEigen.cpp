@@ -20,7 +20,6 @@ static void BM_Copy_MatrixXd(benchmark::State& state)
   for (auto _ : state)
     target = source;
 }
-MAT_BENCHMARK(BM_Copy_MatrixXd);
 
 // A = B^T
 static void BM_Copy_MatrixXd_Source_Transpose(benchmark::State& state)
@@ -31,7 +30,6 @@ static void BM_Copy_MatrixXd_Source_Transpose(benchmark::State& state)
   for (auto _ : state)
     target = source.transpose();
 }
-MAT_BENCHMARK(BM_Copy_MatrixXd_Source_Transpose);
 
 // A^T = B
 static void BM_Copy_MatrixXd_Target_Transpose(benchmark::State& state)
@@ -42,7 +40,6 @@ static void BM_Copy_MatrixXd_Target_Transpose(benchmark::State& state)
   for (auto _ : state)
     target.transpose() = source;
 }
-MAT_BENCHMARK(BM_Copy_MatrixXd_Target_Transpose);
 
 // A += B
 static void BM_Add_MatrixXd(benchmark::State& state)
@@ -53,7 +50,6 @@ static void BM_Add_MatrixXd(benchmark::State& state)
   for (auto _ : state)
     target += source;
 }
-MAT_BENCHMARK(BM_Add_MatrixXd);
 
 // A += B^T
 static void BM_Add_MatrixXd_Source_Transpose(benchmark::State& state)
@@ -64,7 +60,6 @@ static void BM_Add_MatrixXd_Source_Transpose(benchmark::State& state)
   for (auto _ : state)
     target += source.transpose();
 }
-MAT_BENCHMARK(BM_Add_MatrixXd_Source_Transpose);
 
 // A += B^T
 static void BM_Add_MatrixXd_Target_Transpose(benchmark::State& state)
@@ -75,7 +70,6 @@ static void BM_Add_MatrixXd_Target_Transpose(benchmark::State& state)
   for (auto _ : state)
     target.transpose() += source;
 }
-MAT_BENCHMARK(BM_Add_MatrixXd_Target_Transpose);
 
 // y = A*x
 static void BM_Mult_VectorXd(benchmark::State& state)
@@ -87,7 +81,6 @@ static void BM_Mult_VectorXd(benchmark::State& state)
   for (auto _ : state)
     y.noalias() = A*x;
 }
-MAT_BENCHMARK(BM_Mult_VectorXd);
 
 // row = (A*x)^T
 static void BM_Mult_VectorXd_Source_Transpose(benchmark::State& state)
@@ -99,7 +92,6 @@ static void BM_Mult_VectorXd_Source_Transpose(benchmark::State& state)
   for (auto _ : state)
     y.row(1).noalias() = (A * x).transpose();
 }
-MAT_BENCHMARK(BM_Mult_VectorXd_Source_Transpose);
 
 // row^T = A*x
 static void BM_Mult_VectorXd_Target_Transpose(benchmark::State& state)
@@ -111,7 +103,92 @@ static void BM_Mult_VectorXd_Target_Transpose(benchmark::State& state)
   for (auto _ : state)
     y.row(1).transpose().noalias() = A * x;
 }
-MAT_BENCHMARK(BM_Mult_VectorXd_Target_Transpose);
+
+// y = L*x
+static void BM_Mult_VectorXd_Triangular(benchmark::State& state)
+{
+  MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
+  VectorXd x = VectorXd::Random(state.range(0));
+  VectorXd y(state.range(0));
+
+  for (auto _ : state)
+    y.noalias() = A.template triangularView<Lower>() * x;
+}
+
+// y = L*x
+static void BM_Mult_VectorXd_TriangularOptim4(benchmark::State& state)
+{
+  MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
+  A.template triangularView<StrictlyUpper>().setZero();
+  VectorXd x = VectorXd::Random(state.range(0));
+  VectorXd y(state.range(0));
+
+  const int bsize = 4;
+  for (auto _ : state)
+  {
+    int nBlock = A.cols() / bsize;
+    y.setZero();
+    int s = 0;
+    int r = A.cols();
+    for (int i = 0; i < nBlock; ++i)
+    {
+      y.tail(r).noalias() += A.block(s, s, r, bsize) * x.segment(s, bsize);
+      s += bsize;
+      r -= bsize;
+    }
+    y.tail(r).noalias() += A.bottomRightCorner(r, r) * x.tail(r);
+  }
+}
+
+// y = L*x
+static void BM_Mult_VectorXd_TriangularOptim8(benchmark::State& state)
+{
+  MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
+  A.template triangularView<StrictlyUpper>().setZero();
+  VectorXd x = VectorXd::Random(state.range(0));
+  VectorXd y(state.range(0));
+
+  const int bsize = 8;
+  for (auto _ : state)
+  {
+    int nBlock = A.cols() / bsize;
+    y.setZero();
+    int s = 0;
+    int r = A.cols();
+    for (int i = 0; i < nBlock; ++i)
+    {
+      y.tail(r).noalias() += A.block(s, s, r, bsize) * x.segment(s, bsize);
+      s += bsize;
+      r -= bsize;
+    }
+    y.tail(r).noalias() += A.bottomRightCorner(r, r) * x.tail(r);
+  }
+}
+
+// y = L*x
+static void BM_Mult_VectorXd_TriangularOptim16(benchmark::State& state)
+{
+  MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
+  A.template triangularView<StrictlyUpper>().setZero();
+  VectorXd x = VectorXd::Random(state.range(0));
+  VectorXd y(state.range(0));
+
+  const int bsize = 16;
+  for (auto _ : state)
+  {
+    int nBlock = A.cols() / bsize;
+    y.setZero();
+    int s = 0;
+    int r = A.cols();
+    for (int i = 0; i < nBlock; ++i)
+    {
+      y.tail(r).noalias() += A.block(s, s, r, bsize) * x.segment(s, bsize);
+      s += bsize;
+      r -= bsize;
+    }
+    y.tail(r).noalias() += A.bottomRightCorner(r, r) * x.tail(r);
+  }
+}
 
 // C = A*B
 static void BM_Mult_MatrixXd(benchmark::State& state)
@@ -123,7 +200,6 @@ static void BM_Mult_MatrixXd(benchmark::State& state)
   for (auto _ : state)
     target.noalias() = A * B;
 }
-MAT_BENCHMARK(BM_Mult_MatrixXd);
 
 // C = A^T*B
 static void BM_Mult_MatrixXd_AT(benchmark::State& state)
@@ -135,7 +211,6 @@ static void BM_Mult_MatrixXd_AT(benchmark::State& state)
   for (auto _ : state)
     target.noalias() = A.transpose() * B;
 }
-MAT_BENCHMARK(BM_Mult_MatrixXd_AT);
 
 // C = A*B^T
 static void BM_Mult_MatrixXd_BT(benchmark::State& state)
@@ -147,7 +222,6 @@ static void BM_Mult_MatrixXd_BT(benchmark::State& state)
   for (auto _ : state)
     target.noalias() = A * B.transpose();
 }
-MAT_BENCHMARK(BM_Mult_MatrixXd_BT);
 
 // C = A^T*B^T
 static void BM_Mult_MatrixXd_AT_BT(benchmark::State& state)
@@ -159,9 +233,8 @@ static void BM_Mult_MatrixXd_AT_BT(benchmark::State& state)
   for (auto _ : state)
     target.noalias() = A.transpose() * B.transpose();
 }
-MAT_BENCHMARK(BM_Mult_MatrixXd_AT_BT);
 
-// C = A*B
+// C^T = A*B
 static void BM_Mult_MatrixXd_Target_Transpose(benchmark::State& state)
 {
   MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
@@ -171,7 +244,115 @@ static void BM_Mult_MatrixXd_Target_Transpose(benchmark::State& state)
   for (auto _ : state)
     target.transpose().noalias() = A * B;
 }
-MAT_BENCHMARK(BM_Mult_MatrixXd_Target_Transpose);
 
+// Y = L*X
+static void BM_Mult_MatrixXd_Triangular(benchmark::State& state)
+{
+  MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
+  MatrixXd B = MatrixXd::Random(state.range(0), state.range(0));
+  MatrixXd C = MatrixXd::Random(state.range(0), state.range(0));
+
+  for (auto _ : state)
+    C.noalias() = A.template triangularView<Lower>() * B;
+}
+
+// y = L*x
+static void BM_Mult_MatrixXd_TriangularOptim4(benchmark::State& state)
+{
+  MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
+  A.template triangularView<StrictlyUpper>().setZero();
+  MatrixXd B = MatrixXd::Random(state.range(0), state.range(0));
+  MatrixXd C = MatrixXd::Random(state.range(0), state.range(0));
+
+  const int bsize = 4;
+  for (auto _ : state)
+  {
+    int nBlock = A.cols() / bsize;
+    C.setZero();
+    int s = 0;
+    int r = A.cols();
+    for (int i = 0; i < nBlock; ++i)
+    {
+      C.bottomRows(r).noalias() += A.block(s, s, r, bsize) * B.middleRows(s, bsize);
+      s += bsize;
+      r -= bsize;
+    }
+    C.bottomRows(r).noalias() += A.bottomRightCorner(r, r) * B.bottomRows(r);
+  }
+}
+
+// y = L*x
+static void BM_Mult_MatrixXd_TriangularOptim8(benchmark::State& state)
+{
+  MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
+  A.template triangularView<StrictlyUpper>().setZero();
+  MatrixXd B = MatrixXd::Random(state.range(0), state.range(0));
+  MatrixXd C = MatrixXd::Random(state.range(0), state.range(0));
+
+  const int bsize = 8;
+  for (auto _ : state)
+  {
+    int nBlock = A.cols() / bsize;
+    C.setZero();
+    int s = 0;
+    int r = A.cols();
+    for (int i = 0; i < nBlock; ++i)
+    {
+      C.bottomRows(r).noalias() += A.block(s, s, r, bsize) * B.middleRows(s, bsize);
+      s += bsize;
+      r -= bsize;
+    }
+    C.bottomRows(r).noalias() += A.bottomRightCorner(r, r) * B.bottomRows(r);
+  }
+}
+
+// y = L*x
+static void BM_Mult_MatrixXd_TriangularOptim16(benchmark::State& state)
+{
+  MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
+  A.template triangularView<StrictlyUpper>().setZero();
+  MatrixXd B = MatrixXd::Random(state.range(0), state.range(0));
+  MatrixXd C = MatrixXd::Random(state.range(0), state.range(0));
+
+  const int bsize = 16;
+  for (auto _ : state)
+  {
+    int nBlock = A.cols() / bsize;
+    C.setZero();
+    int s = 0;
+    int r = A.cols();
+    for (int i = 0; i < nBlock; ++i)
+    {
+      C.bottomRows(r).noalias() += A.block(s, s, r, bsize) * B.middleRows(s, bsize);
+      s += bsize;
+      r -= bsize;
+    }
+    C.bottomRows(r).noalias() += A.bottomRightCorner(r, r) * B.bottomRows(r);
+  }
+}
+
+
+//MAT_BENCHMARK(BM_Copy_MatrixXd);
+//MAT_BENCHMARK(BM_Copy_MatrixXd_Source_Transpose);
+//MAT_BENCHMARK(BM_Copy_MatrixXd_Target_Transpose);
+//MAT_BENCHMARK(BM_Add_MatrixXd);
+//MAT_BENCHMARK(BM_Add_MatrixXd_Source_Transpose);
+//MAT_BENCHMARK(BM_Add_MatrixXd_Target_Transpose);
+//MAT_BENCHMARK(BM_Mult_VectorXd);
+//MAT_BENCHMARK(BM_Mult_VectorXd_Source_Transpose);
+//MAT_BENCHMARK(BM_Mult_VectorXd_Target_Transpose);
+//MAT_BENCHMARK(BM_Mult_VectorXd_Triangular);
+//MAT_BENCHMARK(BM_Mult_VectorXd_TriangularOptim4);
+//MAT_BENCHMARK(BM_Mult_VectorXd_TriangularOptim8);
+//MAT_BENCHMARK(BM_Mult_VectorXd_TriangularOptim16);
+MAT_BENCHMARK(BM_Mult_MatrixXd);
+//MAT_BENCHMARK(BM_Mult_MatrixXd_AT);
+//MAT_BENCHMARK(BM_Mult_MatrixXd_BT);
+//MAT_BENCHMARK(BM_Mult_MatrixXd_AT_BT);
+//MAT_BENCHMARK(BM_Mult_MatrixXd_Target_Transpose);
+MAT_BENCHMARK(BM_Mult_MatrixXd_Triangular);
+MAT_BENCHMARK(BM_Mult_MatrixXd_TriangularOptim4);
+MAT_BENCHMARK(BM_Mult_MatrixXd_TriangularOptim8);
+MAT_BENCHMARK(BM_Mult_MatrixXd_TriangularOptim16);
 
 BENCHMARK_MAIN();
