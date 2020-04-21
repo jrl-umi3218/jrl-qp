@@ -1,5 +1,7 @@
 set(JRLQP_SOURCES
 	DualSolver.cpp
+	GoldfarbIdnaniSolver.cpp
+	SolverOptions.cpp
 	internal/ActiveSet.cpp
 	utils/Logger.cpp
 )
@@ -10,9 +12,12 @@ set(JRLQP_HEADERS
   ${JRLQP_INCLUDE_DIR}/defs.h
   ${JRLQP_INCLUDE_DIR}/DualSolver.h
   ${JRLQP_INCLUDE_DIR}/enums.h
+  ${JRLQP_INCLUDE_DIR}/GoldfarbIdnaniSolver.h
+  ${JRLQP_INCLUDE_DIR}/SolverOptions.h
   ${JRLQP_INCLUDE_DIR}/internal/ActiveSet.h
   ${JRLQP_INCLUDE_DIR}/internal/meta.h
   ${JRLQP_INCLUDE_DIR}/internal/ConstraintNormal.h
+  ${JRLQP_INCLUDE_DIR}/internal/Workspace.h
   ${JRLQP_INCLUDE_DIR}/utils/debug.h
   ${JRLQP_INCLUDE_DIR}/utils/Logger.h
   ${JRLQP_INCLUDE_DIR}/utils/toMatlab.h

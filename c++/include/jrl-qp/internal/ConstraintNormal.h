@@ -18,7 +18,6 @@ namespace jrlqp::internal
     ConstraintNormal(const MatrixConstRef& C, int p, ActivationStatus status)
       : p_(p), status_(status), C_(C) 
     {
-      assert(status != ActivationStatus::INACTIVE);
     }
 
     ConstraintNormal(const ConstraintNormal& other)
@@ -34,11 +33,12 @@ namespace jrlqp::internal
     }
 
     int index() const { return p_; }
-    int bndIndex() const { assert(status_ >= ActivationStatus::LOWER_BOUND); return p_ - static_cast<int>(C_.rows()); }
+    int bndIndex() const 
+    { assert(status_ >= ActivationStatus::LOWER_BOUND); return p_ - static_cast<int>(C_.rows()); }
     ActivationStatus status() const { return status_; }
 
 
-    void preMultiplyByMt(Eigen::VectorXd& out, const Eigen::MatrixXd& M) const
+    void preMultiplyByMt(VectorRef out, const MatrixConstRef& M) const
     {
       switch (status_)
       {
