@@ -3,11 +3,26 @@
 
 #pragma once
 
-#include <Eigen/Dense>
 #include <iosfwd>
+#include <Eigen/Dense>
+#include <jrl-qp/internal/meta.h>
 
 namespace jrlqp::utils
 {
+	/** Accept any class That convert to Eigen::Ref<const Eigen::MatrixXd>.*/
+	static std::true_type isConvertibleToRef_(const Eigen::Ref<const Eigen::MatrixXd>&);
+	/** Fallback function that will be used for type not convertible to Eigen::Ref<const Eigen::MatrixXd>. */
+	static std::false_type isConvertibleToRef_(...);
+
+	/** Check if class \t T can be converted to Eigen::Ref<const Eigen::MatrixXd>.
+		* Adapted from https://stackoverflow.com/a/5998303/11611648
+		*/
+	template <typename T>
+	constexpr bool isConvertibleToRef() {
+		return decltype(isConvertibleToRef_(std::declval<const T&>()))::value;
+	}
+
+
 	/** A small utility class to write Eigen matrices in a stream with a matlab-readable format.
 	  *
 	  * Example of use:
@@ -19,11 +34,18 @@ namespace jrlqp::utils
 	class toMatlab
 	{
 	public:
-	  toMatlab(const Eigen::Ref<const Eigen::MatrixXd> M)
+	  toMatlab(const Eigen::Ref<const Eigen::MatrixXd>& M)
 		: mat(M)
 	  {}
 
+		template<typename Derived, typename std::enable_if<(!isConvertibleToRef<Derived>()), int>::type = 0>
+		//template<typename Derived>
+		toMatlab(const Eigen::EigenBase<Derived>& M)
+			: tmp(M), mat(tmp)		
+		{}
+
 	private:
+		Eigen::MatrixXd tmp;
 	  const Eigen::Ref<const Eigen::MatrixXd> mat;
 
 	  friend std::ostream& operator<< (std::ostream&, const toMatlab&);
