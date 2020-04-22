@@ -4,7 +4,7 @@ namespace jrlqp
 {
   DualSolver::DualSolver()
     : options_(SolverOptions())
-    , log_(SolverOptions::defaultStream_, "log", 0xFF)
+    , log_(SolverOptions::defaultStream_, "log")
     , nbVar_(0)
     , A_(0)
     , f_(0)
@@ -12,6 +12,7 @@ namespace jrlqp
     , work_z_(0)
     , work_u_(0)
     , work_r_(0)
+    , needToExpandMultipliers_(false)
   {
   }
 
@@ -190,10 +191,10 @@ namespace jrlqp
 
   bool DualSolver::removeConstraint(int l, VectorRef u)
   {
-    int q = A_.nbActiveCstr();
     A_.deactivate(l);
-    u.segment(l, q - l - 1) = u.tail(l - q - 1);
-    DEBUG_ONLY(u[q-1] = 0);
+    int q = A_.nbActiveCstr();
+    u.segment(l, q - l) = u.tail(q - l);
+    DEBUG_ONLY(u[q] = 0);
     return removeConstraint_(l);
   }
 
