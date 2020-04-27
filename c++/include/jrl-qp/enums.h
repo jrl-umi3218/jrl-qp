@@ -36,6 +36,7 @@ namespace jrlqp
     ITERATION_BASIC_DETAILS = 1 << 2,
     ITERATION_ADVANCE_DETAILS = 1 << 3,
     ACTIVE_SET = 1 << 4,
+    ACTIVE_SET_DETAILS = 1 << 5,
     MISC = 1 << 30,
     NO_ITER = constant::noIterationFlag
   };
@@ -43,5 +44,15 @@ namespace jrlqp
   inline std::uint32_t operator| (LogFlags a, LogFlags b) 
   { 
     return static_cast<std::uint32_t>(a) | static_cast<std::uint32_t>(b); 
+  }
+
+  inline std::uint32_t operator| (std::uint32_t a, LogFlags b)
+  {
+    return a | static_cast<std::uint32_t>(b);
+  }
+
+  inline std::uint32_t operator| (LogFlags a, std::uint32_t b)
+  {
+    return static_cast<std::uint32_t>(a) | b;
   }
 }
