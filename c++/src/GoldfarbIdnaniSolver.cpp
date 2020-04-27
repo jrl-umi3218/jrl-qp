@@ -59,7 +59,7 @@ namespace jrlqp
     auto L = pb_.G.template triangularView<Eigen::Lower>();
 
     // J = L^-t
-    auto J = work_J_.asMatrix(nbVar_, nbVar_);
+    auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
     J.setIdentity();
     L.transpose().solveInPlace(J);
 
@@ -130,8 +130,8 @@ namespace jrlqp
   {
     int q = A_.nbActiveCstr();
     auto d = work_d_.asVector(nbVar_, {});
-    auto J = work_J_.asMatrix(nbVar_, nbVar_);
-    auto R = work_R_.asMatrix(q, q).template triangularView<Eigen::Upper>();
+    auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
+    auto R = work_R_.asMatrix(q, q, nbVar_).template triangularView<Eigen::Upper>();
 
     np.preMultiplyByMt(d, J);
     z.noalias() = J.rightCols(nbVar_ - q) * d.tail(nbVar_ - q);
@@ -191,7 +191,7 @@ namespace jrlqp
   {
     int q = A_.nbActiveCstr(); // This already counts the new constraint
     auto d = work_d_.asVector(nbVar_);
-    auto J = work_J_.asMatrix(nbVar_, nbVar_);
+    auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
     for (int i = nbVar_ - 2; i >= q-1; --i) //[OPTIM] use Householder transformation instead
     {
       Givens Qi;
@@ -199,7 +199,7 @@ namespace jrlqp
       DEBUG_ONLY(d[i + 1] = 0);
       J.applyOnTheRight(i, i + 1, Qi);
     }
-    auto R = work_R_.asMatrix(q, q);
+    auto R = work_R_.asMatrix(q, q, nbVar_);
     R.rightCols<1>() = d.head(q);
 
     return true; //[NUMERIC]: add test on dependency
@@ -209,8 +209,8 @@ namespace jrlqp
   {
     int q = A_.nbActiveCstr(); // This already counts that the constraint was removed
     auto d = work_d_.asVector(nbVar_);
-    auto J = work_J_.asMatrix(nbVar_, nbVar_);
-    auto R = work_R_.asMatrix(q + 1, q + 1);
+    auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
+    auto R = work_R_.asMatrix(q + 1, q + 1, nbVar_);
     
     for (int i = l; i < q; ++i)
     {

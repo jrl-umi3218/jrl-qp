@@ -46,16 +46,18 @@ namespace jrlqp::internal
       return buffer_.head(size);
     }
 
-    auto asMatrix(int rows, int cols, NotConst = {})
+    auto asMatrix(int rows, int cols, int ld, NotConst = {})
     {
-      assert(rows * cols <= buffer_.size());
-      return Eigen::Map<Eigen::MatrixXd>(buffer_.data(), rows, cols);
+      assert(ld * cols <= buffer_.size());
+      assert(ld >= rows);
+      return Eigen::Map<Eigen::MatrixXd,0, Eigen::Stride<Eigen::Dynamic, 1> >(buffer_.data(), rows, cols, Eigen::Stride<Eigen::Dynamic,1>(ld,1));
     }
 
-    auto asMatrix(int rows, int cols) const
+    auto asMatrix(int rows, int cols, int ld) const
     {
-      assert(rows * cols <= buffer_.size());
-      return Eigen::Map<const Eigen::MatrixXd>(buffer_.data(), rows, cols);
+      assert(ld * cols <= buffer_.size());
+      assert(ld >= rows);
+      return Eigen::Map<const Eigen::MatrixXd, 0, Eigen::Stride<Eigen::Dynamic, 1> >(buffer_.data(), rows, cols, Eigen::Stride<Eigen::Dynamic, 1>(ld, 1));
     }
 
     void setZero()
