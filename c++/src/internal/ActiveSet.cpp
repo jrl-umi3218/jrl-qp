@@ -2,6 +2,7 @@
  */
 
 #include <assert.h>
+#include <iostream>
 
 #include <jrl-qp/internal/ActiveSet.h>
 
@@ -124,5 +125,16 @@ namespace jrlqp::internal
     case ActivationStatus::UPPER_BOUND: --mb_; --mbu_;  break;
     default: assert(false);
     }
+  }
+
+  std::ostream& operator<<(std::ostream& os, const ActiveSet& a)
+  {
+    int n = a.nbActiveCstr();
+    os << "[";
+    for (int i = 0; i < n - 1; ++i)
+      os << a[i] << ", ";
+    if (n > 0) os << a[n - 1];
+    os << "]";
+    return os;
   }
 }

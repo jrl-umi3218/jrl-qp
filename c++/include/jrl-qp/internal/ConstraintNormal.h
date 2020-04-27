@@ -3,11 +3,14 @@
 
 #pragma once
 
+#include <iosfwd>
+
 #include <Eigen/Core>
 
 #include <jrl-qp/api.h>
 #include <jrl-qp/defs.h>
 #include <jrl-qp/enums.h>
+#include <jrl-qp/utils/toMatlab.h>
 
 namespace jrlqp::internal
 {
@@ -34,7 +37,7 @@ namespace jrlqp::internal
 
     int index() const { return p_; }
     int bndIndex() const 
-    { assert(status_ >= ActivationStatus::LOWER_BOUND); return p_ - static_cast<int>(C_.rows()); }
+    { assert(status_ >= ActivationStatus::LOWER_BOUND); return p_ - static_cast<int>(C_.cols()); }
     ActivationStatus status() const { return status_; }
 
 
@@ -50,10 +53,10 @@ namespace jrlqp::internal
         out.noalias() = -M.transpose() * C_.col(p_);
         break;
       case ActivationStatus::LOWER_BOUND:
-        out = M.row(p_ - C_.rows());
+        out = M.row(p_ - C_.cols());
         break;
       case ActivationStatus::UPPER_BOUND:
-        out = -M.row(p_ - C_.rows());
+        out = -M.row(p_ - C_.cols());
         break;
       default:
         assert(false);
@@ -73,9 +76,26 @@ namespace jrlqp::internal
       }
     }
 
+    friend std::ostream& operator<<(std::ostream& os, const ConstraintNormal& n)
+    {
+      os << "{" << n.p_ << ", " << static_cast<int>(n.status_) << ", ";
+      switch (n.status_)
+      {
+      case ActivationStatus::EQUALITY: //fallthrough
+      case ActivationStatus::LOWER: os << (utils::toMatlab)n.C_.col(n.p_); break;
+      case ActivationStatus::UPPER: os << (utils::toMatlab) (-n.C_.col(n.p_)); break;
+      case ActivationStatus::LOWER_BOUND: os << (utils::toMatlab)Eigen::MatrixXd::Identity(n.C_.rows(), n.C_.rows()).col(n.bndIndex()); break;
+      case ActivationStatus::UPPER_BOUND: os << (utils::toMatlab)(-Eigen::MatrixXd::Identity(n.C_.rows(),n.C_.rows()).col(n.bndIndex())); break;
+      default: assert(false);
+      }
+      os << "}";
+      return os;
+    }
+
   private:
     int p_;
     ActivationStatus status_;
     MatrixConstRef C_;
   };
+
 }

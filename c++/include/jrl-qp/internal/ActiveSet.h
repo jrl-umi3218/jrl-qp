@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <iosfwd>
 #include <vector>
 
 #include <jrl-qp/api.h>
@@ -58,4 +59,6 @@ namespace jrlqp::internal
     int mbl_;   // number of bound constraints active as their lower bound
     int mbu_;   // number of bound constraints active as their upper bound
   };
+
+  std::ostream& operator<<(std::ostream& os, const ActiveSet& a);
 }
