@@ -95,8 +95,11 @@ namespace jrlqp
     for (int it = 0; it < options_.maxIter_; ++it)
     {
       LOG_NEW_ITER(log_, it);
-      LOG(log_, LogFlags::ITERATION_BASIC_DETAILS, x, u);
+      LOG(log_, LogFlags::ACTIVE_SET_DETAILS, A_);
       int q = A_.nbActiveCstr();
+      new (&r) WVector(work_r_.asVector(q));
+      new (&u) WVector(work_u_.asVector(q + 1));
+      LOG(log_, LogFlags::ITERATION_BASIC_DETAILS, x, u, f_);
 
       // Step 1
       if (!skipStep1)
@@ -108,9 +111,9 @@ namespace jrlqp
           return TerminationStatus::SUCCESS;
         }
 
-        LOG_AS(log_, LogFlags::ACTIVE_SET, "selectedConstraint", np.index(), "status", static_cast<int>(np.status()));
-        new (&r) WVector(work_r_.asVector(q));
-        new (&u) WVector(work_u_.asVector(q + 1));
+        LOG(log_, LogFlags::ACTIVE_SET, np);
+        //LOG_AS(log_, LogFlags::ACTIVE_SET, "selectedConstraint", np.index(), "status", static_cast<int>(np.status()));
+        u[q] = 0;
       }
 
       // Step 2
@@ -126,10 +129,10 @@ namespace jrlqp
         return TerminationStatus::INFEASIBLE;
       }
 
-      u.head(q) -= t * r;
-      u[q] = t;
       if (t2 >= options_.bigBnd_)
       {
+        // u = u + t*[-r;1]
+        u.head(q) -= t * r; u[q] += t;
         LOG_AS(log_, LogFlags::ACTIVE_SET, "Activate", false, "l", l);
         removeConstraint(l, u);
         skipStep1 = true;
@@ -138,6 +141,8 @@ namespace jrlqp
       {
         x += t * z;
         f_ += t * np.dot(z) * (.5 * t + u[q]);
+        // u = u + t*[-r;1]
+        u.head(q) -= t * r; u[q] += t;
         if (t == t2)
         {
           LOG_AS(log_, LogFlags::ACTIVE_SET, "Activate", true, "l", l);
@@ -146,11 +151,13 @@ namespace jrlqp
             LOG_COMMENT(log_, LogFlags::TERMINATION, "Attempting to add a linearly dependent constraint.");
             return TerminationStatus::LINEAR_DEPENDENCY_DETECTED;
           }
+          skipStep1 = false;
         }
         else
         {
           LOG_AS(log_, LogFlags::ACTIVE_SET, "Activate", false, "l", l);
           removeConstraint(l, u);
+          skipStep1 = true;
         }
       }
     }
@@ -191,10 +198,10 @@ namespace jrlqp
 
   bool DualSolver::removeConstraint(int l, VectorRef u)
   {
-    A_.deactivate(l);
     int q = A_.nbActiveCstr();
     u.segment(l, q - l) = u.tail(q - l);
     DEBUG_ONLY(u[q] = 0);
+    A_.deactivate(l);
     return removeConstraint_(l);
   }
 
