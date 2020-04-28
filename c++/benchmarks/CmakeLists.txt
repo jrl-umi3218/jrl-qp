@@ -2,9 +2,10 @@
 add_custom_target(jrlqp_benchmarks)
 
 macro(addBenchmark name)
-  add_executable(${name} ${name}.cpp ${ARGN})
+  set(benchName ${name}_Bench)
+  add_executable(${benchName} ${name}.cpp ${ARGN})
   add_custom_command(TARGET jrlqp_benchmarks
-    COMMAND ${name}
+    COMMAND ${benchName} --benchmark_out="${CMAKE_CURRENT_SOURCE_DIR}/out/${name}.csv" --benchmark_out_format=csv
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Running ${name} benchmark"
     )
@@ -16,6 +17,7 @@ macro(addBenchmark name)
   endif()
   # Adding a project configuration file (for MSVC only)
   GENERATE_MSVC_DOT_USER_FILE(${name} "${CMAKE_INSTALL_PREFIX}/bin")
+  set_target_properties(${name} PROPERTIES FOLDER "Benchmarks")
 endmacro()
 
 macro(addEigenBenchmark name)
@@ -34,6 +36,7 @@ macro(addEigenBenchmark name)
   endif()
   # Adding a project configuration file (for MSVC only)
   GENERATE_MSVC_DOT_USER_FILE(${benchName} "${CMAKE_INSTALL_PREFIX}/bin")
+  set_target_properties(${benchName} PROPERTIES FOLDER "Benchmarks")
 endmacro()
 
 file(MAKE_DIRECTORY out)

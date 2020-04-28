@@ -217,7 +217,7 @@ namespace jrlqp
     if (nbCstr + nbBnd != A_.nbAll())
     {
       A_.resize(nbCstr, nbBnd);
-      // We need to have work_u_ sizwe at least as big as the number of constraints because we
+      // We need to have work_u_ size at least as big as the number of constraints because we
       // are using it for storing the final multipliers.
       // work_r_ size could be restricted to at most nbVar, as long as we make sure that we'll
       // never have more than nbVar active constraints, which should always be the case.
