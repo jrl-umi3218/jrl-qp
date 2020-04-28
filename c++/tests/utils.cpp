@@ -109,7 +109,7 @@ namespace jrlqp::test
       double li = cx[i] - bl[i];
       double ui = cx[i] - bu[i];
       bool b1 = std::abs(li) <= tau_x && u[i] <= -tau_u; // constraint active at the lower bound
-      bool b2 = li >= tau_x && ui <= tau_x && std::abs(u[i]) <= tau_u; // constraint inactive
+      bool b2 = li >= -tau_x && ui <= tau_x && std::abs(u[i]) <= tau_u; // constraint inactive
       bool b3 = ui <= tau_x && u[i] >= tau_u; // constraint active at the upper bound
       if (!(b1 || b2 || b3)) return false;
     }
