@@ -49,7 +49,7 @@ namespace
 
   std::ostream& operator<<(std::ostream& os, const QPSReader::Context& c)
   {
-    os << "(line " << c.line << ", " << "section " << lineName[static_cast<int>(c.line)] << ")\n";
+    os << "(line " << c.line << ", " << "section " << lineName[static_cast<int>(c.section)] << ")\n";
     return os;
   }
 
@@ -193,6 +193,7 @@ namespace jrlqp::test
     qp.bu = VectorXd::Constant(nRows, bigBnd);
     qp.xl = VectorXd::Zero(n);
     qp.xu = VectorXd::Constant(n, bigBnd);
+    qp.objCst = objCst;
 
     for (const auto& t : GVal) qp.G(std::get<0>(t), std::get<1>(t)) = std::get<2>(t);
     if (fullObjMat) qp.G.template triangularView<StrictlyUpper>() = qp.G.template triangularView<StrictlyLower>().transpose();
@@ -327,8 +328,10 @@ namespace jrlqp::test
   void QPSReader::addValueToRHS(const std::string& rowName, double val)
   {
     auto [rIdx, rType] = mapRow.at(rowName);
-    if (rType == RowType::N) THROW("Attempting to add rhs on a N row ", context);
-    bVal.push_back({ {rIdx, val}, rType });
+    if (rType == RowType::N)
+      objCst = -val; //minus because the rhs in on the wrong side
+    else
+      bVal.push_back({ {rIdx, val}, rType });
   }
 
   void QPSReader::readRanges(const std::string& line)
@@ -364,9 +367,20 @@ namespace jrlqp::test
     is >> bndName;
     if (is.fail()) THROW("Unable to read bound name", context);
 
-    auto [colName, val] = *readNamedValue(is, context, false);
-    int cIdx = mapCol.at(colName);
-    xVal.push_back({ {cIdx, val}, type });
+    if (type == BndType::FR)
+    {
+      std::string colName;
+      is >> colName;
+      if (is.fail()) THROW("Unable to read column name", context);
+      int cIdx = mapCol.at(colName);
+      xVal.push_back({ {cIdx, std::numeric_limits<double>::infinity()}, type });
+    }
+    else
+    {
+      auto [colName, val] = *readNamedValue(is, context, false);
+      int cIdx = mapCol.at(colName);
+      xVal.push_back({ {cIdx, val}, type });
+    }
   }
 
   void QPSReader::readQuadObj(const std::string& line)

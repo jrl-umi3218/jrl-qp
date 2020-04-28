@@ -21,6 +21,7 @@ namespace jrlqp::test
     Eigen::VectorXd bu;
     Eigen::VectorXd xl;
     Eigen::VectorXd xu;
+    double objCst;
   };
 
   struct ProblemProperties
@@ -120,6 +121,7 @@ namespace jrlqp::test
     std::vector<std::pair<vectorVal, RowType> > bVal = {};
     std::vector<std::pair<vectorVal, RowType> > rVal = {};
     std::vector<std::pair<vectorVal, BndType> > xVal = {};
+    double objCst = 0;
     int nRows = 0;
     bool objWasRead = false;
   };
