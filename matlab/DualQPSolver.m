@@ -6,6 +6,7 @@ classdef DualQPSolver < handle
         act %status of all constraints
         q
         maxIter
+        log
     end
     
     methods
@@ -21,6 +22,11 @@ classdef DualQPSolver < handle
             [x,f,u] = obj.init(G,a,C,bl,bu,xl,xu); %step 0
             
             for it=1:obj.maxIter
+                obj.log(it).it=it;
+                obj.log(it).x = x;
+                obj.log(it).f = f;
+                obj.log(it).u = u;
+                obj.log(it).A = obj.A;
                 %step 1
                 if (~skipStep1)
                     [p,status] = obj.selectViolatedConstraint(x);
@@ -41,6 +47,7 @@ classdef DualQPSolver < handle
                             np = zeros(obj.n,1); np(p-obj.m) = -1;
                         end
                     end
+                    obj.log(it).np = {p,status,np};
                     u = [u;0];
                 end
 
@@ -50,6 +57,10 @@ classdef DualQPSolver < handle
                 %disp(['r=' num2str(r')])
                 [t1,t2,l] = obj.computeStepLength(p,status,x,u,z,r);
                 t = min(t1,t2);
+                obj.log(it).t = t;
+                obj.log(it).z = z;
+                obj.log(it).r = r;
+                obj.log(it).l = l;
 
                 if t==Inf
                     output = SolverStatus.Infeasible;

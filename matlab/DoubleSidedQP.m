@@ -101,6 +101,9 @@ classdef DoubleSidedQP < DualQPSolver
             d = obj.J'*np;
             z = obj.J(:,obj.q+1:end)*d(obj.q+1:end);
             r = obj.R\d(1:obj.q);
+            obj.log(end).J = obj.J;
+            obj.log(end).R = obj.R;
+            obj.log(end).d = d';
         end
         
         function [t1,t2,l] = computeStepLength(obj,p,status,x,u,z,r)
