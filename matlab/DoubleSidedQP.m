@@ -54,7 +54,7 @@ classdef DoubleSidedQP < DualQPSolver
             obj.R = Rb(1:obj.q,1:obj.q);
             obj.J = (obj.L')\Qb;
             
-            x = obj.J*[(obj.R')\obj.bl(obj.A); -obj.J(:,obj.q+1:end)'*a];
+            x = obj.J*[(obj.R')\obj.bl(obj.A'); -obj.J(:,obj.q+1:end)'*a];
             f = x'*(0.5*G*x +a);
             u = obj.R\(obj.J(:,1:obj.q)'*(G*x+a));
         end
