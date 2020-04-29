@@ -58,6 +58,7 @@ namespace jrlqp::internal
     mb_  = 0;
     mbl_ = 0;
     mbu_ = 0;
+    mbe_ = 0;
   }
 
   bool ActiveSet::isActive(int cstrIdx) const
@@ -90,9 +91,9 @@ namespace jrlqp::internal
   {
     assert(cstrIdx < nbCstr_ + nbBnd_);
     assert(status_[cstrIdx] == ActivationStatus::INACTIVE && "Specified constraint is already active");
-    assert(status != ActivationStatus::INACTIVE && "You need to specify an non-inactive status");
+    assert(status != ActivationStatus::INACTIVE && "You need to specify a non-inactive status");
     assert((cstrIdx < nbCstr_ && (status == ActivationStatus::EQUALITY || status == ActivationStatus::LOWER || status == ActivationStatus::UPPER))
-        || (cstrIdx >= nbCstr_ && (status == ActivationStatus::LOWER_BOUND || status == ActivationStatus::UPPER_BOUND))
+        || (cstrIdx >= nbCstr_ && (status == ActivationStatus::LOWER_BOUND || status == ActivationStatus::UPPER_BOUND || status == ActivationStatus::FIXED))
         && "The given status is not compatible with the constraint index");
 
     activeSet_.push_back(cstrIdx);
@@ -105,6 +106,7 @@ namespace jrlqp::internal
     case ActivationStatus::EQUALITY:    ++me_;          break;
     case ActivationStatus::LOWER_BOUND: ++mb_; ++mbl_;  break;
     case ActivationStatus::UPPER_BOUND: ++mb_; ++mbu_;  break;
+    case ActivationStatus::FIXED:       ++mb_; ++mbe_;  break;
     default: assert(false);
     }
   }
@@ -123,6 +125,7 @@ namespace jrlqp::internal
     case ActivationStatus::EQUALITY:    --me_;          break;
     case ActivationStatus::LOWER_BOUND: --mb_; --mbl_;  break;
     case ActivationStatus::UPPER_BOUND: --mb_; --mbu_;  break;
+    case ActivationStatus::FIXED:       --mb_; --mbe_;  break;
     default: assert(false);
     }
   }

@@ -15,7 +15,8 @@ namespace jrlqp
     UPPER,        // Constraint is active at its upper bound
     EQUALITY,     // Constraint is and equality constraint
     LOWER_BOUND,  // Constraint is a bound on variable constraint, active at its lower bound
-    UPPER_BOUND   // Constraint is a bound on variable constraint, active at its upper bound
+    UPPER_BOUND,  // Constraint is a bound on variable constraint, active at its upper bound
+    FIXED         // Constraint fixes the corresponding variable
   };
 
   /** Information on the termination reason for the solver. */

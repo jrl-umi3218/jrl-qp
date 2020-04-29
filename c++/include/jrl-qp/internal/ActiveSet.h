@@ -44,6 +44,7 @@ namespace jrlqp::internal
     int nbActiveBound()           const { return mb_; }
     int nbActiveLowerBound()      const { return mbl_; }
     int nbActiveUpperBound()      const { return mbu_; }
+    int nbFixedVariable()         const { return mbe_; }
 
   private:
     std::vector<ActivationStatus> status_;
@@ -58,6 +59,7 @@ namespace jrlqp::internal
     int mb_;    // number of constraints active as bound
     int mbl_;   // number of bound constraints active as their lower bound
     int mbu_;   // number of bound constraints active as their upper bound
+    int mbe_;   // number of fixed variable
   };
 
   std::ostream& operator<<(std::ostream& os, const ActiveSet& a);

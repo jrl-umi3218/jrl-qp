@@ -52,6 +52,7 @@ namespace jrlqp::internal
       case ActivationStatus::UPPER:
         out.noalias() = -M.transpose() * C_.col(p_);
         break;
+      case ActivationStatus::FIXED: //fallthrough
       case ActivationStatus::LOWER_BOUND:
         out = M.row(p_ - C_.cols());
         break;
@@ -70,6 +71,7 @@ namespace jrlqp::internal
       case ActivationStatus::EQUALITY: //fallthrough
       case ActivationStatus::LOWER: return v.dot(C_.col(p_));
       case ActivationStatus::UPPER: return -v.dot(C_.col(p_));
+      case ActivationStatus::FIXED: //fallthrough
       case ActivationStatus::LOWER_BOUND: return v[bndIndex()];
       case ActivationStatus::UPPER_BOUND: return -v[bndIndex()];
       default: assert(false); return 0;
@@ -84,6 +86,7 @@ namespace jrlqp::internal
       case ActivationStatus::EQUALITY: //fallthrough
       case ActivationStatus::LOWER: os << (utils::toMatlab)n.C_.col(n.p_); break;
       case ActivationStatus::UPPER: os << (utils::toMatlab) (-n.C_.col(n.p_)); break;
+      case ActivationStatus::FIXED: //fallthrough
       case ActivationStatus::LOWER_BOUND: os << (utils::toMatlab)Eigen::MatrixXd::Identity(n.C_.rows(), n.C_.rows()).col(n.bndIndex()); break;
       case ActivationStatus::UPPER_BOUND: os << (utils::toMatlab)(-Eigen::MatrixXd::Identity(n.C_.rows(),n.C_.rows()).col(n.bndIndex())); break;
       default: assert(false);
