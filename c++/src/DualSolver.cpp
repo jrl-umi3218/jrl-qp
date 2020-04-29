@@ -62,14 +62,14 @@ namespace jrlqp
       for (int k = 0; k < A_.nbActiveCstr(); ++k)
       {
         int i = A_[k];
-        if (A_.activationStatus(i) == ActivationStatus::LOWER
-          || A_.activationStatus(i) == ActivationStatus::LOWER_BOUND)
+        if (A_.activationStatus(i) == ActivationStatus::UPPER
+          || A_.activationStatus(i) == ActivationStatus::UPPER_BOUND)
         {
-          u[i] = -r[k];
+          u[i] = r[k];
         }
         else
         {
-          u[i] = r[k];
+          u[i] = -r[k];
         }
       }
     }
