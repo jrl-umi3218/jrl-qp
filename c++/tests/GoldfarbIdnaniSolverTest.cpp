@@ -93,13 +93,13 @@ TEST_CASE("Test Suite")
 //    {"cvxqp3s" ,  1.1943432e+04},    //    75     100     222     100      286   
 //    {"dpklo1"  ,  3.7009622e-01},    //    77     133    1575      77        0   
 //    {"dtoc3"   ,  2.3526248e+02},    //  9998   14999   34993   14997        0   
-//    {"dual1"   ,  3.5012966e-02},    //     1      85      85      85     3473   
-//    {"dual2"   ,  3.3733676e-02},    //     1      96      96      96     4412   
-//    {"dual3"   ,  1.3575584e-01},    //     1     111     111     111     5997   
-//    {"dual4"   ,  7.4609084e-01},    //     1      75      75      75     2724   
-//    {"dualc1"  ,  6.1552508e+03},    //   215       9    1935       9       36   
-//    {"dualc2"  ,  3.5513077e+03},    //   229       7    1603       7       21   
-//    {"dualc5"  ,  4.2723233e+02},    //   278       8    2224       8       28   
+    {"dual1"   ,  3.5012966e-02},    //     1      85      85      85     3473   
+    {"dual2"   ,  3.3733676e-02},    //     1      96      96      96     4412   
+    {"dual3"   ,  1.3575584e-01},    //     1     111     111     111     5997   
+    {"dual4"   ,  7.4609084e-01},    //     1      75      75      75     2724   
+    {"dualc1"  ,  6.1552508e+03},    //   215       9    1935       9       36   
+//    {"dualc2"  ,  3.5513077e+03},    //   229       7    1603       7       21   //badly conditionned Hessian
+    {"dualc5"  ,  4.2723233e+02},    //   278       8    2224       8       28   
 //    {"dualc8"  ,  1.8309359e+04},    //   503       8    4024       8       28   
 //    {"exdata"  , -1.4184343e+02},    //  3001    3000    7500    1500  1124250   
 //    {"genhs28" ,  9.2717369e-01},    //     8      10      24      10        9   
@@ -110,7 +110,7 @@ TEST_CASE("Test Suite")
     {"hs268"   ,  5.7310705e-07},    //     5       5      25       5       10   
     {"hs35"    ,  1.1111111e-01},    //     1       3       3       3        2   
     {"hs35mod" ,  2.5000000e-01},    //     1       3       3       3        2   
-//    {"hs51"    ,  8.8817842e-16},    //     3       5       7       5        2   
+    {"hs51"    ,  8.8817842e-16},    //     3       5       7       5        2   
 //    {"hs52"    ,  5.3266476e+00},    //     3       5       7       5        2   
 //    {"hs53"    ,  4.0930233e+00},    //     3       5       7       5        2   
     {"hs76"    , -4.6818182e+00},    //     3       4      10       4        2   
@@ -199,7 +199,7 @@ TEST_CASE("Test Suite")
 //    {"stadat3" , -3.5779453e+01},    //  7999    4001   19997    4000        0
 //    {"stcqp1"  ,  1.5514356e+05},    //  2052    4097   13338    4097    22506
 //    {"stcqp2"  ,  2.2327313e+04},    //  2052    4097   13338    4097    22506
-//    {"tame"    ,  0.0000000e+00},    //     1       2       2       2        1
+    {"tame"    ,  0.0000000e+00},    //     1       2       2       2        1
 //    {"ubh1"    ,  1.1160008e+00},    // 12000   18009   48000    6003        0
 //    {"values"  , -1.3966211e+00},    //     1     202     202     202     3620
 //    {"yao"     ,  1.9770426e+02},    //  2000    2002    6000    2002        0
@@ -217,16 +217,16 @@ TEST_CASE("Test Suite")
     GoldfarbIdnaniSolver qp(3, 5, false);
     SolverOptions opt;
     opt.logFlags(LogFlags::ITERATION_BASIC_DETAILS 
-    //           | LogFlags::ACTIVE_SET 
+               | LogFlags::ACTIVE_SET 
     //           | LogFlags::ACTIVE_SET_DETAILS 
     //           | LogFlags::ITERATION_ADVANCE_DETAILS
     );
-    //std::ofstream aof("C:/Work/code/optim/jrl-qp/c++/tests/qplog.m");
-    //opt.logStream_ = &aof;
-    //aof.precision(16);
-    //qp.options(opt);
+    std::ofstream aof("C:/Work/code/optim/jrl-qp/c++/tests/qplog.m");
+    opt.logStream_ = &aof;
+    aof.precision(16);
+    qp.options(opt);
     qp.solve(pb.G, pb.a, pb.C.transpose(), pb.bl, pb.bu, pb.xl, pb.xu);
-    //aof.close();
+    aof.close();
     FAST_CHECK_UNARY(test::testKKT(qp.solution(), qp.multipliers(), G, pb.a, pb.C, pb.bl, pb.bu, pb.xl, pb.xu, false));
     FAST_CHECK_EQ(qp.objectiveValue()+pb.objCst, doctest::Approx(p.second).epsilon(1e-6));
   }
