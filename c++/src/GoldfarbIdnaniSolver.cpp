@@ -40,6 +40,8 @@ namespace jrlqp
     assert(xl.size() == nbVar || xl.size() == 0);
     assert(xu.size() == xl.size());
 
+    //TODO check input: bl<=bu, xl<=xu, ...
+
     new (&pb_.G) MatrixRef(G);
     new (&pb_.a) VectorConstRef(a);
     new (&pb_.C) MatrixConstRef(C);
@@ -72,6 +74,9 @@ namespace jrlqp
 
     A_.reset();
     DEBUG_ONLY(work_R_.setZero());
+
+    // Adding equality constraints
+    initActiveSet();
   }
 
   internal::ConstraintNormal GoldfarbIdnaniSolver::selectViolatedConstraint_(const VectorConstRef& x) const
@@ -147,7 +152,9 @@ namespace jrlqp
 
     for (int k = 0; k < A_.nbActiveCstr(); ++k)
     {
-      if (A_.activationStatus(k) != ActivationStatus::EQUALITY && r[k] > 0)
+      if (A_.activationStatus(k) != ActivationStatus::EQUALITY 
+        && A_.activationStatus(k) != ActivationStatus::FIXED
+        && r[k] > 0)
       {
         if (double tk = u[k] / r[k]; tk < t1)
         {
@@ -177,6 +184,9 @@ namespace jrlqp
         break;
       case ActivationStatus::UPPER_BOUND:
         pb = np.bndIndex(); b = pb_.xu[pb]; cx = x[pb]; cz = z[pb];
+        break;
+      case ActivationStatus::FIXED:
+        assert(false);
         break;
       default:
         assert(false);
@@ -232,6 +242,69 @@ namespace jrlqp
       work_d_.resize(nbVar);
       work_J_.resize(nbVar, nbVar);
       work_R_.resize(nbVar, nbVar);
+    }
+  }
+
+  void jrlqp::GoldfarbIdnaniSolver::initActiveSet()
+  {
+    for (int i = 0; i < A_.nbCstr(); ++i)
+    {
+      if (pb_.bl[i] == pb_.bu[i])
+      {
+        internal::ConstraintNormal np(pb_.C, i, ActivationStatus::EQUALITY);
+        addInitialConstraint(np);
+      }
+    }
+
+    for (int i = 0; i < A_.nbBnd(); ++i)
+    {
+      if (pb_.xl[i] == pb_.xu[i])
+      {
+        internal::ConstraintNormal np(pb_.C, i, ActivationStatus::FIXED);
+        addInitialConstraint(np);
+      }
+    }
+  }
+
+  void jrlqp::GoldfarbIdnaniSolver::addInitialConstraint(const internal::ConstraintNormal& np)
+  {
+    int q = A_.nbActiveCstr();
+    WVector x = work_x_.asVector(nbVar_);
+    WVector z = work_z_.asVector(nbVar_);
+    WVector u = work_u_.asVector(q+1);
+    WVector r = work_r_.asVector(q);
+    u[q] = 0;
+
+    computeStep(z, r, np);
+
+    assert(np.status() == ActivationStatus::EQUALITY || np.status() == ActivationStatus::FIXED);
+    double t = 0;
+    if (z.norm() > 1e-14) //[NUMERIC] better criterion
+    {
+      if (np.status() == ActivationStatus::EQUALITY) //[OPTIM] we can avoid this if by specializing the function to general constraint or bound
+      {
+        int p = np.index(); 
+        t = (pb_.bl[p] - pb_.C.col(p).dot(x)) / pb_.C.col(p).dot(z);
+      }
+      else
+      {
+        int pb = np.bndIndex(); 
+        t = (pb_.xl[pb] - x[pb]) / z[pb];
+      }
+    }
+    else
+    {
+      //numerical problem
+    }
+
+    x += t * z;
+    f_ += t * np.dot(z) * (.5 * t + u[q]);
+    // u = u + t*[-r;1]
+    u.head(q) -= t * r; u[q] += t;
+    if (!addConstraint(np))
+    {
+      LOG_COMMENT(log_, LogFlags::TERMINATION, "Attempting to add a linearly dependent constraint.");
+      //return TerminationStatus::LINEAR_DEPENDENCY_DETECTED;
     }
   }
 }

@@ -48,6 +48,10 @@ namespace jrlqp
     virtual bool removeConstraint_(int l) override;
     virtual void resize_(int nbVar, int nbCstr, bool useBounds) override;
 
+    virtual void initActiveSet();
+
+    void addInitialConstraint(const internal::ConstraintNormal& np);
+
     mutable internal::Workspace<> work_d_;
     internal::Workspace<> work_J_;
     internal::Workspace<> work_R_;
