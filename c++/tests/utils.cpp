@@ -5,6 +5,24 @@
 
 using namespace Eigen;
 
+namespace
+{
+  // For a constraint bl <= c(x) <= bu with Lagrange multiplier u, and threshold tau_x and tau_u,
+  // Check that one of the following case is true:
+  // (1) c(x) == bl and u <= 0
+  // (2) bl <= c(x) <= bu and u == 0
+  // (3) cx == bu and u >= 0
+  bool checkKKTConstraint(double cx, double bl, double bu, double u, double tau_x, double tau_u)
+  {
+    double li = cx - bl;
+    double ui = cx - bu;
+    bool b1 = std::abs(li) <= tau_x && u <= -tau_u; // constraint active at the lower bound
+    bool b2 = li >= -tau_x && ui <= tau_x && std::abs(u) <= tau_u; // constraint inactive
+    bool b3 = ui <= tau_x && u >= tau_u; // constraint active at the upper bound
+    return b1 || b2 || b3;
+  }
+}
+
 namespace jrlqp::test
 {
   void checkDimensions([[maybe_unused]] int n,
@@ -106,23 +124,15 @@ namespace jrlqp::test
     else cx = C * x;
     for (int i = 0; i < m; ++i)
     {
-      double li = cx[i] - bl[i];
-      double ui = cx[i] - bu[i];
-      bool b1 = std::abs(li) <= tau_x && u[i] <= -tau_u; // constraint active at the lower bound
-      bool b2 = li >= -tau_x && ui <= tau_x && std::abs(u[i]) <= tau_u; // constraint inactive
-      bool b3 = ui <= tau_x && u[i] >= tau_u; // constraint active at the upper bound
-      if (!(b1 || b2 || b3)) return false;
+      if (!checkKKTConstraint(cx[i], bl[i], bu[i], u[i], tau_x, tau_u))
+        return false;
     }
 
     // Check the bounds, if any
     for (int i = 0; i < xl.size(); ++i)
     {
-      double li = x[i] - xl[i];
-      double ui = x[i] - xu[i];
-      bool b1 = std::abs(li) <= tau_x && u[m+i] <= -tau_u; // constraint active at the lower bound
-      bool b2 = li >= tau_x && ui <= tau_x && std::abs(u[m+i]) <= tau_u; // constraint inactive
-      bool b3 = ui <= tau_x && u[m+i] >= tau_u; // constraint active at the upper bound
-      if (!(b1 || b2 || b3)) return false;
+      if (!checkKKTConstraint(x[i], xl[i], xu[i], u[m+i], tau_x, tau_u))
+        return false;
     }
 
     return true;
