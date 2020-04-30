@@ -21,6 +21,8 @@ namespace jrlqp::internal
     ConstraintNormal(const MatrixConstRef& C, int p, ActivationStatus status)
       : p_(p), status_(status), C_(C) 
     {
+      assert((status < ActivationStatus::LOWER_BOUND&& p < C_.cols())
+        || (status >= ActivationStatus::LOWER_BOUND && p >= C.cols()));
     }
 
     ConstraintNormal(const ConstraintNormal& other)
