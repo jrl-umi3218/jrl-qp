@@ -189,24 +189,36 @@ namespace jrlqp::test
     qp.G = MatrixXd::Zero(n, n);
     qp.a = VectorXd::Zero(n);
     qp.C = MatrixXd::Zero(nRows, n);
-    qp.bl = VectorXd::Constant(nRows, -bigBnd);
-    qp.bu = VectorXd::Constant(nRows, bigBnd);
+    qp.bl = VectorXd::Zero(nRows);
+    qp.bu = VectorXd::Zero(nRows);
     qp.xl = VectorXd::Zero(n);
     qp.xu = VectorXd::Constant(n, bigBnd);
     qp.objCst = objCst;
+    properties.nbEq = 0;
 
     for (const auto& t : GVal) qp.G(std::get<0>(t), std::get<1>(t)) = std::get<2>(t);
     if (fullObjMat) qp.G.template triangularView<StrictlyUpper>() = qp.G.template triangularView<StrictlyLower>().transpose();
     for (const auto& p : aVal) qp.a[p.first] = p.second;
     for (const auto& t : CVal) qp.C(std::get<0>(t), std::get<1>(t)) = std::get<2>(t);
+    for (const auto& r : mapRow)
+    {
+      auto [i, type] = r.second;
+      switch (type)
+      {
+      case RowType::E: qp.bl[i] = qp.bu[i] = 0; ++properties.nbEq; break;
+      case RowType::L: qp.bl[i] = -bigBnd; qp.bu[i] = 0; break;
+      case RowType::G: qp.bl[i] = 0; qp.bu[i] = +bigBnd; break;
+      default: break;
+      }
+    }
     for (const auto& b : bVal)
     {
       auto [i, v] = b.first;
       switch (b.second)
       {
       case RowType::E: qp.bl[i] = qp.bu[i] = v; break;
-      case RowType::L: qp.bu[i] = v; break;
-      case RowType::G: qp.bl[i] = v; break;
+      case RowType::L: qp.bl[i] = -bigBnd; qp.bu[i] = v; break;
+      case RowType::G: qp.bl[i] = v; qp.bu[i] = +bigBnd; break;
       default: assert(false); break;
       }
     }
