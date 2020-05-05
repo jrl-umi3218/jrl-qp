@@ -10,6 +10,7 @@
 #include <jrl-qp/SolverOptions.h>
 #include <jrl-qp/internal/ActiveSet.h>
 #include <jrl-qp/internal/ConstraintNormal.h>
+#include <jrl-qp/internal/TerminationType.h>
 #include <jrl-qp/internal/Workspace.h>
 #include <jrl-qp/utils/Debug.h>
 #include <jrl-qp/utils/Logger.h>
@@ -34,8 +35,9 @@ namespace jrlqp
   protected:
     struct StepLenghth { double t1; double t2; int l; };
     TerminationStatus solve();
+    TerminationStatus terminate(TerminationStatus status);
 
-    void init();
+    internal::InitTermination init();
     internal::ConstraintNormal selectViolatedConstraint(const VectorConstRef& x) const;
     void computeStep(VectorRef z, VectorRef r, const internal::ConstraintNormal& np) const;
     StepLenghth computeStepLength(const internal::ConstraintNormal& np, const VectorConstRef& x, 
@@ -44,7 +46,7 @@ namespace jrlqp
     bool removeConstraint(int l, VectorRef u);
 
 
-    virtual void init_() = 0;
+    virtual internal::InitTermination init_() = 0;
     virtual internal::ConstraintNormal selectViolatedConstraint_(const VectorConstRef& x) const = 0;
     virtual void computeStep_(VectorRef z, VectorRef r, const internal::ConstraintNormal& np) const = 0;
     virtual StepLenghth  computeStepLength_(const internal::ConstraintNormal& np, const VectorConstRef& x, 

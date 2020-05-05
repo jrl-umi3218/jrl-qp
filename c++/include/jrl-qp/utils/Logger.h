@@ -38,6 +38,8 @@ namespace jrlqp::utils
 
     Logger subLog(const std::string& name) const;
 
+    int iter() const { return iter_; }
+
   private:
     template<bool b>
     std::ostream& logIter() const;

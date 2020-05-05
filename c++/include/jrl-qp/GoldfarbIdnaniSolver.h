@@ -39,7 +39,7 @@ namespace jrlqp
       VectorConstRef xu;
     };
 
-    virtual void init_() override;
+    virtual internal::InitTermination init_() override;
     virtual internal::ConstraintNormal selectViolatedConstraint_(const VectorConstRef& x) const override;
     virtual void computeStep_(VectorRef z, VectorRef r, const internal::ConstraintNormal& np) const override;
     virtual StepLenghth  computeStepLength_(const internal::ConstraintNormal& np, const VectorConstRef& x,

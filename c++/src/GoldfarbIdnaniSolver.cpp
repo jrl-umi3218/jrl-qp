@@ -55,10 +55,13 @@ namespace jrlqp
     return DualSolver::solve();
   }
 
-  void GoldfarbIdnaniSolver::init_()
+  internal::InitTermination GoldfarbIdnaniSolver::init_()
   {
-    Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb_.G);
+    int ret = Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb_.G);
     auto L = pb_.G.template triangularView<Eigen::Lower>();
+
+    if (ret >= 0)
+      return TerminationStatus::NON_POS_HESSIAN;
 
     // J = L^-t
     auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
@@ -77,6 +80,8 @@ namespace jrlqp
 
     // Adding equality constraints
     initActiveSet();
+
+    return TerminationStatus::SUCCESS;
   }
 
   internal::ConstraintNormal GoldfarbIdnaniSolver::selectViolatedConstraint_(const VectorConstRef& x) const
@@ -90,7 +95,7 @@ namespace jrlqp
     //Check general constraints
     for (int i = 0; i < A_.nbCstr(); ++i)
     {
-      if (!A_.isActive(i))
+       if (!A_.isActive(i))
       {
         double cx = pb_.C.col(i).dot(x); //possible [OPTIM]: should we compute C^T x at once ?
         if (double sl = cx - pb_.bl[i]; sl < smin)
@@ -260,7 +265,7 @@ namespace jrlqp
     {
       if (pb_.xl[i] == pb_.xu[i])
       {
-        internal::ConstraintNormal np(pb_.C, i, ActivationStatus::FIXED);
+        internal::ConstraintNormal np(pb_.C, A_.nbCstr() + i, ActivationStatus::FIXED);
         addInitialConstraint(np);
       }
     }

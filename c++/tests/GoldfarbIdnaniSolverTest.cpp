@@ -15,51 +15,51 @@
 using namespace Eigen;
 using namespace jrlqp;
 
-//TEST_CASE("Simple problem")
-//{
-//  MatrixXd G = MatrixXd::Identity(3, 3);
-//  VectorXd a = VectorXd::Zero(3);
-//  MatrixXd C = MatrixXd::Random(3, 5);
-//  VectorXd bl = -VectorXd::Ones(5);
-//  VectorXd bu = VectorXd::Ones(5);
-//  VectorXd xl(0);
-//  VectorXd xu(0);
-//
-//  GoldfarbIdnaniSolver qp(3, 5, false);
-//
-//  // unconstraint solution
-//  qp.solve(G, a, C, bl, bu, xl, xu);
-//
-//  G.setIdentity();
-//  FAST_CHECK_UNARY(test::testKKT(qp.solution(), qp.multipliers(), G, a, C, bl, bu, xl, xu, true));
-//
-//  // At least one constraint activated
-//  bl[1] = -2; bu[1] = -1;
-//  G.setIdentity();
-//  qp.solve(G, a, C, bl, bu, xl, xu);
-//
-//  G.setIdentity();
-//  FAST_CHECK_UNARY(test::testKKT(qp.solution(), qp.multipliers(), G, a, C, bl, bu, xl, xu, true));
-//}
-//
-//TEST_CASE("Simple problem paper")
-//{
-//  // example from the Goldfarb-Idnani paper
-//  MatrixXd G(2, 2); G << 4, -2, -2, 4;
-//  VectorXd a(2); a << 6, 0;
-//  MatrixXd C(2, 1); C << 1, 1;
-//  VectorXd bl(1); bl << 2;
-//  VectorXd bu(1); bu << 10;
-//  VectorXd xl = VectorXd::Zero(2);
-//  VectorXd xu = VectorXd::Constant(2, 10);
-//
-//  GoldfarbIdnaniSolver qp(2, 1, true);
-//
-//  qp.solve(G, a, C, bl, bu, xl, xu);
-//
-//  G << 4, -2, -2, 4;
-//  FAST_CHECK_UNARY(test::testKKT(qp.solution(), qp.multipliers(), G, a, C, bl, bu, xl, xu, true));
-//}
+TEST_CASE("Simple problem")
+{
+  MatrixXd G = MatrixXd::Identity(3, 3);
+  VectorXd a = VectorXd::Zero(3);
+  MatrixXd C = MatrixXd::Random(3, 5);
+  VectorXd bl = -VectorXd::Ones(5);
+  VectorXd bu = VectorXd::Ones(5);
+  VectorXd xl(0);
+  VectorXd xu(0);
+
+  GoldfarbIdnaniSolver qp(3, 5, false);
+
+  // unconstraint solution
+  qp.solve(G, a, C, bl, bu, xl, xu);
+
+  G.setIdentity();
+  FAST_CHECK_UNARY(test::testKKT(qp.solution(), qp.multipliers(), G, a, C, bl, bu, xl, xu, true));
+
+  // At least one constraint activated
+  bl[1] = -2; bu[1] = -1;
+  G.setIdentity();
+  qp.solve(G, a, C, bl, bu, xl, xu);
+
+  G.setIdentity();
+  FAST_CHECK_UNARY(test::testKKT(qp.solution(), qp.multipliers(), G, a, C, bl, bu, xl, xu, true));
+}
+
+TEST_CASE("Simple problem paper")
+{
+  // example from the Goldfarb-Idnani paper
+  MatrixXd G(2, 2); G << 4, -2, -2, 4;
+  VectorXd a(2); a << 6, 0;
+  MatrixXd C(2, 1); C << 1, 1;
+  VectorXd bl(1); bl << 2;
+  VectorXd bu(1); bu << 10;
+  VectorXd xl = VectorXd::Zero(2);
+  VectorXd xu = VectorXd::Constant(2, 10);
+
+  GoldfarbIdnaniSolver qp(2, 1, true);
+
+  qp.solve(G, a, C, bl, bu, xl, xu);
+
+  G << 4, -2, -2, 4;
+  FAST_CHECK_UNARY(test::testKKT(qp.solution(), qp.multipliers(), G, a, C, bl, bu, xl, xu, true));
+}
 
 #ifdef QPS_TESTS_DIR
 struct QPSPbData
@@ -165,16 +165,16 @@ TEST_CASE("Test Suite")
     {"qe226"   ,  2.1265343e+02, Inf          ,    223,    282,   2578,     67,     897},  
     {"qetamacr",  8.6760370e+04, Inf          ,    400,    688,   2409,    378,    4069},  
     {"qfffff80",  8.7314747e+05, Inf          ,    524,    854,   6227,    278,    1638},  
-    {"qforplan",  7.4566315e+09, Inf          ,    161,    421,   4563,     36,     546},  
+    //{"qforplan",  7.4566315e+09, Inf          ,    161,    421,   4563,     36,     546},  //requires the QPS reader to handle names with spaces
     {"qgfrdxpn",  1.0079059e+11, Inf          ,    616,   1092,   2377,     54,     108},  
     {"qgrow15" , -1.0169364e+08, Inf          ,    300,    645,   5620,     38,     462},  
     {"qgrow22" , -1.4962895e+08, Inf          ,    440,    946,   8252,     65,     787},  
     {"qgrow7"  , -4.2798714e+07, Inf          ,    140,    301,   2612,     30,     327},  
     {"qisrael" ,  2.5347838e+07, Inf          ,    174,    142,   2269,     42,     656},  
-//    {"qpcblend", -7.8425409e-03, 10           ,     74,     83,    491,     83,       0},  //fail
-//    {"qpcboei1",  1.1503914e+07, 10           ,    351,    384,   3485,    384,       0},  //fail
-//    {"qpcboei2",  8.1719623e+06, 10           ,    166,    143,   1196,    143,       0},  //fail
-//    {"qpcstair",  6.2043875e+06, 10           ,    356,    467,   3856,    467,       0},  //bug
+    {"qpcblend", -7.8425409e-03, 10           ,     74,     83,    491,     83,       0},
+    //{"qpcboei1",  1.1503914e+07, 10           ,    351,    384,   3485,    384,       0},  //Both fail to seemingly bad conditionning of the active set due to selectionning
+    //{"qpcboei2",  8.1719623e+06, 10           ,    166,    143,   1196,    143,       0},  //one constraint to activate instead of another by 1e-13 difference. Need to have a more robust constraint than the basic one.
+    {"qpcstair",  6.2043875e+06, 10           ,    356,    467,   3856,    467,       0},
     {"qpilotno",  4.7285869e+06, Inf          ,    975,   2172,  13057,     94,     391},  
     {"qptest"  ,  4.3718750e+00, 1.6612       ,      2,      2,      4,      2,       1},  
     {"qrecipe" , -2.6661600e+02, Inf          ,     91,    180,    663,     20,      30},  
@@ -223,7 +223,7 @@ TEST_CASE("Test Suite")
     auto [name, fstar, cond, nbCstr, nbVar, nz, qn, qnz] = p;
 
     std::cout << name;
-    if (cond > 1e6) { std::cout << " skip (cond)" << std::endl; continue; }
+    if (cond > 1e8 && cond<Inf) { std::cout << " skip (cond)" << std::endl; continue; }
     if (nbVar > 500) { std::cout << " skip (nbVar)" << std::endl; continue; }
     if (nbCstr > 1000) { std::cout << " skip (nbCstr)" << std::endl; continue; }
     std::cout << std::endl;
@@ -234,21 +234,31 @@ TEST_CASE("Test Suite")
 
 
     MatrixXd G = pb.G; // copy for later check
-    GoldfarbIdnaniSolver qp(3, 5, false);
+    GoldfarbIdnaniSolver qp(3, 5, false); // Sizes are not the correct ones. We check by the way that the resize is working.
     SolverOptions opt;
     opt.logFlags(LogFlags::ITERATION_BASIC_DETAILS 
                | LogFlags::ACTIVE_SET 
-    //           | LogFlags::ACTIVE_SET_DETAILS 
+               | LogFlags::ACTIVE_SET_DETAILS 
     //           | LogFlags::ITERATION_ADVANCE_DETAILS
+               | LogFlags::INPUT
     );
     std::ofstream aof("C:/Work/code/optim/jrl-qp/c++/tests/qplog.m");
     opt.logStream_ = &aof;
     aof.precision(16);
+    opt.maxIter_ = std::max(50, 10 * std::max(nbCstr, nbVar));
     qp.options(opt);
-    qp.solve(pb.G, pb.a, pb.C.transpose(), pb.bl, pb.bu, pb.xl, pb.xu);
+    auto ret = qp.solve(pb.G, pb.a, pb.C.transpose(), pb.bl, pb.bu, pb.xl, pb.xu);
     aof.close();
-    FAST_CHECK_UNARY(test::testKKT(qp.solution(), qp.multipliers(), G, pb.a, pb.C, pb.bl, pb.bu, pb.xl, pb.xu, false));
-    FAST_CHECK_EQ(qp.objectiveValue()+pb.objCst, doctest::Approx(fstar).epsilon(1e-6));
+    if (cond == Inf)
+    {
+      FAST_CHECK_EQ(ret, TerminationStatus::NON_POS_HESSIAN);
+    }
+    else
+    {
+      FAST_CHECK_EQ(ret, TerminationStatus::SUCCESS);
+      FAST_CHECK_UNARY(test::testKKT(qp.solution(), qp.multipliers(), G, pb.a, pb.C, pb.bl, pb.bu, pb.xl, pb.xu, false));
+      FAST_CHECK_EQ(qp.objectiveValue() + pb.objCst, doctest::Approx(fstar).epsilon(1e-6));
+    }
   }
 }
 

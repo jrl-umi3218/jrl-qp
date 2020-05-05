@@ -90,7 +90,8 @@ namespace jrlqp
     WVector u = work_u_.asVector(0);
     WVector r = work_r_.asVector(0);
 
-    init(); //step 0
+    if (auto rt = init(); !rt) //step 0
+      return terminate(rt);
 
     for (int it = 0; it < options_.maxIter_; ++it)
     {
@@ -106,10 +107,7 @@ namespace jrlqp
       {
         np = selectViolatedConstraint(x);
         if (np.status() == ActivationStatus::INACTIVE)
-        {
-          LOG_COMMENT(log_, LogFlags::TERMINATION, "Optimum reached");
-          return TerminationStatus::SUCCESS;
-        }
+          return terminate(TerminationStatus::SUCCESS);
 
         LOG(log_, LogFlags::ACTIVE_SET, np);
         //LOG_AS(log_, LogFlags::ACTIVE_SET, "selectedConstraint", np.index(), "status", static_cast<int>(np.status()));
@@ -124,10 +122,7 @@ namespace jrlqp
       LOG(log_, LogFlags::ITERATION_BASIC_DETAILS, z, r, t);
 
       if (t >= options_.bigBnd_)
-      {
-        LOG_COMMENT(log_, LogFlags::TERMINATION, "Infeasible problem");
-        return TerminationStatus::INFEASIBLE;
-      }
+        return terminate(TerminationStatus::INFEASIBLE);
 
       if (t2 >= options_.bigBnd_)
       {
@@ -147,10 +142,7 @@ namespace jrlqp
         {
           LOG_AS(log_, LogFlags::ACTIVE_SET, "Activate", true, "l", l);
           if (!addConstraint(np))
-          {
-            LOG_COMMENT(log_, LogFlags::TERMINATION, "Attempting to add a linearly dependent constraint.");
-            return TerminationStatus::LINEAR_DEPENDENCY_DETECTED;
-          }
+            return terminate(TerminationStatus::LINEAR_DEPENDENCY_DETECTED);
           skipStep1 = false;
         }
         else
@@ -161,17 +153,44 @@ namespace jrlqp
         }
       }
     }
-    LOG_COMMENT(log_, LogFlags::TERMINATION, "Maximum number of iteration reached");
-    return TerminationStatus::MAX_ITER_REACHED;
+    return terminate(TerminationStatus::MAX_ITER_REACHED);
   }
 
-  void DualSolver::init()
+  TerminationStatus DualSolver::terminate(TerminationStatus status)
+  {
+    switch (status)
+    {
+    case TerminationStatus::SUCCESS:
+      LOG_COMMENT(log_, LogFlags::TERMINATION, "Optimum reached");
+      break;
+    case TerminationStatus::INCONSISTENT_INPUT:
+      break;
+    case TerminationStatus::NON_POS_HESSIAN:
+      LOG_COMMENT(log_, LogFlags::TERMINATION, 
+        "This version of the solver requires the quadratic matrix to be positive definite." 
+        "The input matrix is not (at least numerically)");
+      break;
+    case TerminationStatus::INFEASIBLE:
+      LOG_COMMENT(log_, LogFlags::TERMINATION, "Infeasible problem");
+      break;
+    case TerminationStatus::MAX_ITER_REACHED:
+      LOG_COMMENT(log_, LogFlags::TERMINATION, "Maximum number of iteration reached");
+      break;
+    case TerminationStatus::LINEAR_DEPENDENCY_DETECTED:
+      LOG_COMMENT(log_, LogFlags::TERMINATION, "Attempting to add a linearly dependent constraint.");
+      break;
+    default: assert(false);
+    }
+    return status;
+  }
+
+  internal::InitTermination DualSolver::init()
   {
     DEBUG_ONLY(work_u_.setZero());
     DEBUG_ONLY(work_r_.setZero());
 
     needToExpandMultipliers_ = true;
-    init_();
+    return init_();
   }
 
   internal::ConstraintNormal DualSolver::selectViolatedConstraint(const VectorConstRef& x) const
