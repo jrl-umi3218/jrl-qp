@@ -2,6 +2,7 @@
  */
 
 #pragma once
+#include <jrl-qp/api.h>
 #include <jrl-qp/defs.h>
 
 namespace jrlqp::test
@@ -14,7 +15,7 @@ namespace jrlqp::test
     * where the variable bounds are optional.
     * When transposedC is true, the constraints read bl <= C^T x <= bu
     */
-  void checkDimensions(const MatrixConstRef& G, const VectorConstRef& a,
+  void JRLQP_DLLAPI checkDimensions(const MatrixConstRef& G, const VectorConstRef& a,
                        const MatrixConstRef& C, const VectorConstRef& bl, const VectorConstRef& bu,
                        const VectorConstRef& xl, const VectorConstRef& xu,
                        bool transposedC = false);
@@ -28,7 +29,7 @@ namespace jrlqp::test
     * vector x and the vector of Lagrange multipliers have the correct dimensions.
     * When transposedC is true, the constraints read bl <= C^T x <= bu
     */
-  void checkDimensions(const VectorConstRef& x, const VectorConstRef& u,
+  void JRLQP_DLLAPI checkDimensions(const VectorConstRef& x, const VectorConstRef& u,
                        const MatrixConstRef& G, const VectorConstRef& a,
                        const MatrixConstRef& C, const VectorConstRef& bl, const VectorConstRef& bu,
                        const VectorConstRef& xl, const VectorConstRef& xu,
@@ -43,24 +44,24 @@ namespace jrlqp::test
     * vector x and the vector of Lagrange multipliers have the correct dimensions.
     * When transposedC is true, the constraints read bl <= C^T x <= bu
     */
-  void checkDimensions(const VectorConstRef& x, const VectorConstRef& u,
+  void JRLQP_DLLAPI checkDimensions(const VectorConstRef& x, const VectorConstRef& u,
                        const MatrixConstRef& C, const VectorConstRef& bl, const VectorConstRef& bu,
                        const VectorConstRef& xl, const VectorConstRef& xu,
                        bool transposedC = false);
 
-  bool testKKT(const VectorConstRef& x, const VectorConstRef& u,
+  bool JRLQP_DLLAPI testKKT(const VectorConstRef& x, const VectorConstRef& u,
                const MatrixConstRef& G, const VectorConstRef& a,
                const MatrixConstRef& C, const VectorConstRef& bl, const VectorConstRef& bu,
                const VectorConstRef& xl, const VectorConstRef& xu, 
                bool transposedC = false, double tau_p = 1e-6, double tau_d = 1e-6);
 
-  bool testKKTStationarity(const VectorConstRef& x, const VectorConstRef& u,
+  bool JRLQP_DLLAPI testKKTStationarity(const VectorConstRef& x, const VectorConstRef& u,
                const MatrixConstRef& G, const VectorConstRef& a,
                const MatrixConstRef& C, const VectorConstRef& bl, const VectorConstRef& bu,
                const VectorConstRef& xl, const VectorConstRef& xu, 
                bool transposedC= false, double tau_d = 1e-6);
 
-  bool testKKTFeasibility(const VectorConstRef& x, const VectorConstRef& u,
+  bool JRLQP_DLLAPI testKKTFeasibility(const VectorConstRef& x, const VectorConstRef& u,
                const MatrixConstRef& C, const VectorConstRef& bl, const VectorConstRef& bu,
                const VectorConstRef& xl, const VectorConstRef& xu, 
                bool transposedC= false, double tau_p = 1e-6, double tau_d = 1e-6);

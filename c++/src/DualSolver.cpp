@@ -1,3 +1,6 @@
+/* Copyright 2020 CNRS-AIST JRL
+ */
+
 #include <jrl-qp/DualSolver.h>
 
 namespace jrlqp

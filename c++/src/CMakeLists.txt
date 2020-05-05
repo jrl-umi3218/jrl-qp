@@ -3,6 +3,8 @@ set(JRLQP_SOURCES
 	GoldfarbIdnaniSolver.cpp
 	SolverOptions.cpp
 	internal/ActiveSet.cpp
+	test/randomProblems.cpp
+	test/kkt.cpp
 	utils/Logger.cpp
 )
 
@@ -19,6 +21,9 @@ set(JRLQP_HEADERS
   ${JRLQP_INCLUDE_DIR}/internal/ConstraintNormal.h
   ${JRLQP_INCLUDE_DIR}/internal/TerminationType.h
   ${JRLQP_INCLUDE_DIR}/internal/Workspace.h
+  ${JRLQP_INCLUDE_DIR}/test/randomMatrices.h
+  ${JRLQP_INCLUDE_DIR}/test/randomProblems.h
+  ${JRLQP_INCLUDE_DIR}/test/kkt.h
   ${JRLQP_INCLUDE_DIR}/utils/debug.h
   ${JRLQP_INCLUDE_DIR}/utils/Logger.h
   ${JRLQP_INCLUDE_DIR}/utils/toMatlab.h
@@ -45,7 +50,7 @@ assign_source_group("sources" ${JRLQP_SOURCES})
 assign_source_group("headers" ${JRLQP_HEADERS})
 
 add_library(JRLQP SHARED ${JRLQP_SOURCES} ${JRLQP_HEADERS})
-target_include_directories(JRLQP PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include> $<INSTALL_INTERFACE:include>)
+target_include_directories(JRLQP PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..> $<INSTALL_INTERFACE:include>)
 target_link_libraries(JRLQP PUBLIC Eigen3::Eigen)
 set_target_properties(JRLQP PROPERTIES COMPILE_FLAGS "-DJRLQP_EXPORTS")
 set_target_properties(JRLQP PROPERTIES SOVERSION 0 VERSION 0.8.0)

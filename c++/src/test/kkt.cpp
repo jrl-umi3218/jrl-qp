@@ -1,7 +1,7 @@
 /* Copyright 2020 CNRS-AIST JRL
  */
 
-#include "utils.h"
+#include <jrl-qp/test/kkt.h>
 
 using namespace Eigen;
 

@@ -9,7 +9,7 @@
 #include "doctest/doctest.h"
 
 #include <jrl-qp/GoldfarbIdnaniSolver.h>
-#include "utils.h"
+#include <jrl-qp/test/kkt.h>
 #include "QPSReader.h"
 
 using namespace Eigen;
