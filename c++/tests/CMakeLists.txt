@@ -33,7 +33,8 @@ macro(addUnitTest name)
 endmacro(addUnitTest)
 
 addUnitTest(ActiveSetTest)
-addUnitTest(GoldfarbIdnaniSolverTest utils.cpp QPSReader.cpp)
+addUnitTest(GoldfarbIdnaniSolverTest QPSReader.cpp)
+addUnitTest(RandomProblemsTest)
 
 set(TESTSOURCES
     main.cpp
