@@ -101,8 +101,6 @@ namespace jrlqp
       LOG_NEW_ITER(log_, it);
       LOG(log_, LogFlags::ACTIVE_SET_DETAILS, A_);
       int q = A_.nbActiveCstr();
-      new (&r) WVector(work_r_.asVector(q));
-      new (&u) WVector(work_u_.asVector(q + 1));
       LOG(log_, LogFlags::ITERATION_BASIC_DETAILS, x, u, f_);
 
       // Step 1
@@ -114,6 +112,8 @@ namespace jrlqp
 
         LOG(log_, LogFlags::ACTIVE_SET, np);
         //LOG_AS(log_, LogFlags::ACTIVE_SET, "selectedConstraint", np.index(), "status", static_cast<int>(np.status()));
+        new (&r) WVector(work_r_.asVector(q));
+        new (&u) WVector(work_u_.asVector(q + 1));
         u[q] = 0;
       }
 
@@ -133,6 +133,8 @@ namespace jrlqp
         u.head(q) -= t * r; u[q] += t;
         LOG_AS(log_, LogFlags::ACTIVE_SET, "Activate", false, "l", l);
         removeConstraint(l, u);
+        new (&r) WVector(work_r_.asVector(q - 1));
+        new (&u) WVector(work_u_.asVector(q));
         skipStep1 = true;
       }
       else
@@ -152,6 +154,8 @@ namespace jrlqp
         {
           LOG_AS(log_, LogFlags::ACTIVE_SET, "Activate", false, "l", l);
           removeConstraint(l, u);
+          new (&r) WVector(work_r_.asVector(q - 1));
+          new (&u) WVector(work_u_.asVector(q));
           skipStep1 = true;
         }
       }
