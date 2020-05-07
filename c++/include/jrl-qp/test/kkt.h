@@ -4,6 +4,7 @@
 #pragma once
 #include <jrl-qp/api.h>
 #include <jrl-qp/defs.h>
+#include <jrl-qp/test/problems.h>
 
 namespace jrlqp::test
 { 
@@ -55,14 +56,23 @@ namespace jrlqp::test
                const VectorConstRef& xl, const VectorConstRef& xu, 
                bool transposedC = false, double tau_p = 1e-6, double tau_d = 1e-6);
 
+  bool JRLQP_DLLAPI testKKT(const VectorConstRef& x, const VectorConstRef& u,
+               const QPProblem<>& pb, double tau_p = 1e-6, double tau_d = 1e-6);
+
   bool JRLQP_DLLAPI testKKTStationarity(const VectorConstRef& x, const VectorConstRef& u,
                const MatrixConstRef& G, const VectorConstRef& a,
                const MatrixConstRef& C, const VectorConstRef& bl, const VectorConstRef& bu,
                const VectorConstRef& xl, const VectorConstRef& xu, 
                bool transposedC= false, double tau_d = 1e-6);
 
+  bool JRLQP_DLLAPI testKKTStationarity(const VectorConstRef& x, const VectorConstRef& u,
+               const QPProblem<>& pb, double tau_d = 1e-6);
+
   bool JRLQP_DLLAPI testKKTFeasibility(const VectorConstRef& x, const VectorConstRef& u,
                const MatrixConstRef& C, const VectorConstRef& bl, const VectorConstRef& bu,
                const VectorConstRef& xl, const VectorConstRef& xu, 
                bool transposedC= false, double tau_p = 1e-6, double tau_d = 1e-6);
+
+  bool JRLQP_DLLAPI testKKTFeasibility(const VectorConstRef& x, const VectorConstRef& u,
+               const FeasibilityConstraints& cstr, double tau_p = 1e-6, double tau_d = 1e-6);
 }

@@ -18,7 +18,7 @@ namespace
     double ui = cx - bu;
     bool b1 = std::abs(li) <= tau_x && u <= -tau_u; // constraint active at the lower bound
     bool b2 = li >= -tau_x && ui <= tau_x && std::abs(u) <= tau_u; // constraint inactive
-    bool b3 = ui <= tau_x && u >= tau_u; // constraint active at the upper bound
+    bool b3 = std::abs(ui) <= tau_x && u >= tau_u; // constraint active at the upper bound
     return b1 || b2 || b3;
   }
 }
@@ -79,6 +79,11 @@ namespace jrlqp::test
     return b1 && b2;
   }
 
+  bool JRLQP_DLLAPI testKKT(const VectorConstRef& x, const VectorConstRef& u, const QPProblem<>& pb, double tau_p, double tau_d)
+  {
+    return testKKT(x, u, pb.G, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu, pb.transposedMat, tau_p, tau_d);
+  }
+
   bool testKKTStationarity(const VectorConstRef& x, const VectorConstRef& u, 
                            const MatrixConstRef& G, const VectorConstRef& a, 
                            const MatrixConstRef& C, const VectorConstRef& bl, const VectorConstRef& bu, 
@@ -106,6 +111,11 @@ namespace jrlqp::test
     return ndL <= tau_u;
   }
 
+  bool JRLQP_DLLAPI testKKTStationarity(const VectorConstRef& x, const VectorConstRef& u, const QPProblem<>& pb, double tau_d)
+  {
+    return testKKTStationarity(x, u, pb.G, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu, pb.transposedMat, tau_d);
+  }
+
   bool testKKTFeasibility(const VectorConstRef& x, const VectorConstRef& u,
                           const MatrixConstRef& C, const VectorConstRef& bl, const VectorConstRef& bu,
                           const VectorConstRef& xl, const VectorConstRef& xu, 
@@ -118,7 +128,7 @@ namespace jrlqp::test
     double tau_x = tau_p * (1 + x.template lpNorm<Infinity>());
     double tau_u = tau_d * (1 + u.template lpNorm<Infinity>());
 
-    // Check general constraints see S. Brossette PhD thesis (2016), sec 4.3.5
+    // Check general constraints, see S. Brossette PhD thesis (2016), sec 4.3.5
     VectorXd cx;
     if (transposedC) cx = C.transpose() * x;
     else cx = C * x;
@@ -136,6 +146,11 @@ namespace jrlqp::test
     }
 
     return true;
+  }
+
+  bool JRLQP_DLLAPI testKKTFeasibility(const VectorConstRef& x, const VectorConstRef& u, const FeasibilityConstraints& cstr, double tau_p, double tau_d)
+  {
+    return testKKTFeasibility(x, u, cstr.C, cstr.l, cstr.u, cstr.xl, cstr.xu, cstr.transposedMat, tau_p, tau_d);
   }
 
 }

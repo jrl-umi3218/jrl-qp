@@ -3,8 +3,9 @@ set(JRLQP_SOURCES
 	GoldfarbIdnaniSolver.cpp
 	SolverOptions.cpp
 	internal/ActiveSet.cpp
-	test/randomProblems.cpp
 	test/kkt.cpp
+	test/problems.cpp
+	test/randomProblems.cpp
 	utils/Logger.cpp
 )
 
@@ -21,9 +22,10 @@ set(JRLQP_HEADERS
   ${JRLQP_INCLUDE_DIR}/internal/ConstraintNormal.h
   ${JRLQP_INCLUDE_DIR}/internal/TerminationType.h
   ${JRLQP_INCLUDE_DIR}/internal/Workspace.h
+  ${JRLQP_INCLUDE_DIR}/test/kkt.h
+  ${JRLQP_INCLUDE_DIR}/test/problems.h
   ${JRLQP_INCLUDE_DIR}/test/randomMatrices.h
   ${JRLQP_INCLUDE_DIR}/test/randomProblems.h
-  ${JRLQP_INCLUDE_DIR}/test/kkt.h
   ${JRLQP_INCLUDE_DIR}/utils/debug.h
   ${JRLQP_INCLUDE_DIR}/utils/Logger.h
   ${JRLQP_INCLUDE_DIR}/utils/toMatlab.h
