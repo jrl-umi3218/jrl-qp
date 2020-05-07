@@ -2,6 +2,7 @@
 #include <Eigen/LU>
 #include <Eigen/QR>
 
+#include <jrl-qp/test/kkt.h>
 #include <jrl-qp/test/randomMatrices.h>
 #include <jrl-qp/test/randomProblems.h>
 
@@ -47,7 +48,7 @@ using namespace jrlqp::test;
 //  Eigen::Index n = 0;
 //  double mean = 0;
 //  double var = 0;
-//  //Precompute the required size for storing all coefficients
+//  Precompute the required size for storing all coefficients
 //  for (auto rows : sizes)
 //  {
 //    for (auto cols : sizes)
@@ -62,7 +63,7 @@ using namespace jrlqp::test;
 //  std::vector<double> val;
 //  val.reserve(n);
 //
-//  //Testing the rank of generated matrices
+//  Testing the rank of generated matrices
 //  for (auto rows: sizes)
 //  {
 //    for (auto cols: sizes)
@@ -78,7 +79,7 @@ using namespace jrlqp::test;
 //    }
 //  }
 //
-//  //Computing and testing mean and variance
+//  Computing and testing mean and variance
 //  for (int i = 0; i < n; ++i)
 //  {
 //    mean += val[i];
@@ -117,15 +118,23 @@ using namespace jrlqp::test;
 //  }
 //}
 
+void testRandomProblem(const RandomLeastSquare& pb)
+{
+  FAST_CHECK_UNARY(pb.wellFormed());
+  Eigen::VectorXd mult(pb.l.size() + pb.f.size() + pb.xl.size());
+  mult << pb.lambdaEq, pb.lambdaIneq, pb.lambdaBnd;
+  FAST_CHECK_UNARY(testKKT(pb.x, mult, pb));
+}
+
 TEST_CASE("Random Least Squares")
 {
-  randomProblem(ProblemCharacteristics(5, 3));
-  randomProblem(ProblemCharacteristics(5, 3).nEq(2));
-  randomProblem(ProblemCharacteristics(5, 0).nEq(2));
-  randomProblem(ProblemCharacteristics(5, 3).nIneq(5));
-  randomProblem(ProblemCharacteristics(5, 3).nIneq(5).nStrongActIneq(2));
-  randomProblem(ProblemCharacteristics(5, 3).nIneq(5).nStrongActIneq(4));
-  randomProblem({ 5, 3, 2, 5, 3, 0, 2, 0, 0, 0, false, false, false });
-  randomProblem({ 5, 3, 1, 5, 3, 0, 1, 0, 0, 0, false, false, false });
+  testRandomProblem(randomProblem(ProblemCharacteristics(5, 3)));
+  testRandomProblem(randomProblem(ProblemCharacteristics(5, 3).nEq(2)));
+  testRandomProblem(randomProblem(ProblemCharacteristics(5, 0).nEq(2)));
+  testRandomProblem(randomProblem(ProblemCharacteristics(5, 3).nIneq(5)));
+  testRandomProblem(randomProblem(ProblemCharacteristics(5, 3).nIneq(5).nStrongActIneq(2)));
+  testRandomProblem(randomProblem(ProblemCharacteristics(5, 3).nIneq(5).nStrongActIneq(4)));
+  testRandomProblem(randomProblem({ 5, 3, 2, 5, 3, 0, 2, 0, 0, 0, false, false, false }));
+  testRandomProblem(randomProblem({ 5, 3, 1, 5, 3, 0, 1, 0, 0, 0, false, false, false }));
 }
 

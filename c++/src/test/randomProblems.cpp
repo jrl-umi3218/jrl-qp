@@ -108,8 +108,10 @@ namespace jrlqp::test
     pb.f.resize(nEq);
     pb.lambdaEq = reducedMultipliers.segment(nObj, nEq);
     pb.C.resize(nIneq, nVar);
-    pb.l.resize(doubleSidedIneq ? nIneq : 0); // If constraints are not double-sided, they have the form Cx <= u
+    pb.l.resize(nIneq); 
     pb.u.resize(nIneq);
+    if (!doubleSidedIneq) // If constraints are not double-sided, they have the form Cx <= u
+      pb.l.setConstant(-std::numeric_limits<double>::infinity());
     pb.lambdaIneq.resize(nIneq);
     pb.C.topRows(nStrongActIneq) = Ca.middleRows(nEq, nStrongActIneq);
     pb.lambdaIneq.head(nStrongActIneq) = reducedMultipliers.segment(nObj + nEq, nStrongActIneq);
@@ -193,7 +195,7 @@ namespace jrlqp::test
     else
     {
       int inact = nIneq - nStrongActIneq - nWeakActIneq;
-      pb.u.tail(inact) += Eigen::VectorXd::Random(inact);
+      pb.u.tail(inact) += Eigen::VectorXd::Random(inact).cwiseAbs();
     }
     if (bounds)
     {
@@ -242,32 +244,6 @@ namespace jrlqp::test
         std::swap(pb.xu[i], pb.xu[j]);
         std::swap(pb.lambdaBnd[i], pb.lambdaBnd[j]);
       }
-    }
-
-
-
-    std::cout << "KKT\n";
-    if (bounds)
-      std::cout << "dL =\n " << (pb.A.transpose() * (pb.A * pb.x - pb.b) + pb.E.transpose() * pb.lambdaEq + pb.C.transpose() * pb.lambdaIneq + pb.lambdaBnd).transpose() << std::endl;
-    else
-      std::cout << "dL =\n " << (pb.A.transpose() * (pb.A * pb.x - pb.b) + pb.E.transpose() * pb.lambdaEq + pb.C.transpose() * pb.lambdaIneq).transpose() << std::endl;
-    std::cout << "Eq:\n" << (pb.E * pb.x - pb.f).transpose() << std::endl;
-    if (doubleSidedIneq)
-    {
-      std::cout << "Lower Ineq:\n" << -(pb.C * pb.x - pb.l).transpose() << std::endl;
-      std::cout << "Upper Ineq:\n" << (pb.C * pb.x - pb.u).transpose() << std::endl;
-      std::cout << "Complementarity: \n" << ((pb.lambdaIneq.array() > 0).select(pb.C * pb.x - pb.l, pb.C * pb.x - pb.u).cwiseProduct(pb.lambdaIneq)).transpose() << std::endl;
-    }
-    else
-    {
-      std::cout << "Upper Ineq:\n" << (pb.C * pb.x - pb.u).transpose() << std::endl;
-      std::cout << "Complementarity: \n" << (pb.C * pb.x - pb.u).cwiseProduct(pb.lambdaIneq).transpose() << std::endl;
-    }
-    if (bounds)
-    {
-      std::cout << "Lower bounds:\n" << -(pb.x - pb.xl).transpose() << std::endl;
-      std::cout << "Upper bounds:\n" << (pb.x - pb.xu).transpose() << std::endl;
-      std::cout << ((pb.lambdaBnd.array() > 0).select(pb.x - pb.xl, pb.x - pb.xu).cwiseProduct(pb.lambdaBnd)).transpose() << std::endl;
     }
 
     return pb;

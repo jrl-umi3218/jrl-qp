@@ -192,7 +192,7 @@ namespace jrlqp::test
     * \param rankA Rank of B.
     * \param rankAB Rank of [AB].
     */
-  inline std::tuple<Eigen::MatrixXd, Eigen::MatrixXd> randDependent(Eigen::Index cols, Eigen::Index rowsA, Eigen::Index rankA, Eigen::Index rowsB, Eigen::Index rankB, Eigen::Index rankAB)
+  inline std::pair<Eigen::MatrixXd, Eigen::MatrixXd> randDependent(Eigen::Index cols, Eigen::Index rowsA, Eigen::Index rankA, Eigen::Index rowsB, Eigen::Index rankB, Eigen::Index rankAB)
   {
     assert(rankA <= rowsA && rankA <= cols);
     assert(rankB <= rowsB && rankB <= cols);
@@ -212,6 +212,6 @@ namespace jrlqp::test
     else
       B.noalias() = randOrtho(rowsB).leftCols(rankB) * M.bottomRows(rankB);
 
-    return std::make_tuple(A, B);
+    return { A, B };
   }
 }

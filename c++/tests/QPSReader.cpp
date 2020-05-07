@@ -157,7 +157,7 @@ namespace jrlqp::test
   {
   }
 
-  std::pair<QPProblem, ProblemProperties> QPSReader::read(const std::string& filename)
+  std::pair<QPProblem<>, ProblemProperties> QPSReader::read(const std::string& filename)
   {
     std::ifstream file(filename);
     if (!file.is_open()) THROW("Unable to opern file " << filename << " ", context);
@@ -184,13 +184,13 @@ namespace jrlqp::test
 
     // populating data
     int n = static_cast<int>(mapCol.size());
-    QPProblem qp;
+    QPProblem<> qp;
     ProblemProperties properties;
     qp.G = MatrixXd::Zero(n, n);
     qp.a = VectorXd::Zero(n);
     qp.C = MatrixXd::Zero(nRows, n);
-    qp.bl = VectorXd::Zero(nRows);
-    qp.bu = VectorXd::Zero(nRows);
+    qp.l = VectorXd::Zero(nRows);
+    qp.u = VectorXd::Zero(nRows);
     qp.xl = VectorXd::Zero(n);
     qp.xu = VectorXd::Constant(n, bigBnd);
     qp.objCst = objCst;
@@ -205,9 +205,9 @@ namespace jrlqp::test
       auto [i, type] = r.second;
       switch (type)
       {
-      case RowType::E: qp.bl[i] = qp.bu[i] = 0; ++properties.nbEq; break;
-      case RowType::L: qp.bl[i] = -bigBnd; qp.bu[i] = 0; break;
-      case RowType::G: qp.bl[i] = 0; qp.bu[i] = +bigBnd; break;
+      case RowType::E: qp.l[i] = qp.u[i] = 0; ++properties.nbEq; break;
+      case RowType::L: qp.l[i] = -bigBnd; qp.u[i] = 0; break;
+      case RowType::G: qp.l[i] = 0; qp.u[i] = +bigBnd; break;
       default: break;
       }
     }
@@ -216,9 +216,9 @@ namespace jrlqp::test
       auto [i, v] = b.first;
       switch (b.second)
       {
-      case RowType::E: qp.bl[i] = qp.bu[i] = v; break;
-      case RowType::L: qp.bl[i] = -bigBnd; qp.bu[i] = v; break;
-      case RowType::G: qp.bl[i] = v; qp.bu[i] = +bigBnd; break;
+      case RowType::E: qp.l[i] = qp.u[i] = v; break;
+      case RowType::L: qp.l[i] = -bigBnd; qp.u[i] = v; break;
+      case RowType::G: qp.l[i] = v; qp.u[i] = +bigBnd; break;
       default: assert(false); break;
       }
     }
@@ -227,9 +227,9 @@ namespace jrlqp::test
       auto [i, v] = r.first;
       switch (r.second)
       {
-      case RowType::E: if (v >= 0) qp.bu[i] += v; else qp.bl[i] += v; break;
-      case RowType::L: qp.bl[i] = qp.bu[i] - std::abs(v); break;
-      case RowType::G: qp.bu[i] = qp.bl[i] + std::abs(v); break;
+      case RowType::E: if (v >= 0) qp.u[i] += v; else qp.l[i] += v; break;
+      case RowType::L: qp.l[i] = qp.u[i] - std::abs(v); break;
+      case RowType::G: qp.u[i] = qp.l[i] + std::abs(v); break;
       default: assert(false); break;
       }
     }

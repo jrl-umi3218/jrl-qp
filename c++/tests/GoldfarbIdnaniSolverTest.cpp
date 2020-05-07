@@ -247,7 +247,7 @@ TEST_CASE("Test Suite")
     aof.precision(16);
     opt.maxIter_ = std::max(50, 10 * std::max(nbCstr, nbVar));
     qp.options(opt);
-    auto ret = qp.solve(pb.G, pb.a, pb.C.transpose(), pb.bl, pb.bu, pb.xl, pb.xu);
+    auto ret = qp.solve(pb.G, pb.a, pb.C.transpose(), pb.l, pb.u, pb.xl, pb.xu);
     aof.close();
     if (cond == Inf)
     {
@@ -256,7 +256,7 @@ TEST_CASE("Test Suite")
     else
     {
       FAST_CHECK_EQ(ret, TerminationStatus::SUCCESS);
-      FAST_CHECK_UNARY(test::testKKT(qp.solution(), qp.multipliers(), G, pb.a, pb.C, pb.bl, pb.bu, pb.xl, pb.xu, false));
+      FAST_CHECK_UNARY(test::testKKT(qp.solution(), qp.multipliers(), G, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu, false));
       FAST_CHECK_EQ(qp.objectiveValue() + pb.objCst, doctest::Approx(fstar).epsilon(1e-6));
     }
   }

@@ -10,20 +10,10 @@
 
 #include <Eigen/Core>
 
+#include <jrl-qp/test/problems.h>
+
 namespace jrlqp::test
 {
-  struct QPProblem
-  {
-    Eigen::MatrixXd G;
-    Eigen::VectorXd a;
-    Eigen::MatrixXd C;
-    Eigen::VectorXd bl;
-    Eigen::VectorXd bu;
-    Eigen::VectorXd xl;
-    Eigen::VectorXd xu;
-    double objCst;
-  };
-
   struct ProblemProperties
   {
     int nbVar;
@@ -85,7 +75,7 @@ namespace jrlqp::test
 
     QPSReader(bool fullObjMat = false);
 
-    std::pair<QPProblem, ProblemProperties> read(const std::string& filename);
+    std::pair<QPProblem<>, ProblemProperties> read(const std::string& filename);
 
   private:
     using vectorVal = std::pair<int, double>;

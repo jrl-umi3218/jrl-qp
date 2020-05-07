@@ -5,6 +5,7 @@
 
 #include <Eigen/Core>
 #include <jrl-qp/api.h>
+#include <jrl-qp/test/problems.h>
 
 namespace jrlqp::test
 {
@@ -53,20 +54,11 @@ namespace jrlqp::test
     void check() const;
   };
 
-  struct JRLQP_DLLAPI RandomLeastSquare
+  struct JRLQP_DLLAPI RandomLeastSquare : public LeastSquareProblem<true>
   {
     Eigen::VectorXd x;
-    Eigen::MatrixXd A;
-    Eigen::VectorXd b;
-    Eigen::MatrixXd E;
-    Eigen::VectorXd f;
     Eigen::VectorXd lambdaEq;
-    Eigen::MatrixXd C;
-    Eigen::VectorXd l;
-    Eigen::VectorXd u;
     Eigen::VectorXd lambdaIneq;
-    Eigen::VectorXd xl;
-    Eigen::VectorXd xu;
     Eigen::VectorXd lambdaBnd;
     bool doubleSidedIneq;
     bool bounds;
