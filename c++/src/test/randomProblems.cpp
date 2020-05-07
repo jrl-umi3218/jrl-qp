@@ -243,6 +243,7 @@ namespace jrlqp::test
         std::swap(pb.xl[i], pb.xl[j]);
         std::swap(pb.xu[i], pb.xu[j]);
         std::swap(pb.lambdaBnd[i], pb.lambdaBnd[j]);
+        std::swap(pb.x[i], pb.x[j]);
       }
     }
 

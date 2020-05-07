@@ -1,8 +1,9 @@
 /* Copyright 2020 CNRS-AIST JRL
  */
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
+#include <vector>
 
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #define DOCTEST_CONFIG_SUPER_FAST_ASSERTS
@@ -10,10 +11,12 @@
 
 #include <jrl-qp/GoldfarbIdnaniSolver.h>
 #include <jrl-qp/test/kkt.h>
+#include <jrl-qp/test/randomProblems.h>
 #include "QPSReader.h"
 
 using namespace Eigen;
 using namespace jrlqp;
+using namespace jrlqp::test;
 
 TEST_CASE("Simple problem")
 {
@@ -59,6 +62,32 @@ TEST_CASE("Simple problem paper")
 
   G << 4, -2, -2, 4;
   FAST_CHECK_UNARY(test::testKKT(qp.solution(), qp.multipliers(), G, a, C, bl, bu, xl, xu, true));
+}
+
+TEST_CASE("Random problems")
+{
+  std::vector problems =
+  {
+    randomProblem(ProblemCharacteristics(5, 5)),
+    randomProblem(ProblemCharacteristics(5, 5).nEq(2)),
+    randomProblem(ProblemCharacteristics(5, 5).nIneq(8).nStrongActIneq(4)),
+    randomProblem(ProblemCharacteristics(5, 5, 2, 6).nStrongActIneq(3)),
+    randomProblem(ProblemCharacteristics(5, 5, 2, 6).nStrongActIneq(1).bounds(true).nStrongActBounds(2))
+  };
+
+  for (const auto& pb : problems)
+  {
+    QPProblem qpp(pb);
+    MatrixXd G = qpp.G; // copy for later check
+    GoldfarbIdnaniSolver solver(qpp.G.rows(), qpp.C.rows(), pb.bounds);
+    auto ret = solver.solve(qpp.G, qpp.a, qpp.C.transpose(), qpp.l, qpp.u, qpp.xl, qpp.xu);
+    FAST_CHECK_EQ(ret, TerminationStatus::SUCCESS);
+    FAST_CHECK_UNARY(test::testKKT(solver.solution(), solver.multipliers(), G, qpp.a, qpp.C, qpp.l, qpp.u, qpp.xl, qpp.xu, false));
+    FAST_CHECK_UNARY(solver.solution().isApprox(pb.x, 1e-6));
+    FAST_CHECK_UNARY(solver.multipliers().head(pb.E.rows()).isApprox(pb.lambdaEq, 1e-6));
+    FAST_CHECK_UNARY(solver.multipliers().segment(pb.E.rows(), pb.C.rows()).isApprox(pb.lambdaIneq, 1e-6));
+    FAST_CHECK_UNARY(solver.multipliers().tail(pb.xl.size()).isApprox(pb.lambdaBnd, 1e-6));
+  }
 }
 
 #ifdef QPS_TESTS_DIR
