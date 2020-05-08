@@ -10,6 +10,7 @@
 #include "doctest/doctest.h"
 
 #include <jrl-qp/GoldfarbIdnaniSolver.h>
+#include <jrl-qp/internal/memoryChecks.h>
 #include <jrl-qp/test/kkt.h>
 #include <jrl-qp/test/randomProblems.h>
 #include "QPSReader.h"
@@ -80,7 +81,37 @@ TEST_CASE("Random problems")
     QPProblem qpp(pb);
     MatrixXd G = qpp.G; // copy for later check
     GoldfarbIdnaniSolver solver(qpp.G.rows(), qpp.C.rows(), pb.bounds);
+    jrlqp::internal::set_is_malloc_allowed(false);
     auto ret = solver.solve(qpp.G, qpp.a, qpp.C.transpose(), qpp.l, qpp.u, qpp.xl, qpp.xu);
+    jrlqp::internal::set_is_malloc_allowed(true);
+    FAST_CHECK_EQ(ret, TerminationStatus::SUCCESS);
+    FAST_CHECK_UNARY(test::testKKT(solver.solution(), solver.multipliers(), G, qpp.a, qpp.C, qpp.l, qpp.u, qpp.xl, qpp.xu, false));
+    FAST_CHECK_UNARY(solver.solution().isApprox(pb.x, 1e-6));
+    FAST_CHECK_UNARY(solver.multipliers().head(pb.E.rows()).isApprox(pb.lambdaEq, 1e-6));
+    FAST_CHECK_UNARY(solver.multipliers().segment(pb.E.rows(), pb.C.rows()).isApprox(pb.lambdaIneq, 1e-6));
+    FAST_CHECK_UNARY(solver.multipliers().tail(pb.xl.size()).isApprox(pb.lambdaBnd, 1e-6));
+  }
+}
+
+TEST_CASE("Multiple uses")
+{
+  std::vector problems =
+  {
+    randomProblem(ProblemCharacteristics(5, 5)),
+    randomProblem(ProblemCharacteristics(5, 5).nEq(2)),
+    randomProblem(ProblemCharacteristics(5, 5).nIneq(8).nStrongActIneq(4)),
+    randomProblem(ProblemCharacteristics(5, 5, 2, 6).nStrongActIneq(3)),
+    randomProblem(ProblemCharacteristics(5, 5, 2, 6).nStrongActIneq(1).bounds(true).nStrongActBounds(2))
+  };
+
+  GoldfarbIdnaniSolver solver(5, 8, true);
+  for (const auto& pb : problems)
+  {
+    QPProblem qpp(pb);
+    MatrixXd G = qpp.G; // copy for later check
+    jrlqp::internal::set_is_malloc_allowed(false);
+    auto ret = solver.solve(qpp.G, qpp.a, qpp.C.transpose(), qpp.l, qpp.u, qpp.xl, qpp.xu);
+    jrlqp::internal::set_is_malloc_allowed(true);
     FAST_CHECK_EQ(ret, TerminationStatus::SUCCESS);
     FAST_CHECK_UNARY(test::testKKT(solver.solution(), solver.multipliers(), G, qpp.a, qpp.C, qpp.l, qpp.u, qpp.xl, qpp.xu, false));
     FAST_CHECK_UNARY(solver.solution().isApprox(pb.x, 1e-6));
