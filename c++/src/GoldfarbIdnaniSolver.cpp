@@ -11,7 +11,8 @@ using Givens = Eigen::JacobiRotation<double>;
 namespace jrlqp
 {
   GoldfarbIdnaniSolver::GoldfarbIdnaniSolver()
-    : work_d_(0)
+    : DualSolver()
+    , work_d_(0)
     , work_J_(0)
     , work_R_(0)
   {
@@ -20,7 +21,7 @@ namespace jrlqp
   GoldfarbIdnaniSolver::GoldfarbIdnaniSolver(int nbVar, int nbCstr, bool useBounds)
     : GoldfarbIdnaniSolver()
   {
-    resize_(nbVar, nbCstr, useBounds);
+    resize(nbVar, nbCstr, useBounds);
   }
 
   TerminationStatus GoldfarbIdnaniSolver::solve(MatrixRef G, const VectorConstRef& a, const MatrixConstRef& C, const VectorConstRef& bl, const VectorConstRef& bu, const VectorConstRef& xl, const VectorConstRef& xu)

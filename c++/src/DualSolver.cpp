@@ -197,6 +197,7 @@ namespace jrlqp
     DEBUG_ONLY(work_r_.setZero());
 
     needToExpandMultipliers_ = true;
+    A_.reset();
     return init_();
   }
 

@@ -66,7 +66,7 @@ namespace jrlqp::internal
       }
     }
 
-    double dot(const Eigen::VectorXd& v) const
+    double dot(const VectorConstRef& v) const
     {
       switch (status_)
       {
