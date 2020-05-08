@@ -34,7 +34,7 @@ namespace jrlqp::test
       : nVar_(nVar), nObj_(nObj), rankObj_(nObj) {}
     ProblemCharacteristics(int nVar, int nObj, int nEq, int nIneq)
       : nVar_(nVar), nObj_(nObj), rankObj_(nObj), nEq_(nEq), nIneq_(nIneq) {}
-    ProblemCharacteristics(int nVar, int nObj, int nEq, int nIneq, int rankObj, int nSharedRank, int nStrongActIneq, int nWeakActIneq, int nStrongActBounds, int nWeakActBounds, int bounds, int doubleSidedIneq, int strictlyFeasible)
+    ProblemCharacteristics(int nVar, int nObj, int nEq, int nIneq, int rankObj, int nSharedRank, int nStrongActIneq, int nWeakActIneq, int nStrongActBounds, int nWeakActBounds, int bounds, bool doubleSidedIneq, bool strictlyFeasible)
       : nVar_(nVar), nObj_(nObj), nEq_(nEq), nIneq_(nIneq), rankObj_(rankObj), nSharedRank_(nSharedRank),
       nStrongActIneq_(nStrongActIneq), nWeakActIneq_(nWeakActIneq), nStrongActBounds_(nStrongActBounds),
       nWeakActBounds_(nWeakActBounds), bounds_(bounds), doubleSidedIneq_(doubleSidedIneq), strictlyFeasible_(strictlyFeasible) {}

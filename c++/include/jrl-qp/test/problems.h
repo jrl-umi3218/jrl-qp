@@ -87,6 +87,8 @@ namespace jrlqp::test
     QPProblem(QPProblem&&) = default;
     template<bool LSSeparated>
     QPProblem(const LeastSquareProblem<LSSeparated>& ls);
+    template<bool LSSeparated>
+    QPProblem& operator=(const LeastSquareProblem<LSSeparated>& ls);
     bool wellFormed() const;
 
     using Base = std::conditional_t<Separated, SeparatedFeasibilityConstraints, FeasibilityConstraints>;
@@ -111,6 +113,14 @@ namespace jrlqp::test
     , G(ls.A.transpose()*ls.A)
     , a(-ls.A.transpose()*ls.b)
   {
+  }
+
+  template<bool Separated>
+  template<bool LSSeparated>
+  inline QPProblem<Separated>& QPProblem<Separated>::operator=(const LeastSquareProblem<LSSeparated>& ls)
+  {
+    new (this) QPProblem<Separated>(ls);
+    return *this;
   }
 
   template<bool Separated>
