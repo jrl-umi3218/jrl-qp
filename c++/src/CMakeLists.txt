@@ -3,6 +3,7 @@ set(JRLQP_SOURCES
 	GoldfarbIdnaniSolver.cpp
 	SolverOptions.cpp
 	internal/ActiveSet.cpp
+	internal/memoryChecks.cpp
 	test/kkt.cpp
 	test/problems.cpp
 	test/randomProblems.cpp
@@ -19,6 +20,7 @@ set(JRLQP_HEADERS
   ${JRLQP_INCLUDE_DIR}/SolverOptions.h
   ${JRLQP_INCLUDE_DIR}/internal/ActiveSet.h
   ${JRLQP_INCLUDE_DIR}/internal/meta.h
+  ${JRLQP_INCLUDE_DIR}/internal/memoryChecks.h
   ${JRLQP_INCLUDE_DIR}/internal/ConstraintNormal.h
   ${JRLQP_INCLUDE_DIR}/internal/TerminationType.h
   ${JRLQP_INCLUDE_DIR}/internal/Workspace.h
@@ -54,7 +56,7 @@ assign_source_group("headers" ${JRLQP_HEADERS})
 add_library(JRLQP SHARED ${JRLQP_SOURCES} ${JRLQP_HEADERS})
 target_include_directories(JRLQP PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..> $<INSTALL_INTERFACE:include>)
 target_link_libraries(JRLQP PUBLIC Eigen3::Eigen)
-set_target_properties(JRLQP PROPERTIES COMPILE_FLAGS "-DJRLQP_EXPORTS")
+set_target_properties(JRLQP PROPERTIES COMPILE_FLAGS "-DJRLQP_EXPORTS -DEIGEN_RUNTIME_NO_MALLOC")
 set_target_properties(JRLQP PROPERTIES SOVERSION 0 VERSION 0.8.0)
 set_target_properties(JRLQP PROPERTIES CXX_STANDARD 17)
 target_compile_definitions(JRLQP PUBLIC ${SOLVER_FLAGS})
