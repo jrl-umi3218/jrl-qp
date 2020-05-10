@@ -19,6 +19,8 @@ namespace jrlqp::test
     FeasibilityConstraints() = default;
     FeasibilityConstraints(const FeasibilityConstraints&) = default;
     FeasibilityConstraints(FeasibilityConstraints&&) = default;
+    FeasibilityConstraints& operator=(const FeasibilityConstraints&) = default;
+    FeasibilityConstraints& operator=(FeasibilityConstraints&&) = default;
     FeasibilityConstraints(const SeparatedFeasibilityConstraints& cstr);
     bool wellFormed(bool noEq = false) const;
 
@@ -43,6 +45,8 @@ namespace jrlqp::test
     SeparatedFeasibilityConstraints() = default;
     SeparatedFeasibilityConstraints(const SeparatedFeasibilityConstraints&) = default;
     SeparatedFeasibilityConstraints(SeparatedFeasibilityConstraints&&) = default;
+    SeparatedFeasibilityConstraints& operator=(const SeparatedFeasibilityConstraints&) = default;
+    SeparatedFeasibilityConstraints& operator=(SeparatedFeasibilityConstraints&&) = default;
     SeparatedFeasibilityConstraints(const FeasibilityConstraints& feas);
 
     bool wellFormed() const;
@@ -58,10 +62,10 @@ namespace jrlqp::test
     * if \tparam Separated = true and FeasibilityConstraints otherwise.
     */
   template<bool Separated = false>
-  struct LeastSquareProblem 
-    : public std::conditional_t<Separated, 
-                                SeparatedFeasibilityConstraints, 
-                                FeasibilityConstraints>
+  struct LeastSquareProblem
+    : public std::conditional_t<Separated,
+    SeparatedFeasibilityConstraints,
+    FeasibilityConstraints>
   {
     bool wellFormed() const;
 
@@ -77,18 +81,22 @@ namespace jrlqp::test
     * if \tparam Separated = true and FeasibilityConstraints otherwise.
     */
   template<bool Separated = false>
-  struct QPProblem 
-    : public std::conditional_t<Separated, 
-                                SeparatedFeasibilityConstraints, 
-                                FeasibilityConstraints>
+  struct QPProblem
+    : public std::conditional_t<Separated,
+    SeparatedFeasibilityConstraints,
+    FeasibilityConstraints>
   {
     QPProblem() = default;
     QPProblem(const QPProblem&) = default;
     QPProblem(QPProblem&&) = default;
+    QPProblem& operator=(const QPProblem& qp) = default;
+    QPProblem& operator=(QPProblem&& qp) = default;
+    QPProblem(const QPProblem<!Separated>& qp);
     template<bool LSSeparated>
     QPProblem(const LeastSquareProblem<LSSeparated>& ls);
     template<bool LSSeparated>
     QPProblem& operator=(const LeastSquareProblem<LSSeparated>& ls);
+    QPProblem& operator=(const QPProblem<!Separated>& qp);
     bool wellFormed() const;
 
     using Base = std::conditional_t<Separated, SeparatedFeasibilityConstraints, FeasibilityConstraints>;
@@ -110,8 +118,16 @@ namespace jrlqp::test
   template<bool LSSeparated>
   inline QPProblem<Separated>::QPProblem(const LeastSquareProblem<LSSeparated>& ls)
     : Base(ls)
-    , G(ls.A.transpose()*ls.A)
-    , a(-ls.A.transpose()*ls.b)
+    , G(ls.A.transpose()* ls.A)
+    , a(-ls.A.transpose() * ls.b)
+  {
+  }
+
+  template<bool Separated>
+  inline QPProblem<Separated>::QPProblem(const QPProblem<!Separated>& qp)
+    : Base(qp)
+    , G(qp.G)
+    , a(qp.a)
   {
   }
 
@@ -124,11 +140,19 @@ namespace jrlqp::test
   }
 
   template<bool Separated>
+  inline QPProblem<Separated>& QPProblem<Separated>::operator=(const QPProblem<!Separated>& qp)
+  {
+    new (this) QPProblem<Separated>(qp);
+    return *this;
+  }
+
+  template<bool Separated>
   inline bool QPProblem<Separated>::wellFormed() const
   {
     bool b1 = Base::wellFormed();
     bool b2 = transposedMat ? (G.cols() == C.rows()) : (G.cols() == C.cols());
     bool b3 = G.cols() == a.size();
-    return b1 && b2 && b3;
+    bool b4 = G.cols() == C.cols();
+    return b1 && b2 && b3 && b4;
   }
 }

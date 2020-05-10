@@ -13,7 +13,7 @@ namespace jrlqp
 {
   struct JRLQP_DLLAPI SolverOptions
   {
-    int maxIter_ = 50;
+    int maxIter_ = 500;
     double bigBnd_ = 1e100;
     std::uint32_t logFlags_;
     std::ostream* logStream_ = &defaultStream_;
