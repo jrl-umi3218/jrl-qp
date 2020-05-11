@@ -420,11 +420,11 @@ BENCH_LSSOL(fixture)otherArgs;          \
 
 // Varying size, fixed 40% equality
 using test1 = ProblemFixture<100, Var<0>, FFrac<40>, Fixed<0>, Fixed<0>, false, Fixed<0>>;
-//BENCH_ALL(test1, ->DenseRange(10,100,10));
+BENCH_ALL(test1, ->DenseRange(10,100,10));
 
 //Fixed nVar = 50 and nIneq=80, varying number of active constraints from 0 to 100%
 using test2 = ProblemFixture<100, Fixed<50>, Fixed<0>, Fixed<80>, VFrac<0>, false, Fixed<0>>;
-//BENCH_ALL(test2, ->DenseRange(0, 100, 10));
+BENCH_ALL(test2, ->DenseRange(0, 100, 10));
 
 // Varying size, fixed 20% equality, fixed 100% inequality, with 30% active, bounds 
 using test3 = ProblemFixture<100, Var<0>, FFrac<20>, FFrac<100>, FFrac<30>, true, FFrac<10>, true>;
