@@ -189,7 +189,7 @@ namespace jrlqp::test
         }
       }
       int inact = nIneq - nStrongActIneq - nWeakActIneq;
-      pb.l.tail(inact) += rl.tail(inact);
+      pb.l.tail(inact) -= rl.tail(inact);
       pb.u.tail(inact) += ru.tail(inact);
     }
     else
