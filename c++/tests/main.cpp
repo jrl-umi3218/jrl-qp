@@ -8,7 +8,7 @@
 #include <Eigen/Core>
 #include <Eigen/QR>
 
-#include <jrl-qp/utils/Debug.h>
+#include <jrl-qp/utils/debug.h>
 #include <jrl-qp/utils/Logger.h>
 
 using namespace Eigen;

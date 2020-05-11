@@ -17,7 +17,7 @@ set(CXX_DISABLE_WERROR True)
 set(DOXYGEN_USE_MATHJAX "YES")
 set(DOXYGEN_DISTRIBUTE_GROUP_DOC YES)
 
-project(JRL-QP CXX)
+project(JRL-QP LANGUAGES CXX)
 
 if(NOT WIN32)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-sign-conversion -pedantic")

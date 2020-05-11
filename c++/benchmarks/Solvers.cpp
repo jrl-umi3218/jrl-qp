@@ -2,6 +2,7 @@
  */
 
 #include <array>
+#include <iostream>
 #include <map>
 #include <set>
 
@@ -114,8 +115,8 @@ struct ProblemCollection
                                   .bounds(bounds)
                                   .doubleSidedIneq(doubleSided));
       QPProblem<true> qp = original[k];
-      GIPb[k] = qp;
-      G[k] = GIPb[k].G;
+      giPb[k] = qp;
+      G[k] = giPb[k].G;
       lssolPb[k] = qp;
       quadprogPb[k] = qp;
       eiquadprogPb[k] = qp;
@@ -142,7 +143,7 @@ struct ProblemCollection
     for (int k = 0; k < NbPb; ++k)
     {
       {
-        auto& qp = GIPb[k];
+        auto& qp = giPb[k];
         solverGI.solve(qp.G, qp.a, qp.C, qp.l, qp.u, qp.xl, qp.xu);
         checkSolution(solverGI.solution(), k, "GI");
       }
@@ -185,7 +186,7 @@ struct ProblemCollection
   bool doubleSided;
   std::array<RandomLeastSquare, NbPb> original;
   std::array<MatrixXd, NbPb> G;
-  std::array<GIPb, NbPb> GIPb;
+  std::array<GIPb, NbPb> giPb;
   std::array<LssolPb, NbPb> lssolPb;
   std::array<EigenQuadprogPb, NbPb> quadprogPb;
   std::array<EiQuadprogPb, NbPb> eiquadprogPb;
@@ -263,14 +264,14 @@ public:
   int nCstr(const Signature& sig) const { return problems[sig].nCstr; }
   int bounds(const Signature& sig) const { return problems[sig].bounds; }
 
-  RandomLeastSquare& getOriginal() { return problems[sig].original[idx()]; }
+  RandomLeastSquare& getOriginal() { return problems[this->sig].original[idx()]; }
 
   GIPb& getGIPb(const Signature& sig) 
   { 
     int i = idx();
     auto& pb = problems[sig];
-    pb.GIPb[i].G = pb.G[i];  
-    return pb.GIPb[i];
+    pb.giPb[i].G = pb.G[i];  
+    return pb.giPb[i];
   }
 
   LssolPb& getLssolPb(const Signature& sig)

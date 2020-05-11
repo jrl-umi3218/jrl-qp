@@ -12,7 +12,7 @@
 #include <jrl-qp/internal/ConstraintNormal.h>
 #include <jrl-qp/internal/TerminationType.h>
 #include <jrl-qp/internal/Workspace.h>
-#include <jrl-qp/utils/Debug.h>
+#include <jrl-qp/utils/debug.h>
 #include <jrl-qp/utils/Logger.h>
 
 

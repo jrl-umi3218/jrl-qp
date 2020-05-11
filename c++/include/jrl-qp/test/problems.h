@@ -109,7 +109,7 @@ namespace jrlqp::test
   inline bool LeastSquareProblem<Separated>::wellFormed() const
   {
     bool b1 = Base::wellFormed();
-    bool b2 = transposedMat ? (A.cols() == C.rows()) : (A.cols() == C.cols());
+    bool b2 = this->transposedMat ? (A.cols() == this->C.rows()) : (A.cols() == this->C.cols());
     bool b3 = A.rows() == b.size();
     return b1 && b2 && b3;
   }
@@ -150,9 +150,9 @@ namespace jrlqp::test
   inline bool QPProblem<Separated>::wellFormed() const
   {
     bool b1 = Base::wellFormed();
-    bool b2 = transposedMat ? (G.cols() == C.rows()) : (G.cols() == C.cols());
+    bool b2 = this->transposedMat ? (G.cols() == this->C.rows()) : (G.cols() == this->C.cols());
     bool b3 = G.cols() == a.size();
-    bool b4 = G.cols() == C.cols();
+    bool b4 = G.cols() == this->C.cols();
     return b1 && b2 && b3 && b4;
   }
 }
