@@ -331,6 +331,27 @@ static void BM_Mult_MatrixXd_TriangularOptim16(benchmark::State& state)
   }
 }
 
+// y = D*x
+static void BM_Mult_Diagonal_VectorXd(benchmark::State& state)
+{
+  VectorXd d = VectorXd::Random(state.range(0));
+  VectorXd x = VectorXd::Random(state.range(0));
+  VectorXd y(state.range(0));
+
+  for (auto _ : state)
+    y.noalias() = d.asDiagonal() * x;
+}
+
+// y = d*x
+static void BM_Mult_scalar_VectorXd(benchmark::State& state)
+{
+  double d = VectorXd::Random(1)[0];
+  VectorXd x = VectorXd::Random(state.range(0));
+  VectorXd y(state.range(0));
+
+  for (auto _ : state)
+    y.noalias() = d * x;
+}
 
 //MAT_BENCHMARK(BM_Copy_MatrixXd);
 //MAT_BENCHMARK(BM_Copy_MatrixXd_Source_Transpose);
@@ -350,9 +371,11 @@ MAT_BENCHMARK(BM_Mult_MatrixXd);
 //MAT_BENCHMARK(BM_Mult_MatrixXd_BT);
 //MAT_BENCHMARK(BM_Mult_MatrixXd_AT_BT);
 //MAT_BENCHMARK(BM_Mult_MatrixXd_Target_Transpose);
-MAT_BENCHMARK(BM_Mult_MatrixXd_Triangular);
-MAT_BENCHMARK(BM_Mult_MatrixXd_TriangularOptim4);
-MAT_BENCHMARK(BM_Mult_MatrixXd_TriangularOptim8);
-MAT_BENCHMARK(BM_Mult_MatrixXd_TriangularOptim16);
+//MAT_BENCHMARK(BM_Mult_MatrixXd_Triangular);
+//MAT_BENCHMARK(BM_Mult_MatrixXd_TriangularOptim4);
+//MAT_BENCHMARK(BM_Mult_MatrixXd_TriangularOptim8);
+//MAT_BENCHMARK(BM_Mult_MatrixXd_TriangularOptim16);
+MAT_BENCHMARK(BM_Mult_Diagonal_VectorXd);
+MAT_BENCHMARK(BM_Mult_scalar_VectorXd);
 
 BENCHMARK_MAIN();
