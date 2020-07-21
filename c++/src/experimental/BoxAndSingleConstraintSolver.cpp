@@ -48,17 +48,47 @@ namespace jrlqp::experimental
 
   internal::InitTermination BoxAndSingleConstraintSolver::init_()
   {
-    // J = L^-t = I
-    auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
-    J.setIdentity();
-
-    // x = x0
-    auto x = work_x_.asVector(nbVar_);
-    x = pb_.a;
-    f_ = 0;
-
     A_.reset();
     DEBUG_ONLY(work_R_.setZero());
+
+    auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
+    auto R = work_R_.asMatrix(nbVar_, nbVar_, nbVar_);
+
+    auto x = work_x_.asVector(nbVar_);
+    auto u = work_u_.asVector(nbVar_);
+    auto x0 = pb_.a;
+
+    int q = 0;
+    J.setZero();
+    for (int i = 0; i < nbVar_; ++i)
+    {
+      if (x0[i] < pb_.xl[i])
+      {
+        x[i] = pb_.xl[i];
+        u[q] = x[i] - x0[i];
+        R(q, q) = 1;
+        R.col(q).head(q).setZero();
+        J(i, q) = 1;
+        A_.activate(i + 1, ActivationStatus::LOWER_BOUND); // i+1 because we have one non-bound constraint
+        ++q;
+      }
+      else if (x0[i] > pb_.xu[i])
+      {
+        x[i] = pb_.xu[i];
+        u[q] = x0[i] - x[i];
+        R(q, q) = -1;
+        R.col(q).head(q).setZero();
+        J(i, q) = 1;
+        A_.activate(i + 1, ActivationStatus::UPPER_BOUND); // i+1 because we have one non-bound constraint
+        ++q;
+      }
+      else
+      {
+        x[i] = x0[i];
+        J(i, nbVar_-i+q-1) = 1;
+      }
+    }
+    LOG(log_, LogFlags::ACTIVE_SET_DETAILS, x, u, J, R);
 
     return TerminationStatus::SUCCESS;
   }

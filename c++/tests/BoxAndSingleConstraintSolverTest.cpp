@@ -17,7 +17,7 @@ using namespace jrlqp;
 TEST_CASE("Compare")
 {
   const int N = 10;
-  bool act = false;
+  bool act = true;
 
   MatrixXd I = MatrixXd::Identity(N, N);
   VectorXd x0 = VectorXd::Random(N);
@@ -113,7 +113,15 @@ TEST_CASE("Compare")
   GoldfarbIdnaniSolver GIsolver(N, 0, true);
   GIsolver.solve(I, -x0, c, bl, bu, xl, xu);
 
+  SolverOptions opt;
+  opt.logFlags(LogFlags::ITERATION_BASIC_DETAILS
+    | LogFlags::ACTIVE_SET
+    | LogFlags::ACTIVE_SET_DETAILS
+    | LogFlags::ITERATION_ADVANCE_DETAILS
+  );
+
   experimental::BoxAndSingleConstraintSolver solver(N);
+  solver.options(opt);
   solver.solve(x0, c, b, xl, xu);
 
   std::cout << GIsolver.solution().transpose() << std::endl;
