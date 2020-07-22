@@ -59,6 +59,7 @@ namespace jrlqp::experimental
     auto x0 = pb_.a;
 
     int q = 0;
+    f_ = 0;
     J.setZero();
     for (int i = 0; i < nbVar_; ++i)
     {
@@ -66,6 +67,7 @@ namespace jrlqp::experimental
       {
         x[i] = pb_.xl[i];
         u[q] = x[i] - x0[i];
+        f_ += 0.5 * u[q] * u[q];
         R(q, q) = 1;
         R.col(q).head(q).setZero();
         J(i, q) = 1;
@@ -76,6 +78,7 @@ namespace jrlqp::experimental
       {
         x[i] = pb_.xu[i];
         u[q] = x0[i] - x[i];
+        f_ += 0.5 * u[q] * u[q];
         R(q, q) = -1;
         R.col(q).head(q).setZero();
         J(i, q) = 1;
@@ -91,5 +94,83 @@ namespace jrlqp::experimental
     LOG(log_, LogFlags::ACTIVE_SET_DETAILS, x, u, J, R);
 
     return TerminationStatus::SUCCESS;
+  }
+}
+
+namespace jrlqp::test
+{
+  LeastSquareProblem<> generateBoxAndSingleConstraintProblem(int nbVar, bool act, double actLevel)
+  {
+    assert((!act || (actLevel > 0 && actLevel < 1)) && "when act is true, actLevel must be strictly between 0 and 1.");
+    Eigen::VectorXd x0 = Eigen::VectorXd::Random(nbVar);
+    Eigen::VectorXd r1 = Eigen::VectorXd::Random(nbVar);
+    Eigen::VectorXd r2 = Eigen::VectorXd::Random(nbVar);
+    Eigen::VectorXd xl(nbVar);
+    Eigen::VectorXd xu(nbVar);
+    Eigen::VectorXd xb(nbVar); // closest point to x0 satisfying the bounds
+    for (int i = 0; i < nbVar; ++i)
+    {
+      //xl = min(r1, r2)
+      //xu = max(r1, r2)
+      if (r1[i] < r2[i])
+      {
+        xl[i] = r1[i];
+        xu[i] = r2[i];
+      }
+      else
+      {
+        xl[i] = r2[i];
+        xu[i] = r1[i];
+      }
+      // clamp x0 in the box [xl, xu]
+      if (x0[i] < xl[i])
+        xb[i] = xl[i];
+      else if (x0[i] > xu[i])
+        xb[i] = xu[i];
+      else
+        xb[i] = x0[i];
+    }
+
+    Eigen::VectorXd c = Eigen::VectorXd::Random(nbVar);
+    // Points of the box the closer and further away in the direction of c
+    Eigen::VectorXd sl(nbVar);
+    Eigen::VectorXd su(nbVar);
+    for (int i = 0; i < nbVar; ++i)
+    {
+      if (c[i] > 0)
+      {
+        sl[i] = xl[i];
+        su[i] = xu[i];
+      }
+      else
+      {
+        sl[i] = xu[i];
+        su[i] = xl[i];
+      }
+    }
+
+    double b;
+    if (act)
+    {
+      // If we want the constraint c'x >= b active we chose b so that d2 <= c'x <= d1 
+      double d1 = c.dot(xb); // minimum b so that the constraint is active
+      double d2 = c.dot(su); // maximum b so that the problem is feasible
+      b = actLevel * d1 + (1-actLevel) * d2;
+    }
+    else
+    {
+      b = c.dot(sl); //the constraint doesn't intersect the box
+    }
+
+    test::LeastSquareProblem<> pb;
+    pb.A = Eigen::MatrixXd::Identity(nbVar, nbVar);
+    pb.b = x0;
+    pb.C = c;
+    pb.l = Eigen::VectorXd(1); pb.l[0] = b;
+    pb.u = Eigen::VectorXd(1); pb.u[0] = std::numeric_limits<double>::infinity();
+    pb.xl = xl;
+    pb.xu = xu;
+
+    return pb;
   }
 }

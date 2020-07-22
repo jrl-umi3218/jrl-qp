@@ -29,3 +29,19 @@ namespace jrlqp::experimental
     Eigen::Matrix<double, 1, 1> bu_;
   };
 }
+
+#include <jrl-qp/test/problems.h>
+namespace jrlqp::test
+{
+  /** Generate a problem 
+    * min. || x- x0 ||
+    * s.t. c'x >= bl   (1)
+    *      xl<=x<=xu
+    * with nbVar variables and the constraint c'x >= bl active if act is true
+    * Noting xb the solution without the constraint (1) and su the vertex of the box
+    * [xl, xu] the furthest away in the direction given by c, actLevel indicates
+    * where the constraint plan intersects the segement [xb, su].
+    */ 
+  LeastSquareProblem<> JRLQP_DLLAPI generateBoxAndSingleConstraintProblem(int nbVar, bool act, double actLevel = 0.5);
+
+}
