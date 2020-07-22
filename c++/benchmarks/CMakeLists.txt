@@ -77,6 +77,7 @@ addEigenBenchmark(Decomposition)
 addEigenBenchmark(LinearSystemSolving)
 
 addBenchmark(Solvers problemAdaptors.cpp)
+addBenchmark(BoxAndSingleConstraintSolver)
 
 add_custom_command(TARGET jrlqp_benchmarks
     COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/generatePlot.py"
