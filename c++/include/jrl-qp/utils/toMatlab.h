@@ -39,7 +39,6 @@ namespace jrlqp::utils
 	  {}
 
 		template<typename Derived, typename std::enable_if<(!isConvertibleToRef<Derived>()), int>::type = 0>
-		//template<typename Derived>
 		toMatlab(const Eigen::EigenBase<Derived>& M)
 			: tmp(M), mat(tmp)		
 		{}

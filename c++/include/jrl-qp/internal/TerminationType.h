@@ -8,6 +8,11 @@
 
 namespace jrlqp::internal
 {
+  /** A utility class to indicate the termination status of a call to a function
+    * or sub-function.
+    *
+    * Meant to be derived and give a strong type to TerminationStatus values.
+    */
   class TerminationType
   {
   public:

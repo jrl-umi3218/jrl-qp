@@ -14,10 +14,27 @@
 
 namespace jrlqp::internal
 {
+  /** A class to represent the vector \p n of a constraint \f$ n^T x op b \f$.
+    *
+    * It is meant to abstract the difference between general constraints, where
+    * \p n is a column of a dense matrix \p C, and bounds, where \p n is a column
+    * of the identity matrix, to provide optimized computations.
+    */
   class ConstraintNormal
   {
   public:
+    /** Default constructor.*/
     ConstraintNormal() : p_(-1), status_(ActivationStatus::INACTIVE), C_(Eigen::MatrixXd(0, 0)) {}
+    /** Usual constructor
+      *
+      * \param C Matrix from which the column is taken. Useful only if
+      * \p p < C.cols(). Note that the object only keep a reference on the
+      * matrix, that must remain valid for the lifetime of the object.
+      * \param p If smaller than C.cols(), refers to a column of C (general
+      * constraints). If not, refer to the bound with index p-C.Cols().
+      * \param status Activation status of the associated constraint. Must be
+      * consistent with the index \p p.
+      */
     ConstraintNormal(const MatrixConstRef& C, int p, ActivationStatus status)
       : p_(p), status_(status), C_(C) 
     {
@@ -37,12 +54,15 @@ namespace jrlqp::internal
       return *this;
     }
 
+    /** Underlying index of the constraint.*/
     int index() const { return p_; }
-    int bndIndex() const 
+    /** Underlying index of the constraint seen as a bound constraint, i.e. index() - C.cols().*/
+    int bndIndex() const
     { assert(status_ >= ActivationStatus::LOWER_BOUND); return p_ - static_cast<int>(C_.cols()); }
+    /** Activation status of the corresponding constraint.*/
     ActivationStatus status() const { return status_; }
 
-
+    /** Performs \f$ out = M^T * n \f$. */
     void preMultiplyByMt(VectorRef out, const MatrixConstRef& M) const
     {
       switch (status_)
@@ -66,6 +86,7 @@ namespace jrlqp::internal
       }
     }
 
+    /** Performs \f$ n^T v \f$. */
     double dot(const VectorConstRef& v) const
     {
       switch (status_)

@@ -18,31 +18,59 @@
 
 namespace jrlqp
 {
+  /** Base class for dual QP solver. It implements the general logic of the
+    * Goldfarb-Idnani paper, and relies to call to virtual functions to do the
+    * actual work, depending on the specificities of the problem.
+    */
   class JRLQP_DLLAPI DualSolver
   {
   public:
     DualSolver();
+    /** Pre-allocate the data for a problem with \p nbVar variables, \p nbCstr
+      * (general) constraints, and bounds if \p useBounds is \a true.*/
     DualSolver(int nbVar, int nbCstr, bool useBounds);
 
+    /** Resize the data for a problem with \p nbVar variables, \p nbCstr
+      * (general) constraints, and bounds if \p useBounds is \a true.
+      *
+      * \internal Call resize_ first, then resize_p.
+      */
     void resize(int nbVar, int nbCstr, bool useBounds);
 
+    /** Specify the solver options.*/
     void options(const SolverOptions& options);
 
+    /** Get the solution.*/
     WConstVector solution() const;
+    /** Get the Lagrange multipliers at the solution.*/
     WConstVector multipliers() const;
+    /** Get the objective value at the solution.*/
     double objectiveValue() const;
 
   protected:
     struct StepLenghth { double t1; double t2; int l; };
+
+    /** Call to the solving routines. Need to be initiated by the derived class. */
     TerminationStatus solve();
+    /** Finalize a function call by logging relevant information.*/
     TerminationStatus terminate(TerminationStatus status);
 
+    /** Initialize the problem data. In particular compute the initial primal-dual point
+      * and perform the initial decompositions.
+      */
     internal::InitTermination init();
+    /** Select a violated constraint and return it's normal \p n+.*/
     internal::ConstraintNormal selectViolatedConstraint(const VectorConstRef& x) const;
+    /** Compute a primal step z and dual step r, given \p n+*/
     void computeStep(VectorRef z, VectorRef r, const internal::ConstraintNormal& np) const;
+    /** Compute a step length and update x and u given the data n+, z and r.*/
     StepLenghth computeStepLength(const internal::ConstraintNormal& np, const VectorConstRef& x, 
       const VectorConstRef& u, const VectorConstRef& z, const VectorConstRef& r) const;
+    /** Add a constraint to the active set and update the computation data accordingly.*/
     bool addConstraint(const internal::ConstraintNormal& np);
+    /** Remove the l-th active constraint from the active set and update the
+      * computation data accordingly.
+      */
     bool removeConstraint(int l, VectorRef u);
 
 
@@ -56,6 +84,7 @@ namespace jrlqp
     virtual void resize_(int nbVar, int nbCstr, bool useBounds) = 0;
 
   private:
+    /** Resize the data managed by this class.*/
     void resize_p(int nbVar, int nbCstr, bool useBounds);
 
   protected:

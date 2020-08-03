@@ -7,7 +7,11 @@
 
 namespace jrlqp
 {
-  /** Activation status of a constraint. */
+  /** Activation status of a constraint. 
+    *
+    * \internal Order matters: for example we compare values to LOWER_BOUND to
+    * decide if we have a general constraint or a bound.
+    */
   enum class ActivationStatus
   {
     INACTIVE,     // Constraint is inactive
@@ -22,14 +26,15 @@ namespace jrlqp
   /** Information on the termination reason for the solver. */
   enum class TerminationStatus
   {
-    SUCCESS,
-    INCONSISTENT_INPUT,
-    NON_POS_HESSIAN,
-    INFEASIBLE,
-    MAX_ITER_REACHED,
-    LINEAR_DEPENDENCY_DETECTED
+    SUCCESS,                      // Operation was successful 
+    INCONSISTENT_INPUT,           // Inputs are not consistent with one another (e.g. mismatch of size, activation status, ...)
+    NON_POS_HESSIAN,              // Quadratic matrix of the problem is expected to be positive definite, but is not.
+    INFEASIBLE,                   // Problem is infeasible
+    MAX_ITER_REACHED,             // Maximum number of iteration was reached. You can increase this number by using the solver options.
+    LINEAR_DEPENDENCY_DETECTED    // Some active constraints are linearly dependent and the solver doesn't know how to handle this case.
   };
 
+  /** Flags for the log and debug outputs.*/
   enum class LogFlags: std::uint32_t
   {
     NONE = 0,

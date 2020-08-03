@@ -9,16 +9,23 @@
 
 namespace jrlqp
 {
+  /** Implementation of the Goldfarb-Idnani dual QP solver.*/
   class JRLQP_DLLAPI GoldfarbIdnaniSolver: public DualSolver
   {
   public:
     GoldfarbIdnaniSolver();
     GoldfarbIdnaniSolver(int nbVar, int nbCstr, bool useBounds);
 
+    /** Solve the problem
+      *  min. 0.5 x^T G x + a^T x
+      *  s.t. bl <= Cx <= bu
+      *       xl <=  x <= xu
+      */
     TerminationStatus solve(MatrixRef G, const VectorConstRef& a, const MatrixConstRef& C,
       const VectorConstRef& bl, const VectorConstRef& bu, const VectorConstRef& xl, const VectorConstRef& xu);
 
   protected:
+    /** Structure to gather the problem definition. */
     struct Problem
     {
     public:

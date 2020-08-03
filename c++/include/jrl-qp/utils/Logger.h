@@ -26,18 +26,33 @@ namespace jrlqp::utils
     Logger(std::ostream& os, const std::string& name, std::uint32_t flags = 0)
       : flags_(flags), iter_(-1), name_(name), os_(&os) {}
 
-    /***/
+    /** Add or remove one or several (aggregated) flags to filter the data to log.
+      * If \p add is \a true, \p flag is added with a "or". If \a false, it is
+      * removed with a "and not".
+      */
     Logger& setFlag(std::uint32_t flag, bool add = true);
 
+    /** Set the output stream.*/
     Logger& setOutputStream(std::ostream& os);
 
+    /** Log a comment \p c, if \p flag pass the filter.*/
     void comment(std::uint32_t flag, const std::string& c) const;
+    /** Indicate that a new iteration of the solver is starting.*/
     void startIter(int i);
+    /** Log a given number of values.
+      *
+      * \param flag Flag(s) for which the values should be logged.
+      * \param args Sequence of pairs (name, value).
+      */
     template<typename... Args>
     void log(std::uint32_t flag, Args&&... args) const;
 
+    /** Return a sub-logger. It will act as a struct with data for the current
+      * iteration of its parent log.
+      */
     Logger subLog(const std::string& name) const;
 
+    /** Current iteration number. */
     int iter() const { return iter_; }
 
   private:

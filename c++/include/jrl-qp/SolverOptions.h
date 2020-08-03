@@ -11,6 +11,7 @@
 
 namespace jrlqp
 {
+  /** Options for the solvers*/
   struct JRLQP_DLLAPI SolverOptions
   {
     int maxIter_ = 500;
