@@ -39,7 +39,7 @@ macro(addBenchmark name)
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Running ${name} benchmark"
     )
-  target_link_libraries(${benchName} PUBLIC JRLQP benchmark ${SOLVER_LIBS})
+  target_link_libraries(${benchName} PUBLIC jrl-qp benchmark ${SOLVER_LIBS})
   if(NOT WIN32)
     target_link_libraries(${benchName} PUBLIC pthread)
   else()

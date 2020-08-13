@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1.3)
 
-set(PROJECT_NAME JRL-QP)
+set(PROJECT_NAME jrl-qp)
 set(PROJECT_DESCRIPTION "...")
 set(PROJECT_URL "")
 set(PROJECT_DEBUG_POSTFIX "_d")
@@ -17,7 +17,7 @@ set(CXX_DISABLE_WERROR True)
 set(DOXYGEN_USE_MATHJAX "YES")
 set(DOXYGEN_DISTRIBUTE_GROUP_DOC YES)
 
-project(JRL-QP LANGUAGES CXX)
+project(jrl-qp LANGUAGES CXX)
 
 if(NOT WIN32)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-sign-conversion -pedantic")

@@ -55,21 +55,21 @@ endfunction(assign_source_group)
 assign_source_group("sources" ${JRLQP_SOURCES})
 assign_source_group("headers" ${JRLQP_HEADERS})
 
-add_library(JRLQP SHARED ${JRLQP_SOURCES} ${JRLQP_HEADERS})
-target_include_directories(JRLQP PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..> $<INSTALL_INTERFACE:include>)
-target_link_libraries(JRLQP PUBLIC Eigen3::Eigen)
-set_target_properties(JRLQP PROPERTIES COMPILE_FLAGS "-DJRLQP_EXPORTS -DEIGEN_RUNTIME_NO_MALLOC")
-set_target_properties(JRLQP PROPERTIES SOVERSION 0 VERSION 0.8.0)
-set_target_properties(JRLQP PROPERTIES CXX_STANDARD 17)
-target_compile_definitions(JRLQP PUBLIC ${SOLVER_FLAGS})
+add_library(jrl-qp SHARED ${JRLQP_SOURCES} ${JRLQP_HEADERS})
+target_include_directories(jrl-qp PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../include> $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..> $<INSTALL_INTERFACE:include>)
+target_link_libraries(jrl-qp PUBLIC Eigen3::Eigen)
+set_target_properties(jrl-qp PROPERTIES COMPILE_FLAGS "-DJRLQP_EXPORTS -DEIGEN_RUNTIME_NO_MALLOC")
+set_target_properties(jrl-qp PROPERTIES SOVERSION 0 VERSION 0.8.0)
+set_target_properties(jrl-qp PROPERTIES CXX_STANDARD 17)
+target_compile_definitions(jrl-qp PUBLIC ${SOLVER_FLAGS})
 
 if(GENERATE_COVERAGE)
-  target_compile_options(JRLQP PRIVATE "--coverage")
-  set_target_properties(JRLQP PROPERTIES LINK_FLAGS "--coverage")
+  target_compile_options(jrl-qp PRIVATE "--coverage")
+  set_target_properties(jrl-qp PROPERTIES LINK_FLAGS "--coverage")
 endif()
 
 
-install(TARGETS JRLQP
+install(TARGETS jrl-qp
 	EXPORT "${TARGETS_EXPORT_NAME}"
     LIBRARY DESTINATION "lib"
     ARCHIVE DESTINATION "lib"

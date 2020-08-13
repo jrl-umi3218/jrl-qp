@@ -25,7 +25,7 @@ macro(addUnitTest name)
   if (WITH_QPS_TESTS)
     target_compile_definitions(${name} PUBLIC "-DQPS_TESTS_DIR=\"${QPS_DIR}/\"")
   endif()
-  target_link_libraries(${name} JRLQP)
+  target_link_libraries(${name} jrl-qp)
   add_test(${name}Unit ${name})
   # Adding a project configuration file (for MSVC only)
   GENERATE_MSVC_DOT_USER_FILE(${name} "${CMAKE_INSTALL_PREFIX}/bin")
@@ -45,6 +45,6 @@ set(TESTHEADERS
 )
 
 add_executable(main ${TESTSOURCES} ${TESTHEADERS} QPSReader.cpp)
-target_link_libraries(main JRLQP)
+target_link_libraries(main jrl-qp)
 GENERATE_MSVC_DOT_USER_FILE(main "${CMAKE_INSTALL_PREFIX}/bin")
 
