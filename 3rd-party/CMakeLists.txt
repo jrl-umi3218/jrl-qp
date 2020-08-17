@@ -10,3 +10,5 @@ endif()
 if(BUILD_BENCHMARKS)
   add_subdirectory(benchmark EXCLUDE_FROM_ALL)
 endif()
+
+install(FILES ${PROJECT_SOURCE_DIR}/3rdParty/effolkronium/random.hpp DESTINATION ${CMAKE_INSTALL_PREFIX}/include/jrl-qp/3rdParty/effolkronium/)
