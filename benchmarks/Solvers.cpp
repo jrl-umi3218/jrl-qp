@@ -16,9 +16,6 @@
 #include <jrl-qp/test/problems.h>
 #include <jrl-qp/test/randomProblems.h>
 
-// To be found at 
-// https://bitbucket.ihmc.us/projects/LIBS/repos/ihmc-open-robotics-software/browse/ihmc-common-walking-control-modules/csrc/ActiveSetQP/eiquadprog.hpp
-// and copied in the benchmarks directory (for now) [TODO] make this proper.
 #include "eiquadprog.hpp"
 #include "problemAdaptors.h"
 
