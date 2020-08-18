@@ -5,7 +5,7 @@
 
 #include <jrl-qp/test/problems.h>
 
-namespace jrlqp::test
+namespace jrl::qp::test
 {
   struct GIPb : public QPProblem<>
   {

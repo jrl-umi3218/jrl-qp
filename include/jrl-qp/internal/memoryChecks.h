@@ -7,7 +7,7 @@
 
 #include<jrl-qp/api.h>
 
-namespace jrlqp::internal
+namespace jrl::qp::internal
 {
   /** Check if dynamic allocation is allowed in Eigen operations. */
   void JRLQP_DLLAPI check_that_malloc_is_allowed();

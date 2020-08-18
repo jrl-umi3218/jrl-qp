@@ -5,7 +5,7 @@
 
 #include <jrl-qp/GoldfarbIdnaniSolver.h>
 
-namespace jrlqp::experimental
+namespace jrl::qp::experimental
 {
   /** A specialized solver for problems of the form
     * min. 0.5 ||x - x0||^2
@@ -31,7 +31,7 @@ namespace jrlqp::experimental
 }
 
 #include <jrl-qp/test/problems.h>
-namespace jrlqp::test
+namespace jrl::qp::test
 {
   /** Generate a problem 
     * min. || x- x0 ||

@@ -7,7 +7,7 @@
 
 #include <jrl-qp/api.h>
 
-namespace jrlqp::internal
+namespace jrl::qp::internal
 {
   /** Dummy struct to disambiguate call to non-const methods.*/
   struct NotConst {};
@@ -110,7 +110,7 @@ namespace jrlqp::internal
   };
 }
 
-namespace jrlqp
+namespace jrl::qp
 {
   /** Type of a Eigen::Vector-like object from Workspace*/
   using WVector = decltype(internal::Workspace<double>().asVector(0));

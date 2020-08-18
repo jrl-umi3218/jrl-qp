@@ -11,7 +11,7 @@
 #include <jrl-qp/internal/meta.h>
 #include <jrl-qp/utils/toMatlab.h>
 
-namespace jrlqp::utils
+namespace jrl::qp::utils
 {
   /** Class for logging data in a Matlab-compatible way, with a filter based on
     * a system of binary flags.

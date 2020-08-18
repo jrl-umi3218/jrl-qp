@@ -10,8 +10,8 @@
 #include <jrl-qp/experimental/BoxAndSingleConstraintSolver.h>
 
 using namespace Eigen;
-using namespace jrlqp;
-using namespace jrlqp::test;
+using namespace jrl::qp;
+using namespace jrl::qp::test;
 
 /** Contains a set of \p N problems of the form
   * min. 0.5 ||x - x0||^2

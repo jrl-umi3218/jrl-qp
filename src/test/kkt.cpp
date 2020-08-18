@@ -23,7 +23,7 @@ namespace
   }
 }
 
-namespace jrlqp::test
+namespace jrl::qp::test
 {
   void checkDimensions([[maybe_unused]] int n,
                        [[maybe_unused]] const MatrixConstRef& C, [[maybe_unused]] const VectorConstRef& bl, [[maybe_unused]] const VectorConstRef& bu,

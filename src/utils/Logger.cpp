@@ -3,7 +3,7 @@
 
 #include <jrl-qp/utils/Logger.h>
 
-namespace jrlqp::utils
+namespace jrl::qp::utils
 {
   Logger& Logger::setFlag(std::uint32_t flag, bool add)
   {

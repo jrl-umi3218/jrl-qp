@@ -3,7 +3,7 @@
 
 #include <jrl-qp/experimental/BoxAndSingleConstraintSolver.h>
 
-namespace jrlqp::experimental
+namespace jrl::qp::experimental
 {
   BoxAndSingleConstraintSolver::BoxAndSingleConstraintSolver()
     : GoldfarbIdnaniSolver()
@@ -97,7 +97,7 @@ namespace jrlqp::experimental
   }
 }
 
-namespace jrlqp::test
+namespace jrl::qp::test
 {
   LeastSquareProblem<> generateBoxAndSingleConstraintProblem(int nbVar, bool act, double actLevel)
   {

@@ -1,6 +1,6 @@
 #include <jrl-qp/internal/memoryChecks.h>
 
-namespace jrlqp::internal
+namespace jrl::qp::internal
 {
   bool is_malloc_allowed_impl(bool update, bool new_value = false)
   {

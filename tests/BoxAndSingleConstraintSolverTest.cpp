@@ -11,8 +11,8 @@
 #include <jrl-qp/experimental/BoxAndSingleConstraintSolver.h>
 
 using namespace Eigen;
-using namespace jrlqp;
-using namespace jrlqp::test;
+using namespace jrl::qp;
+using namespace jrl::qp::test;
 
 
 TEST_CASE("Compare")

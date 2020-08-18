@@ -11,7 +11,7 @@
 
 using namespace Eigen;
 
-namespace jrlqp::test
+namespace jrl::qp::test
 {
   RandomLeastSquare randomProblem(const ProblemCharacteristics& characs)
   {

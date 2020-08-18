@@ -6,7 +6,7 @@
 #include <jrl-qp/api.h>
 #include <jrl-qp/enums.h>
 
-namespace jrlqp::internal
+namespace jrl::qp::internal
 {
   /** A utility class to indicate the termination status of a call to a function
     * or sub-function.

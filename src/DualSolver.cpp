@@ -3,7 +3,7 @@
 
 #include <jrl-qp/DualSolver.h>
 
-namespace jrlqp
+namespace jrl::qp
 {
   DualSolver::DualSolver()
     : options_(SolverOptions())

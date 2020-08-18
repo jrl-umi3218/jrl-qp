@@ -26,8 +26,8 @@
 #include "problemAdaptors.h"
 
 using namespace Eigen;
-using namespace jrlqp;
-using namespace jrlqp::test;
+using namespace jrl::qp;
+using namespace jrl::qp::test;
 
 /** Describe a parameter behavior*/
 enum class ParamType

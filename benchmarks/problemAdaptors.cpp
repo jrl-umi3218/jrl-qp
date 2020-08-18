@@ -3,7 +3,7 @@
 
 #include "problemAdaptors.h"
 
-using namespace jrlqp::test;
+using namespace jrl::qp::test;
 using namespace Eigen;
 
 namespace
@@ -41,7 +41,7 @@ namespace
   }
 }
 
-namespace jrlqp::test
+namespace jrl::qp::test
 {
 
   EigenQuadprogPb::EigenQuadprogPb(const QPProblem<true>& pb)

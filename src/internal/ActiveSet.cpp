@@ -6,7 +6,7 @@
 
 #include <jrl-qp/internal/ActiveSet.h>
 
-namespace jrlqp::internal
+namespace jrl::qp::internal
 {
   ActiveSet::ActiveSet()
     : ActiveSet(0)

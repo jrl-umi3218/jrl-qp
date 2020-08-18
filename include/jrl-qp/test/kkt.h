@@ -6,7 +6,7 @@
 #include <jrl-qp/defs.h>
 #include <jrl-qp/test/problems.h>
 
-namespace jrlqp::test
+namespace jrl::qp::test
 { 
   /** Check that all the matrix and vector dimensions of the following QP problem
     * are consistent:

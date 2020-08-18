@@ -16,8 +16,8 @@
 #include "QPSReader.h"
 
 using namespace Eigen;
-using namespace jrlqp;
-using namespace jrlqp::test;
+using namespace jrl::qp;
+using namespace jrl::qp::test;
 
 TEST_CASE("Simple problem")
 {
@@ -81,9 +81,9 @@ TEST_CASE("Random problems")
     QPProblem qpp(pb);
     MatrixXd G = qpp.G; // copy for later check
     GoldfarbIdnaniSolver solver(qpp.G.rows(), qpp.C.rows(), pb.bounds);
-    jrlqp::internal::set_is_malloc_allowed(false);
+    jrl::qp::internal::set_is_malloc_allowed(false);
     auto ret = solver.solve(qpp.G, qpp.a, qpp.C.transpose(), qpp.l, qpp.u, qpp.xl, qpp.xu);
-    jrlqp::internal::set_is_malloc_allowed(true);
+    jrl::qp::internal::set_is_malloc_allowed(true);
     FAST_CHECK_EQ(ret, TerminationStatus::SUCCESS);
     FAST_CHECK_UNARY(test::testKKT(solver.solution(), solver.multipliers(), G, qpp.a, qpp.C, qpp.l, qpp.u, qpp.xl, qpp.xu, false));
     FAST_CHECK_UNARY(solver.solution().isApprox(pb.x, 1e-6));
@@ -109,9 +109,9 @@ TEST_CASE("Multiple uses")
   {
     QPProblem qpp(pb);
     MatrixXd G = qpp.G; // copy for later check
-    jrlqp::internal::set_is_malloc_allowed(false);
+    jrl::qp::internal::set_is_malloc_allowed(false);
     auto ret = solver.solve(qpp.G, qpp.a, qpp.C.transpose(), qpp.l, qpp.u, qpp.xl, qpp.xu);
-    jrlqp::internal::set_is_malloc_allowed(true);
+    jrl::qp::internal::set_is_malloc_allowed(true);
     FAST_CHECK_EQ(ret, TerminationStatus::SUCCESS);
     FAST_CHECK_UNARY(test::testKKT(solver.solution(), solver.multipliers(), G, qpp.a, qpp.C, qpp.l, qpp.u, qpp.xl, qpp.xu, false));
     FAST_CHECK_UNARY(solver.solution().isApprox(pb.x, 1e-6));

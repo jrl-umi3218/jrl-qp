@@ -7,7 +7,7 @@
 
 #include <jrl-qp/DualSolver.h>
 
-namespace jrlqp
+namespace jrl::qp
 {
   /** Implementation of the Goldfarb-Idnani dual QP solver.*/
   class JRLQP_DLLAPI GoldfarbIdnaniSolver: public DualSolver

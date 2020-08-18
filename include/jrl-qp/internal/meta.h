@@ -5,7 +5,7 @@
 
 #include <type_traits>
 
-namespace jrlqp::internal
+namespace jrl::qp::internal
 {
   /** An helper struct used by derives_from.*/
   template<template<typename...> class Base>
@@ -20,7 +20,7 @@ namespace jrlqp::internal
 
   /** Check if class \t T derives from the templated class \t Base.
     *
-    * This relies on jrlqp::internal::is_base::check: if T derives from \t Base,
+    * This relies on jrl::qp::internal::is_base::check: if T derives from \t Base,
     * the overload returning \a std::true_type will be selected, otherwise, it 
     * will be the one returning \a std::false_type.
     *

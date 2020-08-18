@@ -9,7 +9,7 @@
 #include <jrl-qp/api.h>
 #include <jrl-qp/enums.h>
 
-namespace jrlqp
+namespace jrl::qp
 {
   /** Options for the solvers*/
   struct JRLQP_DLLAPI SolverOptions

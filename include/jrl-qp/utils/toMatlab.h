@@ -7,7 +7,7 @@
 #include <Eigen/Dense>
 #include <jrl-qp/internal/meta.h>
 
-namespace jrlqp::utils
+namespace jrl::qp::utils
 {
 	/** Accept any class That convert to Eigen::Ref<const Eigen::MatrixXd>.*/
 	static std::true_type isConvertibleToRef_(const Eigen::Ref<const Eigen::MatrixXd>&);

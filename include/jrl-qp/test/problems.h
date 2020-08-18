@@ -6,7 +6,7 @@
 #include <Eigen/Core>
 #include <jrl-qp/api.h>
 
-namespace jrlqp::test
+namespace jrl::qp::test
 {
   struct JRLQP_DLLAPI SeparatedFeasibilityConstraints;
 

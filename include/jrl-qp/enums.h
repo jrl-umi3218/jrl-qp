@@ -5,7 +5,7 @@
 
 #include <jrl-qp/defs.h>
 
-namespace jrlqp
+namespace jrl::qp
 {
   /** Activation status of a constraint. 
     *

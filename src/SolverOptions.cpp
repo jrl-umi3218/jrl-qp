@@ -2,7 +2,7 @@
 
 #include <jrl-qp/SolverOptions.h>
 
-namespace jrlqp
+namespace jrl::qp
 {
 	std::ostream& SolverOptions::defaultStream_ = std::cout;
 }

@@ -8,7 +8,7 @@
 
 using Givens = Eigen::JacobiRotation<double>;
 
-namespace jrlqp
+namespace jrl::qp
 {
   GoldfarbIdnaniSolver::GoldfarbIdnaniSolver()
     : DualSolver()
@@ -251,7 +251,7 @@ namespace jrlqp
     }
   }
 
-  void jrlqp::GoldfarbIdnaniSolver::initActiveSet()
+  void GoldfarbIdnaniSolver::initActiveSet()
   {
     for (int i = 0; i < A_.nbCstr(); ++i)
     {
@@ -272,7 +272,7 @@ namespace jrlqp
     }
   }
 
-  void jrlqp::GoldfarbIdnaniSolver::addInitialConstraint(const internal::ConstraintNormal& np)
+  void GoldfarbIdnaniSolver::addInitialConstraint(const internal::ConstraintNormal& np)
   {
     int q = A_.nbActiveCstr();
     WVector x = work_x_.asVector(nbVar_);

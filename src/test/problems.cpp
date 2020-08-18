@@ -3,7 +3,7 @@
 
 #include <jrl-qp/test/problems.h>
 
-namespace jrlqp::test
+namespace jrl::qp::test
 {
   FeasibilityConstraints::FeasibilityConstraints(const SeparatedFeasibilityConstraints& cstr)
     : C(cstr.transposedMat?cstr.C.rows():cstr.C.rows()+cstr.E.rows(), cstr.transposedMat?cstr.C.cols()+cstr.E.cols():cstr.C.cols())

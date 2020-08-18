@@ -20,7 +20,7 @@ using namespace Eigen;
 
 namespace
 {
-  using namespace jrlqp::test;
+  using namespace jrl::qp::test;
 
   const char* lineName[] = { "normal", "name", "rows", "columns", "rhs", "ranges", "bounds", "quadobj", "endata", "empty", "other" };
 
@@ -150,7 +150,7 @@ namespace
   }
 }
 
-namespace jrlqp::test
+namespace jrl::qp::test
 {
   QPSReader::QPSReader(bool fullObjMat)
     :fullObjMat(fullObjMat)

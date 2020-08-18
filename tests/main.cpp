@@ -12,7 +12,7 @@
 #include <jrl-qp/utils/Logger.h>
 
 using namespace Eigen;
-using namespace jrlqp;
+using namespace jrl::qp;
 
 
 int main()

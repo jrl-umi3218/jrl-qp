@@ -16,7 +16,7 @@
 #include <jrl-qp/utils/Logger.h>
 
 
-namespace jrlqp
+namespace jrl::qp
 {
   /** Base class for dual QP solver. It implements the general logic of the
     * Goldfarb-Idnani paper, and relies on call to virtual functions to do the

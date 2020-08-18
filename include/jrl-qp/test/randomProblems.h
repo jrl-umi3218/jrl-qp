@@ -7,7 +7,7 @@
 #include <jrl-qp/api.h>
 #include <jrl-qp/test/problems.h>
 
-namespace jrlqp::test
+namespace jrl::qp::test
 {
   // Description of the characteristics of a least-square problem
   // min. 0.5 ||A x - b||^2

@@ -5,7 +5,7 @@
 
 #include <Eigen/Core>
 
-namespace jrlqp
+namespace jrl::qp
 {
   //definitions
   using MatrixConstRef = Eigen::Ref<const Eigen::MatrixXd>;

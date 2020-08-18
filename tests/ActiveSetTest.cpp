@@ -9,7 +9,7 @@
 
 #include <jrl-qp/internal/ActiveSet.h>
 
-using namespace jrlqp;
+using namespace jrl::qp;
 
 const static ActivationStatus I = ActivationStatus::INACTIVE;
 const static ActivationStatus E = ActivationStatus::EQUALITY;

@@ -9,7 +9,7 @@
 #include <jrl-qp/api.h>
 #include <jrl-qp/enums.h>
 
-namespace jrlqp::internal
+namespace jrl::qp::internal
 {
   /** A class to track the active status of a set of constraints and bounds. 
     *
@@ -33,7 +33,7 @@ namespace jrlqp::internal
       */
     ActiveSet(int nCstr, int nBnd = 0);
     /** Constructor for a vector of activation status, such as can be returned by
-      * jrlqp::ActiveSet::activationStatus().
+      * jrl::qp::ActiveSet::activationStatus().
       *
       * \param as Vector of activation status with status of general constraints
       * first, followed by the status of bounds. as[i] contains the activation

@@ -8,7 +8,7 @@
 #include <3rd-party/effolkronium/random.hpp>
 
 
-namespace jrlqp::test
+namespace jrl::qp::test
 {
   /** Functor returning number following a normal distribution.*/
   template<typename Scalar>
