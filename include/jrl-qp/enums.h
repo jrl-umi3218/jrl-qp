@@ -17,7 +17,7 @@ namespace jrlqp
     INACTIVE,     // Constraint is inactive
     LOWER,        // Constraint is active at its lower bound
     UPPER,        // Constraint is active at its upper bound
-    EQUALITY,     // Constraint is and equality constraint
+    EQUALITY,     // Constraint is an equality constraint
     LOWER_BOUND,  // Constraint is a bound on variable constraint, active at its lower bound
     UPPER_BOUND,  // Constraint is a bound on variable constraint, active at its upper bound
     FIXED         // Constraint fixes the corresponding variable
