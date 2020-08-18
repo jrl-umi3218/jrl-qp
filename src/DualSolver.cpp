@@ -1,5 +1,4 @@
-/* Copyright 2020 CNRS-AIST JRL
- */
+/* Copyright 2020 CNRS-AIST JRL */
 
 #include <jrl-qp/DualSolver.h>
 

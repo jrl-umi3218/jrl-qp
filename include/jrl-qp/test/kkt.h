@@ -1,5 +1,4 @@
-/* Copyright 2020 CNRS-AIST JRL
- */
+/* Copyright 2020 CNRS-AIST JRL */
 
 #pragma once
 #include <jrl-qp/api.h>
