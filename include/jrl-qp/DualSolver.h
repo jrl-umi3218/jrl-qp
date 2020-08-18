@@ -19,7 +19,7 @@
 namespace jrlqp
 {
   /** Base class for dual QP solver. It implements the general logic of the
-    * Goldfarb-Idnani paper, and relies to call to virtual functions to do the
+    * Goldfarb-Idnani paper, and relies on call to virtual functions to do the
     * actual work, depending on the specificities of the problem.
     */
   class JRLQP_DLLAPI DualSolver
@@ -29,6 +29,8 @@ namespace jrlqp
     /** Pre-allocate the data for a problem with \p nbVar variables, \p nbCstr
       * (general) constraints, and bounds if \p useBounds is \a true.*/
     DualSolver(int nbVar, int nbCstr, bool useBounds);
+
+    virtual ~DualSolver() = default;
 
     /** Resize the data for a problem with \p nbVar variables, \p nbCstr
       * (general) constraints, and bounds if \p useBounds is \a true.
@@ -74,13 +76,24 @@ namespace jrlqp
     bool removeConstraint(int l, VectorRef u);
 
 
+    /** Compute the initial iterate, the corresponding objective value and
+      * initialize any relevant data of the derived class.
+      */
     virtual internal::InitTermination init_() = 0;
+    /** Select the violated constraint to be considered for the current iteration.*/
     virtual internal::ConstraintNormal selectViolatedConstraint_(const VectorConstRef& x) const = 0;
+    /** Compute a primal step z and dual step r, given \p n+*/
     virtual void computeStep_(VectorRef z, VectorRef r, const internal::ConstraintNormal& np) const = 0;
-    virtual StepLenghth  computeStepLength_(const internal::ConstraintNormal& np, const VectorConstRef& x, 
+    /** Compute a step length and update x and u given the data n+, z and r.*/
+    virtual StepLenghth  computeStepLength_(const internal::ConstraintNormal& np, const VectorConstRef& x,
       const VectorConstRef& u, const VectorConstRef& z, const VectorConstRef& r) const = 0;
+    /** Add a constraint to the active set and update the computation data accordingly.*/
     virtual bool addConstraint_(const internal::ConstraintNormal& np) = 0;
+    /** Remove the l-th active constraint from the active set and update the
+      * computation data accordingly.
+      */
     virtual bool removeConstraint_(int l) = 0;
+    /** Resize the data managed by the derived class.*/
     virtual void resize_(int nbVar, int nbCstr, bool useBounds) = 0;
 
   private:

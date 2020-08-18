@@ -14,7 +14,11 @@ namespace jrlqp
   {
   public:
     GoldfarbIdnaniSolver();
+    /** Pre-allocate the data for a problem with \p nbVar variables, \p nbCstr
+      * (general) constraints, and bounds if \p useBounds is \a true.*/
     GoldfarbIdnaniSolver(int nbVar, int nbCstr, bool useBounds);
+
+    virtual ~GoldfarbIdnaniSolver() = default;
 
     /** Solve the problem
       *  min. 0.5 x^T G x + a^T x
@@ -46,14 +50,14 @@ namespace jrlqp
       VectorConstRef xu;
     };
 
-    virtual internal::InitTermination init_() override;
-    virtual internal::ConstraintNormal selectViolatedConstraint_(const VectorConstRef& x) const override;
-    virtual void computeStep_(VectorRef z, VectorRef r, const internal::ConstraintNormal& np) const override;
-    virtual StepLenghth  computeStepLength_(const internal::ConstraintNormal& np, const VectorConstRef& x,
+    internal::InitTermination init_() override;
+    internal::ConstraintNormal selectViolatedConstraint_(const VectorConstRef& x) const override;
+    void computeStep_(VectorRef z, VectorRef r, const internal::ConstraintNormal& np) const override;
+    StepLenghth  computeStepLength_(const internal::ConstraintNormal& np, const VectorConstRef& x,
       const VectorConstRef& u, const VectorConstRef& z, const VectorConstRef& r) const override;
-    virtual bool addConstraint_(const internal::ConstraintNormal& np) override;
-    virtual bool removeConstraint_(int l) override;
-    virtual void resize_(int nbVar, int nbCstr, bool useBounds) override;
+    bool addConstraint_(const internal::ConstraintNormal& np) override;
+    bool removeConstraint_(int l) override;
+    void resize_(int nbVar, int nbCstr, bool useBounds) override;
 
     virtual void initActiveSet();
 

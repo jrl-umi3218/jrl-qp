@@ -168,9 +168,10 @@ namespace jrlqp
     switch (status)
     {
     case TerminationStatus::SUCCESS:
-      LOG_COMMENT(log_, LogFlags::TERMINATION, "Optimum reached");
+      LOG_COMMENT(log_, LogFlags::TERMINATION, "Optimum reached.");
       break;
     case TerminationStatus::INCONSISTENT_INPUT:
+      LOG_COMMENT(log_, LogFlags::TERMINATION, "Inconsistent inputs.");
       break;
     case TerminationStatus::NON_POS_HESSIAN:
       LOG_COMMENT(log_, LogFlags::TERMINATION, 
@@ -178,10 +179,10 @@ namespace jrlqp
         "The input matrix is not (at least numerically)");
       break;
     case TerminationStatus::INFEASIBLE:
-      LOG_COMMENT(log_, LogFlags::TERMINATION, "Infeasible problem");
+      LOG_COMMENT(log_, LogFlags::TERMINATION, "Infeasible problem.");
       break;
     case TerminationStatus::MAX_ITER_REACHED:
-      LOG_COMMENT(log_, LogFlags::TERMINATION, "Maximum number of iteration reached");
+      LOG_COMMENT(log_, LogFlags::TERMINATION, "Maximum number of iteration reached.");
       break;
     case TerminationStatus::LINEAR_DEPENDENCY_DETECTED:
       LOG_COMMENT(log_, LogFlags::TERMINATION, "Attempting to add a linearly dependent constraint.");
