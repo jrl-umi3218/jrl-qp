@@ -13,7 +13,14 @@ using namespace Eigen;
 using namespace jrlqp;
 using namespace jrlqp::test;
 
-
+/** Contains a set of \p N problems of the form
+  * min. 0.5 ||x - x0||^2
+  * s.t. c'x >= bl
+  *      xl <= x <= xu
+  * (with c is a vector).
+  * 
+  * The constraint c'x >= bl is active at the solution iff \p act is \c true.
+  */
 template<int N, bool act>
 class ProblemFixture : public ::benchmark::Fixture
 {
@@ -22,7 +29,6 @@ public:
   {
     i = 0;
 
-    //std::cout << "initialize for nbVar = " << st.range(0) << std::endl;
     for (int k = 0; k < N; ++k)
     {
       pb.emplace_back(generateBoxAndSingleConstraintProblem(st.range(0), act));
@@ -32,7 +38,6 @@ public:
 
   void TearDown(const ::benchmark::State&)
   {
-    //std::cout << "tear down" << std::endl;
     pb.clear();
     qpp.clear();
   }
@@ -62,6 +67,7 @@ private:
   std::vector<QPProblem<>> qpp;
 };
 
+// Test problems where the inequality constraint is not active
 using test1 = ProblemFixture<1000, false>;
 BENCHMARK_DEFINE_F(test1, BSC_INACTIVE)(benchmark::State& st)
 {
@@ -88,6 +94,7 @@ BENCHMARK_DEFINE_F(test1, GI_INACTIVE)(benchmark::State& st)
 BENCHMARK_REGISTER_F(test1, GI_INACTIVE)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);
 
 
+// Test problems where the inequality constraint is active
 using test2 = ProblemFixture<1000, true>;
 BENCHMARK_DEFINE_F(test2, BSC_ACTIVE)(benchmark::State& st)
 {

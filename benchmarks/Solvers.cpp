@@ -29,14 +29,19 @@ using namespace Eigen;
 using namespace jrlqp;
 using namespace jrlqp::test;
 
+/** Describe a parameter behavior*/
 enum class ParamType
 {
-  Variable,
-  Fixed,
-  FixedFraction,
-  VariableFraction
+  Variable,         // Parameter value is variable
+  Fixed,            // Parameter value is fixed
+  FixedFraction,    // Parameter value is a fixed fraction of another value
+  VariableFraction  // Parameter value is a variable fraction of another value
 };
 
+/** Helper structure extracting the i-th parameter of a ::benchmark::State range
+  *
+  * This is part of a collection of helpers to interpret a range.
+  */
 template<int i> 
 struct Var
 {
@@ -46,6 +51,11 @@ struct Var
   static int value(const ::benchmark::State& st, int) { return st.range(i); }
 };
 
+/** Helper structure whose value is \p i independently of the ::benchmark::State range
+  * is is given.
+  *
+  * This is part of a collection of helpers to interpret a range.
+  */
 template<int i>
 struct Fixed
 {
@@ -54,6 +64,11 @@ struct Fixed
   static int value(const ::benchmark::State&, int) { return i; }
 };
 
+/** Helper structure whose value is a fixed fraction n/d of a reference value,
+  * independently of the ::benchmark::State range is is given.
+  *
+  * This is part of a collection of helpers to interpret a range.
+  */
 template<int n, int d=100>
 struct FFrac
 {
@@ -63,6 +78,11 @@ struct FFrac
   static int value(const ::benchmark::State&, double ref) { return static_cast<int>(frac * ref); }
 };
 
+/** Helper structure whose value is a variable fraction range(i)/d of a reference value,
+  * where range is a ::benchmark::State range.
+  *
+  * This is part of a collection of helpers to interpret a range.
+  */
 template<int i, int d=100>
 struct VFrac
 {
@@ -73,6 +93,7 @@ struct VFrac
   static int value(const ::benchmark::State& st, double ref) { return static_cast<int>(st.range(i) * ref * invd); }
 };
 
+/** Compute the decimal representation of the binary number whose digit are \p doubleSided and \p bounds.*/
 template<bool bounds, bool doubleSided>
 constexpr int packBool()
 {
@@ -82,15 +103,20 @@ constexpr int packBool()
   return r;
 }
 
+/** Helper function used for generating the signature of a problem*/
 template<typename NVar, typename NEq, typename NIneq, typename NIneqAct, typename NBndAct>
 constexpr int rangeSize()
 {
   return 1 + NVar::rangeSlot + NEq::rangeSlot + NIneq::rangeSlot + NIneqAct::rangeSlot + NBndAct::rangeSlot;
 }
 
+/** An object representing the signature of a problem, used as a key for storing
+  * and retrieving problem of a given type and size
+  */
 template<typename NVar, typename NEq, typename NIneq, typename NIneqAct, typename NBndAct>
 using SignatureType = std::array<int, rangeSize<NVar, NEq, NIneq, NIneqAct, NBndAct>()>;
 
+/** Computation of a problem signature for a given ::benchmark::State*/
 template<typename NVar, typename NEq, typename NIneq, typename NIneqAct, bool Bounds, typename NBndAct, bool DoubleSided = false>
 SignatureType<NVar, NEq, NIneq, NIneqAct, NBndAct> problemSignature(const ::benchmark::State& st)
 {
@@ -105,9 +131,15 @@ SignatureType<NVar, NEq, NIneq, NIneqAct, NBndAct> problemSignature(const ::benc
   return ret;
 }
 
+/** A collection of \p NbPb QP problems with all the variations in representation
+  * needed for the different solver tested.
+  *
+  * Care is taken so that each problems is solvable by all solvers.
+  */
 template<int NbPb>
 struct ProblemCollection
 {
+  /** Generate all the problems*/
   void generate(int n, int me, int mi, int ma, int na, bool bounds, bool doubleSided)
   {
     nVar = n;
@@ -141,7 +173,7 @@ struct ProblemCollection
 
     for (int k = 0; k < NbPb; ++k)
     {
-      generate(k, n, me, mi, ma, na, bounds, doubleSided);
+      generateSingleProblem(k, n, me, mi, ma, na, bounds, doubleSided);
 
       if (!skipGI)
       {
@@ -212,7 +244,7 @@ struct ProblemCollection
     }
   }
 
-  void generate(int k, int n, int me, int mi, int ma, int na, bool bounds, bool doubleSided)
+  void generateSingleProblem(int k, int n, int me, int mi, int ma, int na, bool bounds, bool doubleSided)
   {
     original[k] = randomProblem(ProblemCharacteristics(n, n, me, mi)
       .nStrongActIneq(ma)
@@ -256,7 +288,35 @@ struct ProblemCollection
   bool skipQLD = false;
 };
 
-
+/** A fixture containing and managing collections of problems for all the sizes
+  * deduced from the template arguments and the ::benchmark::State
+  *
+  * The main goal of this class (with all related development) is to ensure that all
+  * solvers solve the same set of problems
+  *
+  * \tparam NbPb Number of different problems for a given set of sizes
+  * \tparam NVar Number of variables, specified as one of the helper structures Var,
+  * Fixed, VFrac or FFrac, to explain how to get this of variables from a 
+  * ::benchmark::State range.
+  * \tparam NEq Number of equality constraints, specified as one of the helper structures
+  * Var, Fixed, VFrac or FFrac, to explain how to get this number from a
+  * ::benchmark::State range. If given as a fraction, this is a fraction of NVar.
+  * \tparam NIneq Number of inequality constraints, specified as one of the helper
+  * structures Var, Fixed, VFrac or FFrac, to explain how to get this number from a 
+  * ::benchmark::State range. If given as a fraction, this is a fraction of NVar.
+  * \tparam NIneqAct Number of active inequality constraints at the solution, specified
+  * as one of the helper structures Var, Fixed, VFrac or FFrac, to explain how to get 
+  * this number from a ::benchmark::State range. If given as a fraction, this is a
+  * fraction of min(NVar,NIneq).
+  * \tparam Bounds Whether or not the problems have bounds on the variables.
+  * \tparam NIneqAct Number of active bounds constraints at the solution, specified as
+  * one of the helper structures Var, Fixed, VFrac or FFrac, to explain how to get this
+  * number from a ::benchmark::State range. If given as a fraction, this is a fraction of 
+  * NVar.
+  * \tparam DoubleSided Whether or not the constraints are double sided (lower and upper
+  * bounds)
+  * 
+  */
 template<int NbPb, typename NVar, typename NEq, typename NIneq, typename NIneqAct, bool Bounds, typename NBndAct, bool DoubleSided = false>
 class ProblemFixture : public ::benchmark::Fixture
 {
