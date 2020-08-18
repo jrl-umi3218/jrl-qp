@@ -8,9 +8,15 @@
 
 #include <benchmark/benchmark.h>
 
+#ifdef JRLQP_USE_LSSOL
 #include <eigen-lssol/LSSOL_QP.h>
+#endif
+#ifdef JRLQP_USE_QUADPROG
 #include <eigen-quadprog/QuadProg.h>
+#endif
+#ifdef JRLQP_USE_QLD
 #include <eigen-qld/QLDDirect.h>
+#endif
 
 #include <jrl-qp/GoldfarbIdnaniSolver.h>
 #include <jrl-qp/test/problems.h>
@@ -115,11 +121,17 @@ struct ProblemCollection
 
     Eigen::VectorXd x(nVar);
     GoldfarbIdnaniSolver solverGI(nVar, nCstr, bounds);
+#ifdef JRLQP_USE_QUADPROG
     Eigen::QuadProgDense solverQP(nVar, nEq, nSSIneqAndBnd);
+#endif
+#ifdef JRLQP_USE_LSSOL
     Eigen::LSSOL_QP solverLS(nVar, nCstr, Eigen::lssol::QP2);
     solverLS.optimalityMaxIter(500);
     solverLS.feasibilityMaxIter(500);
+#endif
+#ifdef JRLQP_USE_QLD
     Eigen::QLDDirect solverQLD(nVar, nEq, nSSIneq);
+#endif
 
     int failGI = 0;
     int failEigenQuadprog = 0;
@@ -145,6 +157,7 @@ struct ProblemCollection
         if (!check(x, k, failEiQuadprog, skipEiQuadprog, "eiQuadprog"))
           continue;
       }
+#ifdef JRLQP_USE_QUADPROG
       if (!skipEigenQuadprog)
       {
         auto& qp = quadprogPb[k];
@@ -152,6 +165,8 @@ struct ProblemCollection
         if (!check(solverQP.result(), k, failEigenQuadprog, skipEigenQuadprog, "quadprog"))
           continue;
       }
+#endif
+#ifdef JRLQP_USE_LSSOL
       if (!skipLssol)
       {
         auto& qp = lssolPb[k];
@@ -159,6 +174,8 @@ struct ProblemCollection
         if (!check(solverLS.result(), k, failLssol, skipLssol, "lssol"))
           continue;
       }
+#endif
+#ifdef JRLQP_USE_QLD
       if (!skipQLD)
       {
         auto& qp = qldPb[k];
@@ -166,6 +183,7 @@ struct ProblemCollection
         if (!check(solverQLD.result(), k, failQLD, skipQLD, "qld"))
           continue;
       }
+#endif
     }
   }
 
@@ -360,106 +378,103 @@ private:
 
 #include<iostream>
 
-#define BENCH_OVERHEAD(fixture)                                       \
-BENCHMARK_DEFINE_F(fixture, Overhead)(benchmark::State& st)           \
-{                                                                     \
-  auto sig = signature(st);                                           \
-  for (auto _ : st)                                                   \
-  {                                                                   \
-    benchmark::DoNotOptimize(getGIPb(sig));                           \
-  }                                                                   \
-}                                                                     \
-BENCHMARK_REGISTER_F(fixture, Overhead)->Unit(benchmark::kMicrosecond)
+#define NOP
 
-#define BENCH_GI(fixture)                                             \
-BENCHMARK_DEFINE_F(fixture, GI)(benchmark::State& st)                 \
-{                                                                     \
-  auto sig = signature(st);                                           \
-  if (skipGI(sig)) st.SkipWithError("Skipping GI");                   \
-  GoldfarbIdnaniSolver solver(nVar(sig), nCstr(sig), bounds(sig));    \
-  for (auto _ : st)                                                   \
-  {                                                                   \
-    auto& qp = getGIPb(sig);                                          \
-    solver.solve(qp.G, qp.a, qp.C, qp.l, qp.u, qp.xl, qp.xu);         \
-  }                                                                   \
-}                                                                     \
-BENCHMARK_REGISTER_F(fixture, GI)->Unit(benchmark::kMicrosecond)
+#define BENCH_OVERHEAD(fixture, otherArgs)                                       \
+BENCHMARK_DEFINE_F(fixture, Overhead)(benchmark::State& st)                      \
+{                                                                                \
+  auto sig = signature(st);                                                      \
+  for (auto _ : st)                                                              \
+  {                                                                              \
+    benchmark::DoNotOptimize(getGIPb(sig));                                      \
+  }                                                                              \
+}                                                                                \
+BENCHMARK_REGISTER_F(fixture, Overhead)->Unit(benchmark::kMicrosecond)otherArgs
 
-#define BENCH_EIQP(fixture)                                               \
-BENCHMARK_DEFINE_F(fixture, EIQP)(benchmark::State& st)                   \
-{                                                                         \
-  auto sig = signature(st);                                               \
-  if (skipEiQuadprog(sig)) st.SkipWithError("Skipping EiQuadprog");       \
-  Eigen::VectorXd x(nVar(sig));                                           \
-  for (auto _ : st)                                                       \
-  {                                                                       \
-    auto& qp = getEiQuadprogPb(sig);                                      \
-    Eigen::solve_quadprog(qp.G, qp.g0, qp.CE, qp.ce0, qp.CI, qp.ci0, x);  \
-  }                                                                       \
-}                                                                         \
-BENCHMARK_REGISTER_F(fixture, EIQP)->Unit(benchmark::kMicrosecond)
+#define BENCH_GI(fixture, otherArgs)                                        \
+BENCHMARK_DEFINE_F(fixture, GI)(benchmark::State& st)                       \
+{                                                                           \
+  auto sig = signature(st);                                                 \
+  if (skipGI(sig)) st.SkipWithError("Skipping GI");                         \
+  GoldfarbIdnaniSolver solver(nVar(sig), nCstr(sig), bounds(sig));          \
+  for (auto _ : st)                                                         \
+  {                                                                         \
+    auto& qp = getGIPb(sig);                                                \
+    solver.solve(qp.G, qp.a, qp.C, qp.l, qp.u, qp.xl, qp.xu);               \
+  }                                                                         \
+}                                                                           \
+BENCHMARK_REGISTER_F(fixture, GI)->Unit(benchmark::kMicrosecond)otherArgs
 
-#define BENCH_QUADPROG(fixture)                                       \
-BENCHMARK_DEFINE_F(fixture, QuadProg)(benchmark::State& st)           \
-{                                                                     \
-  auto sig = signature(st);                                           \
-  if (skipQuadprog(sig)) st.SkipWithError("Skipping Quadprog");       \
-  Eigen::QuadProgDense solver(nVar(sig),nEq(sig),nSSIneqAndBnd(sig)); \
-                                                                      \
-  for (auto _ : st)                                                   \
-  {                                                                   \
-    auto& qp = getQuadprogPb(sig);                                    \
-    solver.solve(qp.Q, qp.c, qp.Aeq, qp.beq, qp.Aineq, qp.bineq);     \
-  }                                                                   \
-}                                                                     \
-BENCHMARK_REGISTER_F(fixture, QuadProg)->Unit(benchmark::kMicrosecond)
+#define BENCH_EIQP(fixture, otherArgs)                                      \
+BENCHMARK_DEFINE_F(fixture, EIQP)(benchmark::State& st)                     \
+{                                                                           \
+  auto sig = signature(st);                                                 \
+  if (skipEiQuadprog(sig)) st.SkipWithError("Skipping EiQuadprog");         \
+  Eigen::VectorXd x(nVar(sig));                                             \
+  for (auto _ : st)                                                         \
+  {                                                                         \
+    auto& qp = getEiQuadprogPb(sig);                                        \
+    Eigen::solve_quadprog(qp.G, qp.g0, qp.CE, qp.ce0, qp.CI, qp.ci0, x);    \
+  }                                                                         \
+}                                                                           \
+BENCHMARK_REGISTER_F(fixture, EIQP)->Unit(benchmark::kMicrosecond)otherArgs
 
-#define BENCH_LSSOL(fixture)                                        \
-BENCHMARK_DEFINE_F(fixture, Lssol)(benchmark::State& st)            \
-{                                                                   \
-  auto sig = signature(st);                                         \
-  if (skipLssol(sig)) st.SkipWithError("Skipping LSSOL");           \
-  Eigen::LSSOL_QP solver(nVar(sig), nCstr(sig), Eigen::lssol::QP2); \
-  solver.optimalityMaxIter(500);                                    \
-  solver.feasibilityMaxIter(500);                                   \
-  for (auto _ : st)                                                 \
-  {                                                                 \
-    auto& qp = getLssolPb(sig);                                     \
-    solver.solve(qp.Q, qp.p, qp.C, qp.l, qp.u);                     \
-  }                                                                 \
-}                                                                   \
-BENCHMARK_REGISTER_F(fixture, Lssol)->Unit(benchmark::kMicrosecond)
+#ifdef JRLQP_USE_QUADPROG
+#define BENCH_QUADPROG(fixture, otherArgs)                                      \
+BENCHMARK_DEFINE_F(fixture, QuadProg)(benchmark::State& st)                     \
+{                                                                               \
+  auto sig = signature(st);                                                     \
+  if (skipQuadprog(sig)) st.SkipWithError("Skipping Quadprog");                 \
+  Eigen::QuadProgDense solver(nVar(sig),nEq(sig),nSSIneqAndBnd(sig));           \
+                                                                                \
+  for (auto _ : st)                                                             \
+  {                                                                             \
+    auto& qp = getQuadprogPb(sig);                                              \
+    solver.solve(qp.Q, qp.c, qp.Aeq, qp.beq, qp.Aineq, qp.bineq);               \
+  }                                                                             \
+}                                                                               \
+BENCHMARK_REGISTER_F(fixture, QuadProg)->Unit(benchmark::kMicrosecond)otherArgs
+#else
+#define BENCH_QUADPROG(fixture, otherArgs) NOP
+#endif
 
-//BENCHMARK_DEFINE_F(test1, LssolHackyWarmstart)(benchmark::State& st)
-//{
-//  Eigen::LSSOL_QP solver(nVar(), nCstr(), Eigen::lssol::QP2);
-//  solver.optimalityMaxIter(500);
-//  solver.feasibilityMaxIter(500);
-//  solver.warm(true);
-//  solver.persistence(true);
-//  auto& qp = getLssolPb();
-//  MatrixXd Q = qp.Q;
-//  for (auto _ : st)
-//  {
-//    qp.Q = Q;
-//    solver.solve(qp.Q, qp.p, qp.C, qp.l, qp.u);
-//  }
-//}
-//BENCHMARK_REGISTER_F(test1, LssolHackyWarmstart);
+#ifdef JRLQP_USE_LSSOL
+#define BENCH_LSSOL(fixture, otherArgs)                                       \
+BENCHMARK_DEFINE_F(fixture, Lssol)(benchmark::State& st)                      \
+{                                                                             \
+  auto sig = signature(st);                                                   \
+  if (skipLssol(sig)) st.SkipWithError("Skipping LSSOL");                     \
+  Eigen::LSSOL_QP solver(nVar(sig), nCstr(sig), Eigen::lssol::QP2);           \
+  solver.optimalityMaxIter(500);                                              \
+  solver.feasibilityMaxIter(500);                                             \
+  for (auto _ : st)                                                           \
+  {                                                                           \
+    auto& qp = getLssolPb(sig);                                               \
+    solver.solve(qp.Q, qp.p, qp.C, qp.l, qp.u);                               \
+  }                                                                           \
+}                                                                             \
+BENCHMARK_REGISTER_F(fixture, Lssol)->Unit(benchmark::kMicrosecond)otherArgs
+#else
+#define BENCH_LSSOL(fixture, otherArgs) NOP
+#endif
 
-#define BENCH_QLD(fixture)                                            \
-BENCHMARK_DEFINE_F(fixture, QLD)(benchmark::State& st)                \
-{                                                                     \
-  auto sig = signature(st);                                           \
-  if (skipQLD(sig)) st.SkipWithError("Skipping QLD");                 \
-  Eigen::QLDDirect solverQLD(nVar(sig), nEq(sig), nSSIneq(sig));      \
-  for (auto _ : st)                                                   \
-  {                                                                   \
-    auto& qp = getQLDPb(sig);                                         \
-    solverQLD.solve(qp.Q, qp.c, qp.A, qp.b, qp.xl, qp.xu, nEq(sig));  \
-  }                                                                   \
-}                                                                     \
-BENCHMARK_REGISTER_F(fixture, QLD)->Unit(benchmark::kMicrosecond)
+#ifdef JRLQP_USE_QLD
+#define BENCH_QLD(fixture, otherArgs)                                       \
+BENCHMARK_DEFINE_F(fixture, QLD)(benchmark::State& st)                      \
+{                                                                           \
+  auto sig = signature(st);                                                 \
+  if (skipQLD(sig)) st.SkipWithError("Skipping QLD");                       \
+  Eigen::QLDDirect solverQLD(nVar(sig), nEq(sig), nSSIneq(sig));            \
+  for (auto _ : st)                                                         \
+  {                                                                         \
+    auto& qp = getQLDPb(sig);                                               \
+    solverQLD.solve(qp.Q, qp.c, qp.A, qp.b, qp.xl, qp.xu, nEq(sig));        \
+  }                                                                         \
+}                                                                           \
+BENCHMARK_REGISTER_F(fixture, QLD)->Unit(benchmark::kMicrosecond)otherArgs
+#else
+#define BENCH_QLD(fixture, otherArgs) NOP
+#endif
 
 #define BENCH_CLEAR(fixture)                                          \
 BENCHMARK_DEFINE_F(fixture, Clear)(benchmark::State& st)              \
@@ -469,17 +484,15 @@ BENCHMARK_DEFINE_F(fixture, Clear)(benchmark::State& st)              \
 }                                                                     \
 BENCHMARK_REGISTER_F(fixture, Clear)
 
-#define BENCH_ALL(fixture, otherArgs)   \
-BENCH_OVERHEAD(fixture)otherArgs;       \
-BENCH_GI(fixture)otherArgs;             \
-BENCH_EIQP(fixture)otherArgs;           \
-BENCH_QUADPROG(fixture)otherArgs;       \
-BENCH_LSSOL(fixture)otherArgs;          \
-BENCH_QLD(fixture)otherArgs;            \
-BENCH_CLEAR(fixture)->DenseRange(1,1,1);
 
-//using test1 = ProblemFixture<100, Fixed<100>, Fixed<40>, Fixed<100>, Fixed<40>, false, Fixed<0>>;
-//using test1 = ProblemFixture<100, Fixed<100>, Fixed<0>, Fixed<50>, Fixed<0>, false, Fixed<0>>;
+#define BENCH_ALL(fixture, otherArgs)     \
+BENCH_OVERHEAD(fixture, otherArgs);       \
+BENCH_GI(fixture, otherArgs);             \
+BENCH_EIQP(fixture, otherArgs);           \
+BENCH_QUADPROG(fixture, otherArgs);       \
+BENCH_LSSOL(fixture, otherArgs);          \
+BENCH_QLD(fixture, otherArgs);            \
+BENCH_CLEAR(fixture)->DenseRange(1,1,1);
 
 // Varying size, fixed 40% equality
 using test1 = ProblemFixture<100, Var<0>, FFrac<40>, Fixed<0>, Fixed<0>, false, Fixed<0>>;
