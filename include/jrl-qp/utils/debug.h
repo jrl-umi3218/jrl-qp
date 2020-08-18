@@ -4,16 +4,17 @@
 #pragma once
 
 #ifndef NO_LOG
-#define NO_LOG_ 0
+inline constexpr bool NO_LOG_ = 0;
 #else
-#define NO_LOG_ 1
+inline constexpr bool NO_LOG_ = 1;
 #endif
 
 #ifdef NDEBUG
-#define DEBUG_OUTPUT 0
+inline constexpr bool DEBUG_OUTPUT = 0;
 #else
-#define DEBUG_OUTPUT 1
+inline constexpr bool DEBUG_OUTPUT = 1;
 #endif
+
 
 
 #define PP_ID(x) x

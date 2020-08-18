@@ -23,7 +23,7 @@ namespace jrlqp::utils
       * \param name Name of the Matlab struct that will record the data.
       * \param flags Flag for which the logger will effectively output something.
       */
-    Logger(std::ostream& os, const std::string& name, std::uint32_t flags = 0)
+    Logger(std::ostream& os, std::string name, std::uint32_t flags = 0)
       : flags_(flags), iter_(-1), name_(name), os_(&os) {}
 
     /** Add or remove one or several (aggregated) flags to filter the data to log.
@@ -36,7 +36,7 @@ namespace jrlqp::utils
     Logger& setOutputStream(std::ostream& os);
 
     /** Log a comment \p c, if \p flag pass the filter.*/
-    void comment(std::uint32_t flag, const std::string& c) const;
+    void comment(std::uint32_t flag, std::string_view c) const;
     /** Indicate that a new iteration of the solver is starting.*/
     void startIter(int i);
     /** Log a given number of values.
@@ -56,23 +56,27 @@ namespace jrlqp::utils
     int iter() const { return iter_; }
 
   private:
+    /** Output the start of log line corresponding to
+      *  - logging some general data if \p b is \c false
+      *  - logging data for the current iteration if \p b is \c true.
+      */
     template<bool b>
     std::ostream& logIter() const;
 
-    template<typename Bool, typename T, typename... Args>
-    void log_(const Bool& b, const std::string& valName, const T& val, Args&&... args) const;
+    template<bool b, typename T, typename... Args>
+    void log_(const std::string& valName, const T& val, Args&&... args) const;
 
-    template<typename Bool, typename T>
-    void log_(const Bool& b, const T&) const;
+    template<bool b, typename T>
+    void log_(const T&) const;
 
-    template<typename Bool>
-    void log_(const Bool& b) const {}
+    template<bool>
+    void log_() const {}
 
-    template<typename Bool, typename Derived>
-    void logVal_(const Bool&, const std::string& valName, const Eigen::EigenBase<Derived>& M) const;
+    template<bool b, typename Derived>
+    void logVal_(const std::string& valName, const Eigen::EigenBase<Derived>& M) const;
 
-    template<typename Bool, typename Other, typename std::enable_if<(!internal::derives_from<Other, Eigen::EigenBase>()), int>::type=0>
-    void logVal_(const Bool&, const std::string& valName, const Other& val) const;
+    template<bool b, typename Other, typename std::enable_if<(!internal::derives_from<Other, Eigen::EigenBase>()), int>::type=0>
+    void logVal_(const std::string& valName, const Other& val) const;
 
     std::uint32_t flags_;
     int iter_;
@@ -102,34 +106,34 @@ namespace jrlqp::utils
     if (flag & flags_)
     {
       if (flag & constant::noIterationFlag)
-        log_(std::false_type{}, std::forward<Args>(args)...);
+        log_<false>(std::forward<Args>(args)...);
       else
-        log_(std::true_type{}, std::forward<Args>(args)...);
+        log_<true>(std::forward<Args>(args)...);
     }
   }
 
-  template<typename Bool, typename T, typename... Args>
-  inline void Logger::log_(const Bool& b, const std::string& valName, const T& val, Args&&... args) const
+  template<bool b, typename T, typename... Args>
+  inline void Logger::log_(const std::string& valName, const T& val, Args&&... args) const
   {
-    logVal_(b, valName, val);
-    log_(b, std::forward<Args>(args)...);
+    logVal_<b>(valName, val);
+    log_<b>(std::forward<Args>(args)...);
   }
 
-  template<typename Bool, typename T>
-  inline void Logger::log_(const Bool&, const T&) const
+  template<bool, typename T>
+  inline void Logger::log_(const T&) const
   {
     static_assert(internal::always_false<T>::value && "incorrect number of arguments.");
   }
 
-  template<typename Bool, typename Derived>
-  inline void Logger::logVal_(const Bool&, const std::string& valName, const Eigen::EigenBase<Derived>& M) const
+  template<bool b, typename Derived>
+  inline void Logger::logVal_(const std::string& valName, const Eigen::EigenBase<Derived>& M) const
   {
-    logIter<Bool::value>() << "." << valName << " = " << (toMatlab)M.const_derived() << ";\n";
+    logIter<b>() << "." << valName << " = " << (toMatlab)M.const_derived() << ";\n";
   }
 
-  template<typename Bool, typename Other, typename std::enable_if<(!internal::derives_from<Other, Eigen::EigenBase>()), int>::type>
-  inline void Logger::logVal_(const Bool&, const std::string& valName, const Other& val) const
+  template<bool b, typename Other, typename std::enable_if<(!internal::derives_from<Other, Eigen::EigenBase>()), int>::type>
+  inline void Logger::logVal_(const std::string& valName, const Other& val) const
   {
-    logIter<Bool::value>() << "." << valName << " = " << val << ";\n";
+    logIter<b>() << "." << valName << " = " << val << ";\n";
   }
 }

@@ -18,9 +18,7 @@ namespace jrlqp::utils
 		* Adapted from https://stackoverflow.com/a/5998303/11611648
 		*/
 	template <typename T>
-	constexpr bool isConvertibleToRef() {
-		return decltype(isConvertibleToRef_(std::declval<const T&>()))::value;
-	}
+	inline constexpr bool is_convertible_to_eigen_ref_v = decltype(isConvertibleToRef_(std::declval<const T&>()))::value;
 
 
 	/** A small utility class to write Eigen matrices in a stream with a matlab-readable format.
@@ -38,7 +36,7 @@ namespace jrlqp::utils
 		: mat(M)
 	  {}
 
-		template<typename Derived, typename std::enable_if<(!isConvertibleToRef<Derived>()), int>::type = 0>
+		template<typename Derived, typename std::enable_if<!is_convertible_to_eigen_ref_v<Derived>, int>::type = 0>
 		toMatlab(const Eigen::EigenBase<Derived>& M)
 			: tmp(M), mat(tmp)		
 		{}

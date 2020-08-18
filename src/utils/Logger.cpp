@@ -20,7 +20,7 @@ namespace jrlqp::utils
     return *this;
   }
 
-  void Logger::comment(std::uint32_t flag, const std::string& c) const
+  void Logger::comment(std::uint32_t flag, std::string_view c) const
   {
     if (flag & flags_) 
       *os_ << "% " << c << "\n";
