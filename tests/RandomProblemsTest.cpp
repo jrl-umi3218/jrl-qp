@@ -1,11 +1,10 @@
-#include <array>
 #include <Eigen/LU>
 #include <Eigen/QR>
+#include <array>
 
 #include <jrl-qp/test/kkt.h>
 #include <jrl-qp/test/randomMatrices.h>
 #include <jrl-qp/test/randomProblems.h>
-
 
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #define DOCTEST_CONFIG_SUPER_FAST_ASSERTS
@@ -13,7 +12,7 @@
 
 using namespace jrl::qp::test;
 
-//TEST_CASE("Random orthogonal matrices")
+// TEST_CASE("Random orthogonal matrices")
 //{
 //  const int N = 1000;
 //  int positive = 0;
@@ -27,7 +26,7 @@ using namespace jrl::qp::test;
 //    double det = Q.lu().determinant();
 //    FAST_CHECK_EQ(std::abs(det), doctest::Approx(1).epsilon(1e-8));
 //    if (det > 0) ++positive;
-//    
+//
 //    FAST_CHECK_UNARY((Q.transpose() * Q).isIdentity(1e-8));
 //    FAST_CHECK_UNARY((Q * Q.transpose()).isIdentity(1e-8));
 //  }
@@ -42,7 +41,7 @@ using namespace jrl::qp::test;
 //  }
 //}
 //
-//TEST_CASE("Random rank deficient matrices")
+// TEST_CASE("Random rank deficient matrices")
 //{
 //  std::array<Eigen::Index, 5> sizes = {10,25,50,75,100};
 //  Eigen::Index n = 0;
@@ -90,12 +89,12 @@ using namespace jrl::qp::test;
 //    var += (val[i] - mean) * (val[i] - mean);
 //  }
 //  var /= n;
-//  
+//
 //  FAST_CHECK_EQ(std::abs(mean), doctest::Approx(0).epsilon(1e-2));
 //  FAST_CHECK_EQ(var, doctest::Approx(1).epsilon(2.5e-2));
 //}
 //
-//TEST_CASE("Random dependent matrices")
+// TEST_CASE("Random dependent matrices")
 //{
 //  std::vector<std::array<Eigen::Index, 6>> params = {
 //    { 15, 5, 4, 7, 7, 9 },
@@ -118,7 +117,7 @@ using namespace jrl::qp::test;
 //  }
 //}
 
-void testRandomProblem(const RandomLeastSquare& pb)
+void testRandomProblem(const RandomLeastSquare & pb)
 {
   FAST_CHECK_UNARY(pb.wellFormed());
   Eigen::VectorXd mult(pb.l.size() + pb.f.size() + pb.xl.size());
@@ -134,7 +133,6 @@ TEST_CASE("Random Least Squares")
   testRandomProblem(randomProblem(ProblemCharacteristics(5, 3).nIneq(5)));
   testRandomProblem(randomProblem(ProblemCharacteristics(5, 3).nIneq(5).nStrongActIneq(2)));
   testRandomProblem(randomProblem(ProblemCharacteristics(5, 3).nIneq(5).nStrongActIneq(4)));
-  testRandomProblem(randomProblem({ 5, 3, 2, 5, 3, 0, 2, 0, 0, 0, false, false, false }));
-  testRandomProblem(randomProblem({ 5, 3, 1, 5, 3, 0, 1, 0, 0, 0, false, false, false }));
+  testRandomProblem(randomProblem({5, 3, 2, 5, 3, 0, 2, 0, 0, 0, false, false, false}));
+  testRandomProblem(randomProblem({5, 3, 1, 5, 3, 0, 1, 0, 0, 0, false, false, false}));
 }
-

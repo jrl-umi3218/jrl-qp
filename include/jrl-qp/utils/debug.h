@@ -14,24 +14,19 @@ inline constexpr bool DEBUG_OUTPUT = 0;
 inline constexpr bool DEBUG_OUTPUT = 1;
 #endif
 
-
-
 #define PP_ID(x) x
 
 #define PP_APPLY(macro, ...) PP_ID(macro(__VA_ARGS__))
 
 /** Count the number of argument passed to it.*/
-#define PP_NARG(...) PP_ID(PP_NARG_(__VA_ARGS__,PP_RSEQ_N()))
+#define PP_NARG(...) PP_ID(PP_NARG_(__VA_ARGS__, PP_RSEQ_N()))
 #define PP_NARG_(...) PP_ID(PP_ARG_N(__VA_ARGS__))
-#define PP_ARG_N(_1, _2, _3, _4, _5, _6, _7, _8, _9,_10,N,...) N
-#define PP_RSEQ_N() 10,9,8,7,6,5,4,3,2,1,0
-
+#define PP_ARG_N(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, N, ...) N
+#define PP_RSEQ_N() 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0
 
 #define CHOOSE_AUTO_NAME_START(count) AUTO_NAME_ARG##count
 
-#define AUTO_NAME_ARG(...) \
-  PP_ID(PP_APPLY(CHOOSE_AUTO_NAME_START, PP_NARG(__VA_ARGS__)) \
-          (__VA_ARGS__))
+#define AUTO_NAME_ARG(...) PP_ID(PP_APPLY(CHOOSE_AUTO_NAME_START, PP_NARG(__VA_ARGS__))(__VA_ARGS__))
 
 #define AUTO_NAME_ARG1(x) #x, x
 #define AUTO_NAME_ARG2(x, ...) #x, x, PP_ID(AUTO_NAME_ARG1(__VA_ARGS__))
@@ -44,9 +39,22 @@ inline constexpr bool DEBUG_OUTPUT = 1;
 #define AUTO_NAME_ARG9(x, ...) #x, x, PP_ID(AUTO_NAME_ARG8(__VA_ARGS__))
 #define AUTO_NAME_ARG10(x, ...) #x, x, PP_ID(AUTO_NAME_ARG9(__VA_ARGS__))
 
-
-#define ENABLE_LOG_(macro, ...) do { if (!NO_LOG_) {PP_ID(macro(__VA_ARGS__));} } while (0)
-#define ENABLE_DEBUG_(macro, ...) do { if (DEBUG_OUTPUT) {PP_ID(macro(__VA_ARGS__));} } while (0)
+#define ENABLE_LOG_(macro, ...)  \
+  do                             \
+  {                              \
+    if(!NO_LOG_)                 \
+    {                            \
+      PP_ID(macro(__VA_ARGS__)); \
+    }                            \
+  } while(0)
+#define ENABLE_DEBUG_(macro, ...) \
+  do                              \
+  {                               \
+    if(DEBUG_OUTPUT)              \
+    {                             \
+      PP_ID(macro(__VA_ARGS__));  \
+    }                             \
+  } while(0)
 
 #define LOG_(logger, flags, ...) PP_ID(logger.log(static_cast<uint32_t>(flags), PP_ID(AUTO_NAME_ARG(__VA_ARGS__))))
 #define LOG_AS_(logger, flags, ...) PP_ID(logger.log(static_cast<uint32_t>(flags), __VA_ARGS__))
@@ -64,4 +72,11 @@ inline constexpr bool DEBUG_OUTPUT = 1;
 #define LOG_RESET(logger) ENABLE_LOG_(logger.startIter, -1)
 #define DBG_RESET(logger) ENABLE_DEBUG_(logger.startIter, -1)
 
-#define DEBUG_ONLY(expr) do { if (DEBUG_OUTPUT) {expr;} } while (0)
+#define DEBUG_ONLY(expr) \
+  do                     \
+  {                      \
+    if(DEBUG_OUTPUT)     \
+    {                    \
+      expr;              \
+    }                    \
+  } while(0)

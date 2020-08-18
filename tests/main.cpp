@@ -1,23 +1,22 @@
 /* Copyright 2020 CNRS-AIST JRL */
 
-#include <iostream>
 #include <chrono>
+#include <iostream>
 #include <vector>
 
 #include <Eigen/Core>
 #include <Eigen/QR>
 
-#include <jrl-qp/utils/debug.h>
 #include <jrl-qp/utils/Logger.h>
+#include <jrl-qp/utils/debug.h>
 
 using namespace Eigen;
 using namespace jrl::qp;
 
-
 int main()
 {
   MatrixXd A = MatrixXd::Random(3, 5);
-  
+
   utils::Logger l(std::cout, "qp");
   l.setFlag(0x00000001);
   l.startIter(0);
@@ -25,7 +24,7 @@ int main()
   l.log(0x00000010, "test2", 4);
   l.log(0x00000001, "A", A);
 
-  LOG_NEW_ITER(l,1);
+  LOG_NEW_ITER(l, 1);
   l.log(1, "n", 5, "A", A, "r", 3.14);
 
   auto s = l.subLog("choice");

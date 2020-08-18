@@ -4,5 +4,5 @@
 
 namespace jrl::qp
 {
-	std::ostream& SolverOptions::defaultStream_ = std::cout;
+std::ostream & SolverOptions::defaultStream_ = std::cout;
 }

@@ -8,13 +8,13 @@
 #include <benchmark/benchmark.h>
 
 #ifdef JRLQP_USE_LSSOL
-#include <eigen-lssol/LSSOL_QP.h>
+#  include <eigen-lssol/LSSOL_QP.h>
 #endif
 #ifdef JRLQP_USE_QUADPROG
-#include <eigen-quadprog/QuadProg.h>
+#  include <eigen-quadprog/QuadProg.h>
 #endif
 #ifdef JRLQP_USE_QLD
-#include <eigen-qld/QLDDirect.h>
+#  include <eigen-qld/QLDDirect.h>
 #endif
 
 #include <jrl-qp/GoldfarbIdnaniSolver.h>
@@ -31,65 +31,77 @@ using namespace jrl::qp::test;
 /** Describe a parameter behavior*/
 enum class ParamType
 {
-  Variable,         // Parameter value is variable
-  Fixed,            // Parameter value is fixed
-  FixedFraction,    // Parameter value is a fixed fraction of another value
-  VariableFraction  // Parameter value is a variable fraction of another value
+  Variable, // Parameter value is variable
+  Fixed, // Parameter value is fixed
+  FixedFraction, // Parameter value is a fixed fraction of another value
+  VariableFraction // Parameter value is a variable fraction of another value
 };
 
 /** Helper structure extracting the i-th parameter of a ::benchmark::State range
-  *
-  * This is part of a collection of helpers to interpret a range.
-  */
-template<int i> 
+ *
+ * This is part of a collection of helpers to interpret a range.
+ */
+template<int i>
 struct Var
 {
   constexpr static int rangeIdx = i;
   constexpr static ParamType type = ParamType::Variable;
   constexpr static int rangeSlot = 1;
-  static int value(const ::benchmark::State& st, int) { return st.range(i); }
+  static int value(const ::benchmark::State & st, int)
+  {
+    return st.range(i);
+  }
 };
 
 /** Helper structure whose value is \p i independently of the ::benchmark::State range
-  * is is given.
-  *
-  * This is part of a collection of helpers to interpret a range.
-  */
+ * is is given.
+ *
+ * This is part of a collection of helpers to interpret a range.
+ */
 template<int i>
 struct Fixed
 {
   constexpr static ParamType type = ParamType::Fixed;
   constexpr static int rangeSlot = 0;
-  static int value(const ::benchmark::State&, int) { return i; }
+  static int value(const ::benchmark::State &, int)
+  {
+    return i;
+  }
 };
 
 /** Helper structure whose value is a fixed fraction n/d of a reference value,
-  * independently of the ::benchmark::State range is is given.
-  *
-  * This is part of a collection of helpers to interpret a range.
-  */
-template<int n, int d=100>
+ * independently of the ::benchmark::State range is is given.
+ *
+ * This is part of a collection of helpers to interpret a range.
+ */
+template<int n, int d = 100>
 struct FFrac
 {
-  constexpr static double frac = static_cast<double>(n)/d;
+  constexpr static double frac = static_cast<double>(n) / d;
   constexpr static ParamType type = ParamType::FixedFraction;
   constexpr static int rangeSlot = 0;
-  static int value(const ::benchmark::State&, double ref) { return static_cast<int>(frac * ref); }
+  static int value(const ::benchmark::State &, double ref)
+  {
+    return static_cast<int>(frac * ref);
+  }
 };
 
 /** Helper structure whose value is a variable fraction range(i)/d of a reference value,
-  * where range is a ::benchmark::State range.
-  *
-  * This is part of a collection of helpers to interpret a range.
-  */
-template<int i, int d=100>
+ * where range is a ::benchmark::State range.
+ *
+ * This is part of a collection of helpers to interpret a range.
+ */
+template<int i, int d = 100>
 struct VFrac
 {
   constexpr static double invd = 1. / d;
   constexpr static ParamType type = ParamType::VariableFraction;
   constexpr static int rangeIdx = i;
   constexpr static int rangeSlot = 1;
-  static int value(const ::benchmark::State& st, double ref) { return static_cast<int>(st.range(i) * ref * invd); }
+  static int value(const ::benchmark::State & st, double ref)
+  {
+    return static_cast<int>(st.range(i) * ref * invd);
+  }
 };
 
 /** Compute the decimal representation of the binary number whose digit are \p doubleSided and \p bounds.*/
@@ -97,8 +109,11 @@ template<bool bounds, bool doubleSided>
 constexpr int packBool()
 {
   int r;
-  if (bounds) r = 1; else r = 0;
-  if (doubleSided) r += 2;
+  if(bounds)
+    r = 1;
+  else
+    r = 0;
+  if(doubleSided) r += 2;
   return r;
 }
 
@@ -110,31 +125,37 @@ constexpr int rangeSize()
 }
 
 /** An object representing the signature of a problem, used as a key for storing
-  * and retrieving problem of a given type and size
-  */
+ * and retrieving problem of a given type and size
+ */
 template<typename NVar, typename NEq, typename NIneq, typename NIneqAct, typename NBndAct>
 using SignatureType = std::array<int, rangeSize<NVar, NEq, NIneq, NIneqAct, NBndAct>()>;
 
 /** Computation of a problem signature for a given ::benchmark::State*/
-template<typename NVar, typename NEq, typename NIneq, typename NIneqAct, bool Bounds, typename NBndAct, bool DoubleSided = false>
-SignatureType<NVar, NEq, NIneq, NIneqAct, NBndAct> problemSignature(const ::benchmark::State& st)
+template<typename NVar,
+         typename NEq,
+         typename NIneq,
+         typename NIneqAct,
+         bool Bounds,
+         typename NBndAct,
+         bool DoubleSided = false>
+SignatureType<NVar, NEq, NIneq, NIneqAct, NBndAct> problemSignature(const ::benchmark::State & st)
 {
   SignatureType<NVar, NEq, NIneq, NIneqAct, NBndAct> ret;
   ret[0] = packBool<Bounds, DoubleSided>();
-  if constexpr (NVar::rangeSlot) ret[NVar::rangeIdx + 1] = st.range(NVar::rangeIdx);
-  if constexpr (NEq::rangeSlot) ret[NEq::rangeIdx + 1] = st.range(NEq::rangeIdx);
-  if constexpr (NIneq::rangeSlot) ret[NIneq::rangeIdx + 1] = st.range(NIneq::rangeIdx);
-  if constexpr (NIneqAct::rangeSlot) ret[NIneqAct::rangeIdx + 1] = st.range(NIneqAct::rangeIdx);
-  if constexpr (NBndAct::rangeSlot) ret[NBndAct::rangeIdx + 1] = st.range(NBndAct::rangeIdx);
+  if constexpr(NVar::rangeSlot) ret[NVar::rangeIdx + 1] = st.range(NVar::rangeIdx);
+  if constexpr(NEq::rangeSlot) ret[NEq::rangeIdx + 1] = st.range(NEq::rangeIdx);
+  if constexpr(NIneq::rangeSlot) ret[NIneq::rangeIdx + 1] = st.range(NIneq::rangeIdx);
+  if constexpr(NIneqAct::rangeSlot) ret[NIneqAct::rangeIdx + 1] = st.range(NIneqAct::rangeIdx);
+  if constexpr(NBndAct::rangeSlot) ret[NBndAct::rangeIdx + 1] = st.range(NBndAct::rangeIdx);
 
   return ret;
 }
 
 /** A collection of \p NbPb QP problems with all the variations in representation
-  * needed for the different solver tested.
-  *
-  * Care is taken so that each problems is solvable by all solvers.
-  */
+ * needed for the different solver tested.
+ *
+ * Care is taken so that each problems is solvable by all solvers.
+ */
 template<int NbPb>
 struct ProblemCollection
 {
@@ -145,7 +166,7 @@ struct ProblemCollection
     nEq = me;
     nIneq = mi;
     nSSIneq = doubleSided ? (2 * mi) : mi;
-    nSSIneqAndBnd = (bounds?2*nVar:nVar) + nSSIneq;
+    nSSIneqAndBnd = (bounds ? 2 * nVar : nVar) + nSSIneq;
     nCstr = me + mi;
     this->bounds = bounds;
     this->doubleSided = doubleSided;
@@ -170,61 +191,56 @@ struct ProblemCollection
     int failLssol = 0;
     int failQLD = 0;
 
-    for (int k = 0; k < NbPb; ++k)
+    for(int k = 0; k < NbPb; ++k)
     {
       generateSingleProblem(k, n, me, mi, ma, na, bounds, doubleSided);
 
-      if (!skipGI)
+      if(!skipGI)
       {
-        auto& qp = giPb[k];
+        auto & qp = giPb[k];
         solverGI.solve(qp.G, qp.a, qp.C, qp.l, qp.u, qp.xl, qp.xu);
-        if (!check(solverGI.solution(), k, failGI, skipGI, "GI"))
-          continue;
+        if(!check(solverGI.solution(), k, failGI, skipGI, "GI")) continue;
       }
-      if (!skipEiQuadprog)
+      if(!skipEiQuadprog)
       {
-        auto& qp = eiquadprogPb[k];
+        auto & qp = eiquadprogPb[k];
         Eigen::solve_quadprog(qp.G, qp.g0, qp.CE, qp.ce0, qp.CI, qp.ci0, x);
-        if (!check(x, k, failEiQuadprog, skipEiQuadprog, "eiQuadprog"))
-          continue;
+        if(!check(x, k, failEiQuadprog, skipEiQuadprog, "eiQuadprog")) continue;
       }
 #ifdef JRLQP_USE_QUADPROG
-      if (!skipEigenQuadprog)
+      if(!skipEigenQuadprog)
       {
-        auto& qp = quadprogPb[k];
+        auto & qp = quadprogPb[k];
         solverQP.solve(qp.Q, qp.c, qp.Aeq, qp.beq, qp.Aineq, qp.bineq);
-        if (!check(solverQP.result(), k, failEigenQuadprog, skipEigenQuadprog, "quadprog"))
-          continue;
+        if(!check(solverQP.result(), k, failEigenQuadprog, skipEigenQuadprog, "quadprog")) continue;
       }
 #endif
 #ifdef JRLQP_USE_LSSOL
-      if (!skipLssol)
+      if(!skipLssol)
       {
-        auto& qp = lssolPb[k];
+        auto & qp = lssolPb[k];
         solverLS.solve(qp.Q, qp.p, qp.C, qp.l, qp.u);
-        if (!check(solverLS.result(), k, failLssol, skipLssol, "lssol"))
-          continue;
+        if(!check(solverLS.result(), k, failLssol, skipLssol, "lssol")) continue;
       }
 #endif
 #ifdef JRLQP_USE_QLD
-      if (!skipQLD)
+      if(!skipQLD)
       {
-        auto& qp = qldPb[k];
+        auto & qp = qldPb[k];
         solverQLD.solve(qp.Q, qp.c, qp.A, qp.b, qp.xl, qp.xu, nEq);
-        if (!check(solverQLD.result(), k, failQLD, skipQLD, "qld"))
-          continue;
+        if(!check(solverQLD.result(), k, failQLD, skipQLD, "qld")) continue;
       }
 #endif
     }
   }
 
-  bool check(const VectorConstRef& x, int& k, int& failCount, bool& skip, const std::string& name)
+  bool check(const VectorConstRef & x, int & k, int & failCount, bool & skip, const std::string & name)
   {
     const int maxFail = 10;
-    if (!checkSolution(x, k))
+    if(!checkSolution(x, k))
     {
       ++failCount;
-      if (failCount >= maxFail)
+      if(failCount >= maxFail)
       {
         skip = true;
         return true;
@@ -246,10 +262,10 @@ struct ProblemCollection
   void generateSingleProblem(int k, int n, int me, int mi, int ma, int na, bool bounds, bool doubleSided)
   {
     original[k] = randomProblem(ProblemCharacteristics(n, n, me, mi)
-      .nStrongActIneq(ma)
-      .nStrongActBounds(na)
-      .bounds(bounds)
-      .doubleSidedIneq(doubleSided));
+                                    .nStrongActIneq(ma)
+                                    .nStrongActBounds(na)
+                                    .bounds(bounds)
+                                    .doubleSidedIneq(doubleSided));
     QPProblem<true> qp = original[k];
     giPb[k] = qp;
     G[k] = giPb[k].G;
@@ -259,7 +275,7 @@ struct ProblemCollection
     qldPb[k] = qp;
   }
 
-  bool checkSolution(const VectorConstRef& x, int k)
+  bool checkSolution(const VectorConstRef & x, int k)
   {
     double err = (x - original[k].x).norm();
     return (err <= 1e-6);
@@ -288,46 +304,53 @@ struct ProblemCollection
 };
 
 /** A fixture containing and managing collections of problems for all the sizes
-  * deduced from the template arguments and the ::benchmark::State
-  *
-  * The main goal of this class (with all related development) is to ensure that all
-  * solvers solve the same set of problems
-  *
-  * \tparam NbPb Number of different problems for a given set of sizes
-  * \tparam NVar Number of variables, specified as one of the helper structures Var,
-  * Fixed, VFrac or FFrac, to explain how to get this of variables from a 
-  * ::benchmark::State range.
-  * \tparam NEq Number of equality constraints, specified as one of the helper structures
-  * Var, Fixed, VFrac or FFrac, to explain how to get this number from a
-  * ::benchmark::State range. If given as a fraction, this is a fraction of NVar.
-  * \tparam NIneq Number of inequality constraints, specified as one of the helper
-  * structures Var, Fixed, VFrac or FFrac, to explain how to get this number from a 
-  * ::benchmark::State range. If given as a fraction, this is a fraction of NVar.
-  * \tparam NIneqAct Number of active inequality constraints at the solution, specified
-  * as one of the helper structures Var, Fixed, VFrac or FFrac, to explain how to get 
-  * this number from a ::benchmark::State range. If given as a fraction, this is a
-  * fraction of min(NVar,NIneq).
-  * \tparam Bounds Whether or not the problems have bounds on the variables.
-  * \tparam NIneqAct Number of active bounds constraints at the solution, specified as
-  * one of the helper structures Var, Fixed, VFrac or FFrac, to explain how to get this
-  * number from a ::benchmark::State range. If given as a fraction, this is a fraction of 
-  * NVar.
-  * \tparam DoubleSided Whether or not the constraints are double sided (lower and upper
-  * bounds)
-  * 
-  */
-template<int NbPb, typename NVar, typename NEq, typename NIneq, typename NIneqAct, bool Bounds, typename NBndAct, bool DoubleSided = false>
+ * deduced from the template arguments and the ::benchmark::State
+ *
+ * The main goal of this class (with all related development) is to ensure that all
+ * solvers solve the same set of problems
+ *
+ * \tparam NbPb Number of different problems for a given set of sizes
+ * \tparam NVar Number of variables, specified as one of the helper structures Var,
+ * Fixed, VFrac or FFrac, to explain how to get this of variables from a
+ * ::benchmark::State range.
+ * \tparam NEq Number of equality constraints, specified as one of the helper structures
+ * Var, Fixed, VFrac or FFrac, to explain how to get this number from a
+ * ::benchmark::State range. If given as a fraction, this is a fraction of NVar.
+ * \tparam NIneq Number of inequality constraints, specified as one of the helper
+ * structures Var, Fixed, VFrac or FFrac, to explain how to get this number from a
+ * ::benchmark::State range. If given as a fraction, this is a fraction of NVar.
+ * \tparam NIneqAct Number of active inequality constraints at the solution, specified
+ * as one of the helper structures Var, Fixed, VFrac or FFrac, to explain how to get
+ * this number from a ::benchmark::State range. If given as a fraction, this is a
+ * fraction of min(NVar,NIneq).
+ * \tparam Bounds Whether or not the problems have bounds on the variables.
+ * \tparam NIneqAct Number of active bounds constraints at the solution, specified as
+ * one of the helper structures Var, Fixed, VFrac or FFrac, to explain how to get this
+ * number from a ::benchmark::State range. If given as a fraction, this is a fraction of
+ * NVar.
+ * \tparam DoubleSided Whether or not the constraints are double sided (lower and upper
+ * bounds)
+ *
+ */
+template<int NbPb,
+         typename NVar,
+         typename NEq,
+         typename NIneq,
+         typename NIneqAct,
+         bool Bounds,
+         typename NBndAct,
+         bool DoubleSided = false>
 class ProblemFixture : public ::benchmark::Fixture
 {
 public:
   using Signature = SignatureType<NVar, NEq, NIneq, NIneqAct, NBndAct>;
 
-  void SetUp(const ::benchmark::State& st)
+  void SetUp(const ::benchmark::State & st)
   {
     auto sig = problemSignature<NVar, NEq, NIneq, NIneqAct, Bounds, NBndAct, DoubleSided>(st);
 
     i = 0;
-    if (problems.find(sig) == problems.end())
+    if(problems.find(sig) == problems.end())
     {
       int n = NVar::value(st, 0);
       int me = NEq::value(st, n);
@@ -337,29 +360,27 @@ public:
 
       problems[sig] = {};
 
-      //std::cout << "initialize for (" << n << ", " << me << ", " << mi << ", " << ma << ", " << na << ", " << Bounds << ", " << DoubleSided << ")" << std::endl;
+      // std::cout << "initialize for (" << n << ", " << me << ", " << mi << ", " << ma << ", " << na << ", " << Bounds
+      // << ", " << DoubleSided << ")" << std::endl;
       try
       {
         problems[sig].generate(n, me, mi, ma, na, Bounds, DoubleSided);
       }
-      catch (std::exception e)
+      catch(std::exception e)
       {
         std::cout << e.what() << std::endl;
       }
     }
-    
   }
 
-  void TearDown(const ::benchmark::State&)
-  {
-  }
+  void TearDown(const ::benchmark::State &) {}
 
   inline static void clearData()
   {
     problems.clear();
   }
 
-  Signature signature(const ::benchmark::State& st)
+  Signature signature(const ::benchmark::State & st)
   {
     return problemSignature<NVar, NEq, NIneq, NIneqAct, Bounds, NBndAct, DoubleSided>(st);
   }
@@ -371,199 +392,237 @@ public:
     return ret;
   }
 
-  int nVar(const Signature& sig) const { return problems[sig].nVar; }
-  int nEq(const Signature& sig) const { return problems[sig].nEq; }
-  int nIneq(const Signature& sig) const { return problems[sig].nIneq; }
+  int nVar(const Signature & sig) const
+  {
+    return problems[sig].nVar;
+  }
+  int nEq(const Signature & sig) const
+  {
+    return problems[sig].nEq;
+  }
+  int nIneq(const Signature & sig) const
+  {
+    return problems[sig].nIneq;
+  }
   // Number of single-sided constraints
-  int nSSIneq(const Signature& sig) const { return problems[sig].nSSIneq; }
+  int nSSIneq(const Signature & sig) const
+  {
+    return problems[sig].nSSIneq;
+  }
   // Number of single-sided constraints including bounds
-  int nSSIneqAndBnd(const Signature& sig) const { return problems[sig].nSSIneqAndBnd; }
-  int nCstr(const Signature& sig) const { return problems[sig].nCstr; }
-  int bounds(const Signature& sig) const { return problems[sig].bounds; }
+  int nSSIneqAndBnd(const Signature & sig) const
+  {
+    return problems[sig].nSSIneqAndBnd;
+  }
+  int nCstr(const Signature & sig) const
+  {
+    return problems[sig].nCstr;
+  }
+  int bounds(const Signature & sig) const
+  {
+    return problems[sig].bounds;
+  }
 
-  bool skipGI(const Signature& sig) const { return problems[sig].skipGI; }
-  bool skipQuadprog(const Signature& sig) const { return problems[sig].skipEigenQuadprog; }
-  bool skipEiQuadprog(const Signature& sig) const { return problems[sig].skipEiQuadprog; }
-  bool skipLssol(const Signature& sig) const { return problems[sig].skipLssol; }
-  bool skipQLD(const Signature& sig) const { return problems[sig].skipQLD; }
+  bool skipGI(const Signature & sig) const
+  {
+    return problems[sig].skipGI;
+  }
+  bool skipQuadprog(const Signature & sig) const
+  {
+    return problems[sig].skipEigenQuadprog;
+  }
+  bool skipEiQuadprog(const Signature & sig) const
+  {
+    return problems[sig].skipEiQuadprog;
+  }
+  bool skipLssol(const Signature & sig) const
+  {
+    return problems[sig].skipLssol;
+  }
+  bool skipQLD(const Signature & sig) const
+  {
+    return problems[sig].skipQLD;
+  }
 
-  RandomLeastSquare& getOriginal() { return problems[this->sig].original[idx()]; }
+  RandomLeastSquare & getOriginal()
+  {
+    return problems[this->sig].original[idx()];
+  }
 
-  GIPb& getGIPb(const Signature& sig) 
-  { 
+  GIPb & getGIPb(const Signature & sig)
+  {
     int i = idx();
-    auto& pb = problems[sig];
-    pb.giPb[i].G = pb.G[i];  
+    auto & pb = problems[sig];
+    pb.giPb[i].G = pb.G[i];
     return pb.giPb[i];
   }
 
-  LssolPb& getLssolPb(const Signature& sig)
+  LssolPb & getLssolPb(const Signature & sig)
   {
     int i = idx();
-    auto& pb = problems[sig];
+    auto & pb = problems[sig];
     pb.lssolPb[i].Q = pb.G[i];
     return pb.lssolPb[i];
   }
 
-  EigenQuadprogPb& getQuadprogPb(const Signature& sig)
+  EigenQuadprogPb & getQuadprogPb(const Signature & sig)
   {
     int i = idx();
-    auto& pb = problems[sig];
+    auto & pb = problems[sig];
     pb.quadprogPb[i].Q = pb.G[i];
     return pb.quadprogPb[i];
   }
 
-  EiQuadprogPb& getEiQuadprogPb(const Signature& sig)
+  EiQuadprogPb & getEiQuadprogPb(const Signature & sig)
   {
     int i = idx();
-    auto& pb = problems[sig];
+    auto & pb = problems[sig];
     pb.eiquadprogPb[i].G = pb.G[i];
     return pb.eiquadprogPb[i];
   }
 
-  QLDPb& getQLDPb(const Signature& sig)
+  QLDPb & getQLDPb(const Signature & sig)
   {
     int i = idx();
-    auto& pb = problems[sig];
+    auto & pb = problems[sig];
     pb.qldPb[i].Q = pb.G[i];
     return pb.qldPb[i];
   }
 
 private:
   int i;
-  
+
   inline static std::map<Signature, ProblemCollection<NbPb>> problems = {};
 };
 
-#include<iostream>
+#include <iostream>
 
 #define NOP
 
-#define BENCH_OVERHEAD(fixture, otherArgs)                                       \
-BENCHMARK_DEFINE_F(fixture, Overhead)(benchmark::State& st)                      \
-{                                                                                \
-  auto sig = signature(st);                                                      \
-  for (auto _ : st)                                                              \
-  {                                                                              \
-    benchmark::DoNotOptimize(getGIPb(sig));                                      \
-  }                                                                              \
-}                                                                                \
-BENCHMARK_REGISTER_F(fixture, Overhead)->Unit(benchmark::kMicrosecond)otherArgs
+#define BENCH_OVERHEAD(fixture, otherArgs)                     \
+  BENCHMARK_DEFINE_F(fixture, Overhead)(benchmark::State & st) \
+  {                                                            \
+    auto sig = signature(st);                                  \
+    for(auto _ : st)                                           \
+    {                                                          \
+      benchmark::DoNotOptimize(getGIPb(sig));                  \
+    }                                                          \
+  }                                                            \
+  BENCHMARK_REGISTER_F(fixture, Overhead)->Unit(benchmark::kMicrosecond) otherArgs
 
-#define BENCH_GI(fixture, otherArgs)                                        \
-BENCHMARK_DEFINE_F(fixture, GI)(benchmark::State& st)                       \
-{                                                                           \
-  auto sig = signature(st);                                                 \
-  if (skipGI(sig)) st.SkipWithError("Skipping GI");                         \
-  GoldfarbIdnaniSolver solver(nVar(sig), nCstr(sig), bounds(sig));          \
-  for (auto _ : st)                                                         \
-  {                                                                         \
-    auto& qp = getGIPb(sig);                                                \
-    solver.solve(qp.G, qp.a, qp.C, qp.l, qp.u, qp.xl, qp.xu);               \
-  }                                                                         \
-}                                                                           \
-BENCHMARK_REGISTER_F(fixture, GI)->Unit(benchmark::kMicrosecond)otherArgs
+#define BENCH_GI(fixture, otherArgs)                                 \
+  BENCHMARK_DEFINE_F(fixture, GI)(benchmark::State & st)             \
+  {                                                                  \
+    auto sig = signature(st);                                        \
+    if(skipGI(sig)) st.SkipWithError("Skipping GI");                 \
+    GoldfarbIdnaniSolver solver(nVar(sig), nCstr(sig), bounds(sig)); \
+    for(auto _ : st)                                                 \
+    {                                                                \
+      auto & qp = getGIPb(sig);                                      \
+      solver.solve(qp.G, qp.a, qp.C, qp.l, qp.u, qp.xl, qp.xu);      \
+    }                                                                \
+  }                                                                  \
+  BENCHMARK_REGISTER_F(fixture, GI)->Unit(benchmark::kMicrosecond) otherArgs
 
-#define BENCH_EIQP(fixture, otherArgs)                                      \
-BENCHMARK_DEFINE_F(fixture, EIQP)(benchmark::State& st)                     \
-{                                                                           \
-  auto sig = signature(st);                                                 \
-  if (skipEiQuadprog(sig)) st.SkipWithError("Skipping EiQuadprog");         \
-  Eigen::VectorXd x(nVar(sig));                                             \
-  for (auto _ : st)                                                         \
-  {                                                                         \
-    auto& qp = getEiQuadprogPb(sig);                                        \
-    Eigen::solve_quadprog(qp.G, qp.g0, qp.CE, qp.ce0, qp.CI, qp.ci0, x);    \
-  }                                                                         \
-}                                                                           \
-BENCHMARK_REGISTER_F(fixture, EIQP)->Unit(benchmark::kMicrosecond)otherArgs
+#define BENCH_EIQP(fixture, otherArgs)                                     \
+  BENCHMARK_DEFINE_F(fixture, EIQP)(benchmark::State & st)                 \
+  {                                                                        \
+    auto sig = signature(st);                                              \
+    if(skipEiQuadprog(sig)) st.SkipWithError("Skipping EiQuadprog");       \
+    Eigen::VectorXd x(nVar(sig));                                          \
+    for(auto _ : st)                                                       \
+    {                                                                      \
+      auto & qp = getEiQuadprogPb(sig);                                    \
+      Eigen::solve_quadprog(qp.G, qp.g0, qp.CE, qp.ce0, qp.CI, qp.ci0, x); \
+    }                                                                      \
+  }                                                                        \
+  BENCHMARK_REGISTER_F(fixture, EIQP)->Unit(benchmark::kMicrosecond) otherArgs
 
 #ifdef JRLQP_USE_QUADPROG
-#define BENCH_QUADPROG(fixture, otherArgs)                                      \
-BENCHMARK_DEFINE_F(fixture, QuadProg)(benchmark::State& st)                     \
-{                                                                               \
-  auto sig = signature(st);                                                     \
-  if (skipQuadprog(sig)) st.SkipWithError("Skipping Quadprog");                 \
-  Eigen::QuadProgDense solver(nVar(sig),nEq(sig),nSSIneqAndBnd(sig));           \
-                                                                                \
-  for (auto _ : st)                                                             \
-  {                                                                             \
-    auto& qp = getQuadprogPb(sig);                                              \
-    solver.solve(qp.Q, qp.c, qp.Aeq, qp.beq, qp.Aineq, qp.bineq);               \
-  }                                                                             \
-}                                                                               \
-BENCHMARK_REGISTER_F(fixture, QuadProg)->Unit(benchmark::kMicrosecond)otherArgs
+#  define BENCH_QUADPROG(fixture, otherArgs)                                \
+    BENCHMARK_DEFINE_F(fixture, QuadProg)(benchmark::State & st)            \
+    {                                                                       \
+      auto sig = signature(st);                                             \
+      if(skipQuadprog(sig)) st.SkipWithError("Skipping Quadprog");          \
+      Eigen::QuadProgDense solver(nVar(sig), nEq(sig), nSSIneqAndBnd(sig)); \
+                                                                            \
+      for(auto _ : st)                                                      \
+      {                                                                     \
+        auto & qp = getQuadprogPb(sig);                                     \
+        solver.solve(qp.Q, qp.c, qp.Aeq, qp.beq, qp.Aineq, qp.bineq);       \
+      }                                                                     \
+    }                                                                       \
+    BENCHMARK_REGISTER_F(fixture, QuadProg)->Unit(benchmark::kMicrosecond) otherArgs
 #else
-#define BENCH_QUADPROG(fixture, otherArgs) NOP
+#  define BENCH_QUADPROG(fixture, otherArgs) NOP
 #endif
 
 #ifdef JRLQP_USE_LSSOL
-#define BENCH_LSSOL(fixture, otherArgs)                                       \
-BENCHMARK_DEFINE_F(fixture, Lssol)(benchmark::State& st)                      \
-{                                                                             \
-  auto sig = signature(st);                                                   \
-  if (skipLssol(sig)) st.SkipWithError("Skipping LSSOL");                     \
-  Eigen::LSSOL_QP solver(nVar(sig), nCstr(sig), Eigen::lssol::QP2);           \
-  solver.optimalityMaxIter(500);                                              \
-  solver.feasibilityMaxIter(500);                                             \
-  for (auto _ : st)                                                           \
-  {                                                                           \
-    auto& qp = getLssolPb(sig);                                               \
-    solver.solve(qp.Q, qp.p, qp.C, qp.l, qp.u);                               \
-  }                                                                           \
-}                                                                             \
-BENCHMARK_REGISTER_F(fixture, Lssol)->Unit(benchmark::kMicrosecond)otherArgs
+#  define BENCH_LSSOL(fixture, otherArgs)                               \
+    BENCHMARK_DEFINE_F(fixture, Lssol)(benchmark::State & st)           \
+    {                                                                   \
+      auto sig = signature(st);                                         \
+      if(skipLssol(sig)) st.SkipWithError("Skipping LSSOL");            \
+      Eigen::LSSOL_QP solver(nVar(sig), nCstr(sig), Eigen::lssol::QP2); \
+      solver.optimalityMaxIter(500);                                    \
+      solver.feasibilityMaxIter(500);                                   \
+      for(auto _ : st)                                                  \
+      {                                                                 \
+        auto & qp = getLssolPb(sig);                                    \
+        solver.solve(qp.Q, qp.p, qp.C, qp.l, qp.u);                     \
+      }                                                                 \
+    }                                                                   \
+    BENCHMARK_REGISTER_F(fixture, Lssol)->Unit(benchmark::kMicrosecond) otherArgs
 #else
-#define BENCH_LSSOL(fixture, otherArgs) NOP
+#  define BENCH_LSSOL(fixture, otherArgs) NOP
 #endif
 
 #ifdef JRLQP_USE_QLD
-#define BENCH_QLD(fixture, otherArgs)                                       \
-BENCHMARK_DEFINE_F(fixture, QLD)(benchmark::State& st)                      \
-{                                                                           \
-  auto sig = signature(st);                                                 \
-  if (skipQLD(sig)) st.SkipWithError("Skipping QLD");                       \
-  Eigen::QLDDirect solverQLD(nVar(sig), nEq(sig), nSSIneq(sig));            \
-  for (auto _ : st)                                                         \
-  {                                                                         \
-    auto& qp = getQLDPb(sig);                                               \
-    solverQLD.solve(qp.Q, qp.c, qp.A, qp.b, qp.xl, qp.xu, nEq(sig));        \
-  }                                                                         \
-}                                                                           \
-BENCHMARK_REGISTER_F(fixture, QLD)->Unit(benchmark::kMicrosecond)otherArgs
+#  define BENCH_QLD(fixture, otherArgs)                                  \
+    BENCHMARK_DEFINE_F(fixture, QLD)(benchmark::State & st)              \
+    {                                                                    \
+      auto sig = signature(st);                                          \
+      if(skipQLD(sig)) st.SkipWithError("Skipping QLD");                 \
+      Eigen::QLDDirect solverQLD(nVar(sig), nEq(sig), nSSIneq(sig));     \
+      for(auto _ : st)                                                   \
+      {                                                                  \
+        auto & qp = getQLDPb(sig);                                       \
+        solverQLD.solve(qp.Q, qp.c, qp.A, qp.b, qp.xl, qp.xu, nEq(sig)); \
+      }                                                                  \
+    }                                                                    \
+    BENCHMARK_REGISTER_F(fixture, QLD)->Unit(benchmark::kMicrosecond) otherArgs
 #else
-#define BENCH_QLD(fixture, otherArgs) NOP
+#  define BENCH_QLD(fixture, otherArgs) NOP
 #endif
 
-#define BENCH_CLEAR(fixture)                                          \
-BENCHMARK_DEFINE_F(fixture, Clear)(benchmark::State& st)              \
-{                                                                     \
-  fixture::clearData();                                               \
-  st.SkipWithError("Not an error, just a hacky way to clear memory"); \
-}                                                                     \
-BENCHMARK_REGISTER_F(fixture, Clear)
+#define BENCH_CLEAR(fixture)                                            \
+  BENCHMARK_DEFINE_F(fixture, Clear)(benchmark::State & st)             \
+  {                                                                     \
+    fixture::clearData();                                               \
+    st.SkipWithError("Not an error, just a hacky way to clear memory"); \
+  }                                                                     \
+  BENCHMARK_REGISTER_F(fixture, Clear)
 
-
-#define BENCH_ALL(fixture, otherArgs)     \
-BENCH_OVERHEAD(fixture, otherArgs);       \
-BENCH_GI(fixture, otherArgs);             \
-BENCH_EIQP(fixture, otherArgs);           \
-BENCH_QUADPROG(fixture, otherArgs);       \
-BENCH_LSSOL(fixture, otherArgs);          \
-BENCH_QLD(fixture, otherArgs);            \
-BENCH_CLEAR(fixture)->DenseRange(1,1,1);
+#define BENCH_ALL(fixture, otherArgs) \
+  BENCH_OVERHEAD(fixture, otherArgs); \
+  BENCH_GI(fixture, otherArgs);       \
+  BENCH_EIQP(fixture, otherArgs);     \
+  BENCH_QUADPROG(fixture, otherArgs); \
+  BENCH_LSSOL(fixture, otherArgs);    \
+  BENCH_QLD(fixture, otherArgs);      \
+  BENCH_CLEAR(fixture)->DenseRange(1, 1, 1);
 
 // Varying size, fixed 40% equality
 using test1 = ProblemFixture<100, Var<0>, FFrac<40>, Fixed<0>, Fixed<0>, false, Fixed<0>>;
-BENCH_ALL(test1, ->DenseRange(10,100,10));
+BENCH_ALL(test1, ->DenseRange(10, 100, 10));
 
-//Fixed nVar = 50 and nIneq=80, varying number of active constraints from 0 to 100%
+// Fixed nVar = 50 and nIneq=80, varying number of active constraints from 0 to 100%
 using test2 = ProblemFixture<100, Fixed<50>, Fixed<0>, Fixed<80>, VFrac<0>, false, Fixed<0>>;
 BENCH_ALL(test2, ->DenseRange(0, 100, 10));
 
-// Varying size, fixed 20% equality, fixed 100% inequality, with 30% active, bounds 
+// Varying size, fixed 20% equality, fixed 100% inequality, with 30% active, bounds
 using test3 = ProblemFixture<100, Var<0>, FFrac<20>, FFrac<100>, FFrac<30>, true, FFrac<10>, true>;
-BENCH_ALL(test3, ->DenseRange(10,100,10));
+BENCH_ALL(test3, ->DenseRange(10, 100, 10));
 
 // Fixed size, varying equality
 using test4 = ProblemFixture<100, Fixed<50>, VFrac<0>, Fixed<0>, Fixed<0>, false, Fixed<0>>;

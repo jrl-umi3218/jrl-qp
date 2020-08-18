@@ -13,7 +13,6 @@ using namespace Eigen;
 using namespace jrl::qp;
 using namespace jrl::qp::test;
 
-
 TEST_CASE("Compare")
 {
   const int N = 10;
@@ -23,7 +22,7 @@ TEST_CASE("Compare")
   experimental::BoxAndSingleConstraintSolver solver(nbVar);
 
   // Check with inactive constraint
-  for (int i = 0; i <= N; ++i)
+  for(int i = 0; i <= N; ++i)
   {
     auto pb = generateBoxAndSingleConstraintProblem(nbVar, false);
     test::QPProblem qpp(pb);
@@ -31,11 +30,11 @@ TEST_CASE("Compare")
     solver.solve(pb.b, pb.C, pb.l[0], pb.xl, pb.xu);
 
     FAST_CHECK_UNARY(GIsolver.solution().isApprox(solver.solution()));
-    FAST_CHECK_EQ(GIsolver.objectiveValue()+0.5*pb.b.squaredNorm(), doctest::Approx(solver.objectiveValue()));
+    FAST_CHECK_EQ(GIsolver.objectiveValue() + 0.5 * pb.b.squaredNorm(), doctest::Approx(solver.objectiveValue()));
   }
 
   // Check with active constraint
-  for (int i = 0; i <= N; ++i)
+  for(int i = 0; i <= N; ++i)
   {
     auto pb = generateBoxAndSingleConstraintProblem(nbVar, true);
     test::QPProblem qpp(pb);

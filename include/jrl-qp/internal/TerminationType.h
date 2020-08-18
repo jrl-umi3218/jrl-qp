@@ -7,27 +7,36 @@
 
 namespace jrl::qp::internal
 {
-  /** A utility class to indicate the termination status of a call to a function
-    * or sub-function.
-    *
-    * Meant to be derived and give a strong type to TerminationStatus values.
-    */
-  class TerminationType
+/** A utility class to indicate the termination status of a call to a function
+ * or sub-function.
+ *
+ * Meant to be derived and give a strong type to TerminationStatus values.
+ */
+class TerminationType
+{
+public:
+  TerminationType(TerminationStatus status) : status_(status) {}
+
+  operator bool() const
   {
-  public:
-    TerminationType(TerminationStatus status) : status_(status) {}
-
-    operator bool() const { return status_ == TerminationStatus::SUCCESS; }
-    operator TerminationStatus() const { return status_; }
-
-    TerminationStatus status() const { return status_; }
-
-  private:
-    TerminationStatus status_;
-  };
-
-  class InitTermination : public TerminationType
+    return status_ == TerminationStatus::SUCCESS;
+  }
+  operator TerminationStatus() const
   {
-    using TerminationType::TerminationType;
-  };
-}
+    return status_;
+  }
+
+  TerminationStatus status() const
+  {
+    return status_;
+  }
+
+private:
+  TerminationStatus status_;
+};
+
+class InitTermination : public TerminationType
+{
+  using TerminationType::TerminationType;
+};
+} // namespace jrl::qp::internal
