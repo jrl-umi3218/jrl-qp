@@ -1,0 +1,9 @@
+digraph "include/jrl-qp/test" {
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_98f7936f085cf19cdf0ebc7927b0f05e {
+    graph [ bgcolor="#ddddee", pencolor="black", label="jrl-qp" fontname="Helvetica", fontsize="10", URL="dir_98f7936f085cf19cdf0ebc7927b0f05e.html"]
+  dir_bce3761f5705fc7212499374e6418948 [shape=box, label="test", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_bce3761f5705fc7212499374e6418948.html"];
+  }
+}

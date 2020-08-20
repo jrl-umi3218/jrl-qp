@@ -1,0 +1,12 @@
+digraph "include/jrl-qp/internal" {
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_98f7936f085cf19cdf0ebc7927b0f05e {
+    graph [ bgcolor="#ddddee", pencolor="black", label="jrl-qp" fontname="Helvetica", fontsize="10", URL="dir_98f7936f085cf19cdf0ebc7927b0f05e.html"]
+  dir_0c0370eeef4944a898a68d897a53cda4 [shape=box, label="internal", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_0c0370eeef4944a898a68d897a53cda4.html"];
+  }
+  dir_8ae0bef1e7736cfe385d33155400a06c [shape=box label="utils" URL="dir_8ae0bef1e7736cfe385d33155400a06c.html"];
+  dir_8ae0bef1e7736cfe385d33155400a06c->dir_0c0370eeef4944a898a68d897a53cda4 [headlabel="2", labeldistance=1.5 headhref="dir_000005_000003.html"];
+  dir_0c0370eeef4944a898a68d897a53cda4->dir_8ae0bef1e7736cfe385d33155400a06c [headlabel="1", labeldistance=1.5 headhref="dir_000003_000005.html"];
+}
