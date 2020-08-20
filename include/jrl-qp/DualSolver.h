@@ -48,7 +48,7 @@ public:
   double objectiveValue() const;
 
 protected:
-  struct StepLenghth
+  struct StepLength
   {
     double t1;
     double t2;
@@ -69,7 +69,7 @@ protected:
   /** Compute a primal step z and dual step r, given \p n+*/
   void computeStep(VectorRef z, VectorRef r, const internal::ConstraintNormal & np) const;
   /** Compute a step length and update x and u given the data n+, z and r.*/
-  StepLenghth computeStepLength(const internal::ConstraintNormal & np,
+  StepLength computeStepLength(const internal::ConstraintNormal & np,
                                 const VectorConstRef & x,
                                 const VectorConstRef & u,
                                 const VectorConstRef & z,
@@ -90,7 +90,7 @@ protected:
   /** Compute a primal step z and dual step r, given \p n+*/
   virtual void computeStep_(VectorRef z, VectorRef r, const internal::ConstraintNormal & np) const = 0;
   /** Compute a step length and update x and u given the data n+, z and r.*/
-  virtual StepLenghth computeStepLength_(const internal::ConstraintNormal & np,
+  virtual StepLength computeStepLength_(const internal::ConstraintNormal & np,
                                          const VectorConstRef & x,
                                          const VectorConstRef & u,
                                          const VectorConstRef & z,

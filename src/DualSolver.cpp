@@ -201,7 +201,7 @@ void DualSolver::computeStep(VectorRef z, VectorRef r, const internal::Constrain
   computeStep_(z, r, np);
 }
 
-DualSolver::StepLenghth DualSolver::computeStepLength(const internal::ConstraintNormal & np,
+DualSolver::StepLength DualSolver::computeStepLength(const internal::ConstraintNormal & np,
                                                       const VectorConstRef & x,
                                                       const VectorConstRef & u,
                                                       const VectorConstRef & z,

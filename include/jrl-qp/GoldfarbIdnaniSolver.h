@@ -60,7 +60,7 @@ protected:
   internal::InitTermination init_() override;
   internal::ConstraintNormal selectViolatedConstraint_(const VectorConstRef & x) const override;
   void computeStep_(VectorRef z, VectorRef r, const internal::ConstraintNormal & np) const override;
-  StepLenghth computeStepLength_(const internal::ConstraintNormal & np,
+  StepLength computeStepLength_(const internal::ConstraintNormal & np,
                                  const VectorConstRef & x,
                                  const VectorConstRef & u,
                                  const VectorConstRef & z,

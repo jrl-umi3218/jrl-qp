@@ -147,7 +147,7 @@ void GoldfarbIdnaniSolver::computeStep_(VectorRef z, VectorRef r, const internal
   DBG(log_, LogFlags::ITERATION_ADVANCE_DETAILS, J, R, d);
 }
 
-DualSolver::StepLenghth GoldfarbIdnaniSolver::computeStepLength_(const internal::ConstraintNormal & np,
+DualSolver::StepLength GoldfarbIdnaniSolver::computeStepLength_(const internal::ConstraintNormal & np,
                                                                  const VectorConstRef & x,
                                                                  const VectorConstRef & u,
                                                                  const VectorConstRef & z,
