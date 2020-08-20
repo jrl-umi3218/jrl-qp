@@ -15,7 +15,7 @@ include(cmake/msvc-specific.cmake)
 # Disable -Werror on Unix for now.
 set(CXX_DISABLE_WERROR True)
 set(DOXYGEN_USE_MATHJAX "YES")
-# allow to document a group of items and generate a documentation for each of them 
+# allow to document a group of items and generate a documentation for each of them
 set(DOXYGEN_DISTRIBUTE_GROUP_DOC YES)
 
 project(jrl-qp LANGUAGES CXX)
@@ -51,7 +51,7 @@ if(MSVC)
 endif(MSVC)
 
 #allow for solution folder
-set_property(GLOBAL PROPERTY USE_FOLDERS ON) 
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 option(BUILD_BENCHMARKS "Build benchmarks" ON)
 

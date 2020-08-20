@@ -1,14 +1,14 @@
 set(JRLQP_SOURCES
-	DualSolver.cpp
-	GoldfarbIdnaniSolver.cpp
-	SolverOptions.cpp
+  DualSolver.cpp
+  GoldfarbIdnaniSolver.cpp
+  SolverOptions.cpp
   experimental/BoxAndSingleConstraintSolver.cpp
-	internal/ActiveSet.cpp
-	internal/memoryChecks.cpp
-	test/kkt.cpp
-	test/problems.cpp
-	test/randomProblems.cpp
-	utils/Logger.cpp
+  internal/ActiveSet.cpp
+  internal/memoryChecks.cpp
+  test/kkt.cpp
+  test/problems.cpp
+  test/randomProblems.cpp
+  utils/Logger.cpp
 )
 
 set(JRLQP_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include/jrl-qp)
@@ -77,9 +77,8 @@ if(GENERATE_COVERAGE)
   set_target_properties(jrl-qp PROPERTIES LINK_FLAGS "--coverage")
 endif()
 
-
 install(TARGETS jrl-qp
-	EXPORT "${TARGETS_EXPORT_NAME}"
+  EXPORT "${TARGETS_EXPORT_NAME}"
     LIBRARY DESTINATION "lib"
     ARCHIVE DESTINATION "lib"
     RUNTIME DESTINATION "bin"

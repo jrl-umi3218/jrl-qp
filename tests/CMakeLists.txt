@@ -7,7 +7,7 @@ option(WITH_QPS_TESTS "Use QPS tests" OFF)
 if(WITH_QPS_TESTS)
   set(QPS_DIR "" CACHE PATH "Path to the QPS data directory")
   if(QPS_DIR STREQUAL "")
-	message( FATAL_ERROR "You need to specify a path to the QPS data directory." )
+    message( FATAL_ERROR "You need to specify a path to the QPS data directory." )
   endif()
 endif()
 
