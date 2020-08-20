@@ -1,6 +1,10 @@
 jrl-qp (alpha version)
 ======================
 
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-green.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![CI](https://github.com/jrl-umi3218/jrl-qp/workflows/CI%20of%20jrl-qp/badge.svg?branch=master)](https://github.com/jrl-umi3218/jrl-qp/actions?query=workflow%3A%22CI+of+jrl-qp%22)
+[![Documentation](https://img.shields.io/badge/doxygen-online-brightgreen?logo=read-the-docs&style=flat)](http://jrl-umi3218.github.io/jrl-qp/doxygen/HEAD/index.html)
+
 This library offers tools and implementations to write, specialize and test QP solvers.
 
 It comes (so far) with an implementation of the Goldfarb-Idnani dual solver described in the seminal paper *D. Goldfarb, A. Idnani, "A numerically stable dual method for solving strictly convex quadratic programs", Mathematical Programming 27 (1983) 1-33 *.
