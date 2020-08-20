@@ -227,7 +227,7 @@ TEST_CASE("Test Suite")
       {"qetamacr", 8.6760370e+04, Inf, 400, 688, 2409, 378, 4069},
       {"qfffff80", 8.7314747e+05, Inf, 524, 854, 6227, 278, 1638},
       //{"qforplan",  7.4566315e+09, Inf          ,    161,    421,   4563,     36,     546},  //requires the QPS reader
-      //to handle names with spaces
+      // to handle names with spaces
       {"qgfrdxpn", 1.0079059e+11, Inf, 616, 1092, 2377, 54, 108},
       {"qgrow15", -1.0169364e+08, Inf, 300, 645, 5620, 38, 462},
       {"qgrow22", -1.4962895e+08, Inf, 440, 946, 8252, 65, 787},
@@ -235,9 +235,9 @@ TEST_CASE("Test Suite")
       {"qisrael", 2.5347838e+07, Inf, 174, 142, 2269, 42, 656},
       {"qpcblend", -7.8425409e-03, 10, 74, 83, 491, 83, 0},
       //{"qpcboei1",  1.1503914e+07, 10           ,    351,    384,   3485,    384,       0},  //Both fail to seemingly
-      //bad conditionning of the active set due to selectionning
+      // bad conditionning of the active set due to selectionning
       //{"qpcboei2",  8.1719623e+06, 10           ,    166,    143,   1196,    143,       0},  //one constraint to
-      //activate instead of another by 1e-13 difference. Need to have a more robust constraint than the basic one.
+      // activate instead of another by 1e-13 difference. Need to have a more robust constraint than the basic one.
       {"qpcstair", 6.2043875e+06, 10, 356, 467, 3856, 467, 0},
       {"qpilotno", 4.7285869e+06, Inf, 975, 2172, 13057, 94, 391},
       {"qptest", 4.3718750e+00, 1.6612, 2, 2, 4, 2, 1},

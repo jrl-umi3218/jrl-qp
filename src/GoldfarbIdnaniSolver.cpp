@@ -148,10 +148,10 @@ void GoldfarbIdnaniSolver::computeStep_(VectorRef z, VectorRef r, const internal
 }
 
 DualSolver::StepLength GoldfarbIdnaniSolver::computeStepLength_(const internal::ConstraintNormal & np,
-                                                                 const VectorConstRef & x,
-                                                                 const VectorConstRef & u,
-                                                                 const VectorConstRef & z,
-                                                                 const VectorConstRef & r) const
+                                                                const VectorConstRef & x,
+                                                                const VectorConstRef & u,
+                                                                const VectorConstRef & z,
+                                                                const VectorConstRef & r) const
 {
   double t1 = options_.bigBnd_;
   double t2 = options_.bigBnd_;
@@ -300,7 +300,7 @@ void GoldfarbIdnaniSolver::addInitialConstraint(const internal::ConstraintNormal
   if(z.norm() > 1e-14) //[NUMERIC] better criterion
   {
     if(np.status() == ActivationStatus::EQUALITY) //[OPTIM] we can avoid this if by specializing the function to general
-                                                  //constraint or bound
+                                                  // constraint or bound
     {
       int p = np.index();
       t = (pb_.bl[p] - pb_.C.col(p).dot(x)) / pb_.C.col(p).dot(z);

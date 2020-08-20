@@ -61,10 +61,10 @@ protected:
   internal::ConstraintNormal selectViolatedConstraint_(const VectorConstRef & x) const override;
   void computeStep_(VectorRef z, VectorRef r, const internal::ConstraintNormal & np) const override;
   StepLength computeStepLength_(const internal::ConstraintNormal & np,
-                                 const VectorConstRef & x,
-                                 const VectorConstRef & u,
-                                 const VectorConstRef & z,
-                                 const VectorConstRef & r) const override;
+                                const VectorConstRef & x,
+                                const VectorConstRef & u,
+                                const VectorConstRef & z,
+                                const VectorConstRef & r) const override;
   bool addConstraint_(const internal::ConstraintNormal & np) override;
   bool removeConstraint_(int l) override;
   void resize_(int nbVar, int nbCstr, bool useBounds) override;

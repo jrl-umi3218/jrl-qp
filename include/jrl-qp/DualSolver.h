@@ -70,10 +70,10 @@ protected:
   void computeStep(VectorRef z, VectorRef r, const internal::ConstraintNormal & np) const;
   /** Compute a step length and update x and u given the data n+, z and r.*/
   StepLength computeStepLength(const internal::ConstraintNormal & np,
-                                const VectorConstRef & x,
-                                const VectorConstRef & u,
-                                const VectorConstRef & z,
-                                const VectorConstRef & r) const;
+                               const VectorConstRef & x,
+                               const VectorConstRef & u,
+                               const VectorConstRef & z,
+                               const VectorConstRef & r) const;
   /** Add a constraint to the active set and update the computation data accordingly.*/
   bool addConstraint(const internal::ConstraintNormal & np);
   /** Remove the l-th active constraint from the active set and update the
@@ -91,10 +91,10 @@ protected:
   virtual void computeStep_(VectorRef z, VectorRef r, const internal::ConstraintNormal & np) const = 0;
   /** Compute a step length and update x and u given the data n+, z and r.*/
   virtual StepLength computeStepLength_(const internal::ConstraintNormal & np,
-                                         const VectorConstRef & x,
-                                         const VectorConstRef & u,
-                                         const VectorConstRef & z,
-                                         const VectorConstRef & r) const = 0;
+                                        const VectorConstRef & x,
+                                        const VectorConstRef & u,
+                                        const VectorConstRef & z,
+                                        const VectorConstRef & r) const = 0;
   /** Add a constraint to the active set and update the computation data accordingly.*/
   virtual bool addConstraint_(const internal::ConstraintNormal & np) = 0;
   /** Remove the l-th active constraint from the active set and update the
