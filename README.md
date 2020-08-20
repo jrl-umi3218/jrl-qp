@@ -20,8 +20,8 @@ To compile you will need the following tools:
  * [CMake](https://cmake.org/) >= 3.1.3
  * [doxygen](http://www.doxygen.org)
  * A compiler with C++17 support
- 
-jrl-qp as a single dependency: 
+
+jrl-qp has a single dependency:
  * [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page) >= 3.2.8
 
 If you have the following solvers, you can run benchmark comparisons with them :
@@ -30,7 +30,7 @@ If you have the following solvers, you can run benchmark comparisons with them :
  * [eigen-lssol](git@gite.lirmm.fr:multi-contact/eigen-lssol.git) (private repository)
 
 
-This repository also uses [jrl-cmakemodules](https://github.com/jrl-umi3218/jrl-cmakemodules), [jrl-travis](https://github.com/jrl-umi3218/jrl-travis) and [google benchmark](https://github.com/google/benchmark) as submodules.
+This repository also uses [jrl-cmakemodules](https://github.com/jrl-umi3218/jrl-cmakemodules), and [google benchmark](https://github.com/google/benchmark) as submodules.
 
 ### Building from source on Linux
 
@@ -41,15 +41,15 @@ git clone --recursive https://github.com/jrl-umi3218/jrl-qp
 cd tvm
 mkdir build && cd build
 cmake [options] ..
-make && make install
+make && sudo make install
 ```
 
 where the main options are:
  * `-DCMAKE_BUILD_TYPE=Release` Build in Release mode
  * `-DCMAKE_INSTALL_PREFIX=some/path/to/install` default is `/usr/local`
- 
+
 
 Tests
 -----
-Aside from Hand-crafted and randomized test, this repository can use Maros and Meszaros QP collection ([bottom of this page](http://www.doc.ic.ac.uk/~im/)), that can also be found [here](https://github.com/YimingYAN/QP-Test-Problems) with a Matlab version of the problems. 
+Aside from Hand-crafted and randomized test, this repository can use Maros and Meszaros QP collection ([bottom of this page](http://www.doc.ic.ac.uk/~im/)), that can also be found [here](https://github.com/YimingYAN/QP-Test-Problems) with a Matlab version of the problems.
 To use this collection, simply specify its path in the CMake options.
