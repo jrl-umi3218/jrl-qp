@@ -1,0 +1,106 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{amsthm} %qed
+\usepackage[cmex10]{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+%\usepackage{graphicx}
+
+\newcommand{\BIN}{\begin{bmatrix}}
+\newcommand{\BOUT}{\end{bmatrix}}
+\newcommand{\eq}[1]{eq.~(\ref{eq:#1})}
+\newcommand{\rk}[1]{\mbox{rank}(#1)}
+
+\DeclareMathOperator*{\minimize}{\min.}
+\DeclareMathOperator*{\argmin}{\mbox{arg} \min.}
+\newcommand{\st}{\mbox{s.t.}}
+\newcommand{\half}{\frac{1}{2}}
+\newcommand{\act}{\mathcal{A}}
+
+\begin{document}
+\date{March 31, 2020}
+\author{Adrien Escande}
+
+\title{Notes on the Goldfarb-Idnani paper}
+\maketitle
+
+These are notes on the dual QP solver paper of Goldfarb and Idnani~\cite{Goldfarb:mp:1983}.
+
+\section{Problem statement and notations}
+We consider the following optimization problem ($P$)
+\begin{align}
+	\minimize_x &\ \half x^T G x + a^T x \\
+	\st &\ C^T x \geq b
+\end{align}
+and denote $f(x) = \half x^T G x + a^T x$ and $s(x) = C^T x - b$.
+There are $m$ constraints and we note $\mathcal{K} = \left\{1 \ldots m\right\}$.
+
+Conventions in the paper are such that the Lagrangian function is
+\begin{equation}
+	L(x,\lambda) = \half x^T G x + a^T x - \lambda^T(C^T x - b)
+\end{equation}
+where the Lagrange multipliers $\lambda$ needs to be positive.
+
+Let's $\mathcal{A} \subseteq \mathcal{K}$ be a set of indices corresponding to active constraints, $N$ the corresponding columns of $C$, $b_\mathcal{A}$ the corresponding elements of $b$, and $u$ the corresponding elements of $\lambda$. The problem $P_\mathcal{A}$ is
+\begin{align}
+	\minimize_x &\ \half x^T G x + a^T x \\
+	\st &\ N^T x = b_\mathcal{A}
+\end{align}
+If $x$ is solution to this problem\footnote{Assuming the constraints are linearly independent.} with $u\geq 0$, $(x,\act)$ is call a \emph{S-pair} (S for solution).
+
+\section{Solving optimality conditions for $P_\act$}
+The optimality conditions for $P_\act$ are
+\begin{equation}
+	\BIN G & -N \\ N^T & 0 \BOUT \BIN x \\ u \BOUT = \BIN -a \\ b_\act \BOUT \label{eq:optimPA}
+\end{equation}
+There are several ways to solve this system, including the nullspace approach and the Schur approach\cite[Chap. 16]{nocedal:book:2006}. Goldfarb and Idani are using the latter.
+
+Let's $M$ denote the matrix of the system. A simple application of block-inverse formula leads to
+\begin{equation}
+M^{-1} = \BIN G^{-1} - G^{-1} N (N^T G^{-1} N)^{-1} N^T G^{-1} & G^{-1} N (N^T G^{-1} N)^{-1} \\ - (N^T G^{-1} N)^{-1} N^T G^{-1} & (N^T G^{-1} N)^{-1} \BOUT
+\end{equation}
+Noting $S = (N^T G^{-1} N)^{-1}$, $N^* = S N^T G^{-1}$\newline and $H = G^{-1} - G^{-1} N S N^T G^{-1} = G^{-1}(I-N N^*)$, we have
+\begin{equation}
+M^{-1} = \BIN H & N^{*T} \\ - N* & S \BOUT
+\end{equation}
+This leads to 
+\begin{equation}
+	\BIN x \\ u \BOUT = \BIN -H a + N^{*T} b_\act \\ N^* a + S b_act\BOUT
+\end{equation}
+
+Note that because $N^* N = I$, we can also express $u$ as a function of $x$: $u = N^* (Gx+a) = N^* \nabla f$.
+
+
+\section{Step computation}
+Now consider that we have a S-pair $(x,\act)$, but that a constraint $p \in \mathcal{K} \backslash \act$ is violated. Noting $n^+$ the column of $C$ corresponding to this constraint and $b^+$ the associated element of $b$, we are looking for a step such that the optimality conditions are met again if we activate this constraint. The constraint was so far associated to a zero Lagrange multiplier. We want to solve
+\begin{equation}
+	\BIN G & -N & -n^+ \\ N^T & 0 & 0 \\ n^{+T} & 0 & 0\BOUT \BIN x + \delta x \\ u + \delta u \\ 0 + t\BOUT = \BIN -a \\ b_\act \\ b^+\BOUT
+\end{equation}
+Since $(x,u)$ solves \eq{optimPA}, we have that
+\begin{equation}
+	\BIN G & -N & -n^+ \\ N^T & 0 & 0 \\ n^{+T} & 0 & 0\BOUT \BIN \delta x \\ \delta u \\ t\BOUT = \BIN 0 \\ 0 \\ - s_p(x)\BOUT
+\end{equation}
+
+The first two equations yield
+\begin{equation}
+	\BIN \delta x \\ \delta u \BOUT = \BIN t H n^+ \\ -t N^* n^+ \BOUT 
+\end{equation}
+and the paper notes $z = H n^+$ and $r = N^* n^+$.
+
+The last equations $ n^{+T} \delta_x = s_p(x)$ them yields $t = -\dfrac{s_p(x)}{z^Tn^+}$. This full step $t$ might not be possible because some elements of $u - tr$ might become negative.
+
+\section{Some results on matrices $H$ and $N^*$}
+We note $N^+ = \BIN N & n^+\BOUT$, and $H^+$, $S^+$ the corresponding matrices.
+Some tedious computations leads to
+\begin{equation}
+	S^+ = \BIN S & 0 \\ 0 & 0 \BOUT + \frac{1}{z^T n^+} \BIN -r \\ 1\BOUT \BIN -r \\ 1\BOUT^T
+\end{equation}
+and 
+\begin{equation}
+	H^+ = H - \frac{z z^T}{z^T n^+}
+\end{equation}
+
+\bibliographystyle{unsrt}
+\bibliography{bib}
+
+\end{document}
