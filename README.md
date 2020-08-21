@@ -55,5 +55,5 @@ where the main options are:
 
 Tests
 -----
-Aside from Hand-crafted and randomized test, this repository can use Maros and Meszaros QP collection ([bottom of this page](http://www.doc.ic.ac.uk/~im/)), that can also be found [here](https://github.com/YimingYAN/QP-Test-Problems) with a Matlab version of the problems.
+Aside from hand-crafted and randomized tests, this repository can use the Maros and Meszaros QP collection ([bottom of this page](http://www.doc.ic.ac.uk/~im/)), that can also be found [here](https://github.com/YimingYAN/QP-Test-Problems) with a Matlab version of the problems.
 To use this collection, simply specify its path in the CMake options.
