@@ -44,11 +44,11 @@ static void BM_TriangularSolve_InversePrecompute(benchmark::State & state)
     }
   }
 }
-BENCHMARK(BM_TriangularSolve_InversePrecompute)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
+//BENCHMARK(BM_TriangularSolve_InversePrecompute)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
 
 static void BM_TriangularInverse_AtOnce(benchmark::State & state)
 {
-  const int n = state.range(0);
+  const int n = static_cast<int>(state.range(0));
   MatrixXd A = MatrixXd::Random(n, n);
   MatrixXd invA(state.range(0), state.range(0));
   for(auto _ : state)
@@ -57,11 +57,11 @@ static void BM_TriangularInverse_AtOnce(benchmark::State & state)
     A.template triangularView<Eigen::Lower>().solveInPlace(invA);
   }
 }
-BENCHMARK(BM_TriangularInverse_AtOnce)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
+//BENCHMARK(BM_TriangularInverse_AtOnce)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
 
 static void BM_TriangularInverse_Transpose(benchmark::State & state)
 {
-  const int n = state.range(0);
+  const int n = static_cast<int>(state.range(0));
   MatrixXd A = MatrixXd::Random(n, n);
   MatrixXd invA(state.range(0), state.range(0));
   for(auto _ : state)
@@ -70,11 +70,11 @@ static void BM_TriangularInverse_Transpose(benchmark::State & state)
     A.template triangularView<Eigen::Lower>().transpose().solveInPlace(invA);
   }
 }
-BENCHMARK(BM_TriangularInverse_Transpose)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
+//BENCHMARK(BM_TriangularInverse_Transpose)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
 
 static void BM_TriangularInverse_ByCol(benchmark::State & state)
 {
-  const int n = state.range(0);
+  const int n = static_cast<int>(state.range(0));
   MatrixXd A = MatrixXd::Random(n, n);
   MatrixXd invA(state.range(0), state.range(0));
   VectorXd e(n);
@@ -89,6 +89,81 @@ static void BM_TriangularInverse_ByCol(benchmark::State & state)
     }
   }
 }
-BENCHMARK(BM_TriangularInverse_ByCol)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
+//BENCHMARK(BM_TriangularInverse_ByCol)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
+
+static void BM_PSD_Solve_Overhead(benchmark::State & state)
+{
+  Matrix<double, 6, 6> R;
+  R.setRandom();
+  for(auto _ : state)
+  {
+    Matrix<double, 6, 6> A = R.transpose() * R;
+  }
+}
+BENCHMARK(BM_PSD_Solve_Overhead);
+
+static void BM_PSD_Solve(benchmark::State & state)
+{
+  Matrix<double, 6, 6> R;
+  R.setRandom();
+  Matrix<double, 6, 1> b;
+  Matrix<double, 6, 1> x;
+  b.setRandom();
+  for(auto _ : state)
+  {
+    Matrix<double, 6, 6> A = R.transpose() * R;
+    x = A.llt().solve(b);
+  }
+}
+BENCHMARK(BM_PSD_Solve);
+
+static void BM_PSD_SolveInPlace(benchmark::State & state)
+{
+  Matrix<double, 6, 6> R;
+  R.setRandom();
+  Matrix<double, 6, 1> b;
+  Matrix<double, 6, 1> x;
+  b.setRandom();
+  for(auto _ : state)
+  {
+    Matrix<double, 6, 6> A = R.transpose() * R;
+    A.llt().solveInPlace(b);
+  }
+}
+BENCHMARK(BM_PSD_SolveInPlace);
+
+static void BM_PSD_AllInPlace(benchmark::State & state)
+{
+  Matrix<double, 6, 6> R;
+  R.setRandom();
+  Matrix<double, 6, 1> b;
+  Matrix<double, 6, 1> x;
+  b.setRandom();
+  for(auto _ : state)
+  {
+    Matrix<double, 6, 6> A = R.transpose() * R;
+    LLT<Ref<Matrix<double, 6, 6>>> llt(A);
+    llt.solveInPlace(b);
+  }
+}
+BENCHMARK(BM_PSD_AllInPlace);
+
+static void BM_PSD_AllInPlaceByHand(benchmark::State & state)
+{
+  Matrix<double, 6, 6> R;
+  R.setRandom();
+  Matrix<double, 6, 1> b;
+  Matrix<double, 6, 1> x;
+  b.setRandom();
+  for(auto _ : state)
+  {
+    Matrix<double, 6, 6> A = R.transpose() * R;
+    Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(A);
+    auto L = A.template triangularView<Eigen::Lower>();
+    L.solveInPlace(b);
+    L.transpose().solveInPlace(b);
+  }
+}
+BENCHMARK(BM_PSD_AllInPlaceByHand);
 
 BENCHMARK_MAIN();
