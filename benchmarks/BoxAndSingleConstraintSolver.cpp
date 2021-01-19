@@ -30,7 +30,7 @@ public:
 
     for(int k = 0; k < N; ++k)
     {
-      pb.emplace_back(generateBoxAndSingleConstraintProblem(st.range(0), act));
+      pb.emplace_back(generateBoxAndSingleConstraintProblem(static_cast<int>(st.range(0)), act));
       qpp.emplace_back(pb.back());
     }
   }
@@ -61,7 +61,7 @@ public:
   }
 
 private:
-  mutable int i;
+  mutable int i = 0;
   std::vector<LeastSquareProblem<>> pb;
   std::vector<QPProblem<>> qpp;
 };
@@ -70,7 +70,7 @@ private:
 using test1 = ProblemFixture<1000, false>;
 BENCHMARK_DEFINE_F(test1, BSC_INACTIVE)(benchmark::State & st)
 {
-  experimental::BoxAndSingleConstraintSolver solver(st.range(0));
+  experimental::BoxAndSingleConstraintSolver solver(static_cast<int>(st.range(0)));
 
   for(auto _ : st)
   {
@@ -82,7 +82,7 @@ BENCHMARK_REGISTER_F(test1, BSC_INACTIVE)->Unit(benchmark::kMicrosecond)->DenseR
 
 BENCHMARK_DEFINE_F(test1, GI_INACTIVE)(benchmark::State & st)
 {
-  GoldfarbIdnaniSolver solver(st.range(0), 1, true);
+  GoldfarbIdnaniSolver solver(static_cast<int>(st.range(0)), 1, true);
 
   for(auto _ : st)
   {
@@ -96,7 +96,7 @@ BENCHMARK_REGISTER_F(test1, GI_INACTIVE)->Unit(benchmark::kMicrosecond)->DenseRa
 using test2 = ProblemFixture<1000, true>;
 BENCHMARK_DEFINE_F(test2, BSC_ACTIVE)(benchmark::State & st)
 {
-  experimental::BoxAndSingleConstraintSolver solver(st.range(0));
+  experimental::BoxAndSingleConstraintSolver solver(static_cast<int>(st.range(0)));
 
   for(auto _ : st)
   {
@@ -108,7 +108,7 @@ BENCHMARK_REGISTER_F(test2, BSC_ACTIVE)->Unit(benchmark::kMicrosecond)->DenseRan
 
 BENCHMARK_DEFINE_F(test2, GI_ACTIVE)(benchmark::State & st)
 {
-  GoldfarbIdnaniSolver solver(st.range(0), 1, true);
+  GoldfarbIdnaniSolver solver(static_cast<int>(st.range(0)), 1, true);
 
   for(auto _ : st)
   {

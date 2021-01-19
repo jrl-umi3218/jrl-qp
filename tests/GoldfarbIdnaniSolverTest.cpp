@@ -82,7 +82,7 @@ TEST_CASE("Random problems")
   {
     QPProblem qpp(pb);
     MatrixXd G = qpp.G; // copy for later check
-    GoldfarbIdnaniSolver solver(qpp.G.rows(), qpp.C.rows(), pb.bounds);
+    GoldfarbIdnaniSolver solver(static_cast<int>(qpp.G.rows()), static_cast<int>(qpp.C.rows()), pb.bounds);
     jrl::qp::internal::set_is_malloc_allowed(false);
     auto ret = solver.solve(qpp.G, qpp.a, qpp.C.transpose(), qpp.l, qpp.u, qpp.xl, qpp.xu);
     jrl::qp::internal::set_is_malloc_allowed(true);

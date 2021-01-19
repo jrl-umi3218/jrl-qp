@@ -49,7 +49,7 @@ struct Var
   constexpr static int rangeSlot = 1;
   static int value(const ::benchmark::State & st, int)
   {
-    return st.range(i);
+    return static_cast<int>(st.range(i));
   }
 };
 
@@ -137,11 +137,11 @@ SignatureType<NVar, NEq, NIneq, NIneqAct, NBndAct> problemSignature(const ::benc
 {
   SignatureType<NVar, NEq, NIneq, NIneqAct, NBndAct> ret;
   ret[0] = packBool<Bounds, DoubleSided>();
-  if constexpr(NVar::rangeSlot) ret[NVar::rangeIdx + 1] = st.range(NVar::rangeIdx);
-  if constexpr(NEq::rangeSlot) ret[NEq::rangeIdx + 1] = st.range(NEq::rangeIdx);
-  if constexpr(NIneq::rangeSlot) ret[NIneq::rangeIdx + 1] = st.range(NIneq::rangeIdx);
-  if constexpr(NIneqAct::rangeSlot) ret[NIneqAct::rangeIdx + 1] = st.range(NIneqAct::rangeIdx);
-  if constexpr(NBndAct::rangeSlot) ret[NBndAct::rangeIdx + 1] = st.range(NBndAct::rangeIdx);
+  if constexpr(NVar::rangeSlot) ret[NVar::rangeIdx + 1] = static_cast<int>(st.range(NVar::rangeIdx));
+  if constexpr(NEq::rangeSlot) ret[NEq::rangeIdx + 1] = static_cast<int>(st.range(NEq::rangeIdx));
+  if constexpr(NIneq::rangeSlot) ret[NIneq::rangeIdx + 1] = static_cast<int>(st.range(NIneq::rangeIdx));
+  if constexpr(NIneqAct::rangeSlot) ret[NIneqAct::rangeIdx + 1] = static_cast<int>(st.range(NIneqAct::rangeIdx));
+  if constexpr(NBndAct::rangeSlot) ret[NBndAct::rangeIdx + 1] = static_cast<int>(st.range(NBndAct::rangeIdx));
 
   return ret;
 }
@@ -485,7 +485,7 @@ public:
   }
 
 private:
-  int i;
+  int i = 0;
 
   inline static std::map<Signature, ProblemCollection<NbPb>> problems = {};
 };

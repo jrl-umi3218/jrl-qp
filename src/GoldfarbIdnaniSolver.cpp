@@ -24,8 +24,8 @@ TerminationStatus GoldfarbIdnaniSolver::solve(MatrixRef G,
                                               const VectorConstRef & xl,
                                               const VectorConstRef & xu)
 {
-  int nbVar = G.rows();
-  int nbCstr = C.cols();
+  int nbVar = static_cast<int>(G.rows());
+  int nbCstr = static_cast<int>(C.cols());
   bool useBnd = xl.size() > 0;
 
   LOG_RESET(log_);
@@ -56,7 +56,7 @@ TerminationStatus GoldfarbIdnaniSolver::solve(MatrixRef G,
 
 internal::InitTermination GoldfarbIdnaniSolver::init_()
 {
-  int ret = Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb_.G);
+  auto ret = Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb_.G);
   auto L = pb_.G.template triangularView<Eigen::Lower>();
 
   if(ret >= 0) return TerminationStatus::NON_POS_HESSIAN;
