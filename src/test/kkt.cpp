@@ -32,8 +32,8 @@ void checkDimensions([[maybe_unused]] int n,
                      [[maybe_unused]] const VectorConstRef & xu,
                      [[maybe_unused]] bool transposedC)
 {
-  [[maybe_unused]] int m = bl.size();
-  [[maybe_unused]] int nb = xl.size();
+  [[maybe_unused]] int m = static_cast<int>(bl.size());
+  [[maybe_unused]] int nb = static_cast<int>(xl.size());
   assert((!transposedC && C.rows() == m && C.cols() == n) || (transposedC && C.rows() == n && C.cols() == m));
   assert(bu.size() == m);
   assert(nb == 0 || nb == n);
@@ -49,7 +49,7 @@ void checkDimensions([[maybe_unused]] const MatrixConstRef & G,
                      const VectorConstRef & xu,
                      bool transposedC)
 {
-  [[maybe_unused]] int n = a.size();
+  [[maybe_unused]] int n = static_cast<int>(a.size());
   assert(G.rows() == n && G.cols() == n);
   assert(a.size() == n);
   checkDimensions(n, C, bl, bu, xl, xu, transposedC);
@@ -81,7 +81,7 @@ void checkDimensions([[maybe_unused]] const VectorConstRef & x,
                      bool transposedC)
 {
   assert(u.size() == bl.size() + xl.size());
-  checkDimensions(x.size(), C, bl, bu, xl, xu, transposedC);
+  checkDimensions(static_cast<int>(x.size()), C, bl, bu, xl, xu, transposedC);
 }
 
 bool testKKT(const VectorConstRef & x,
@@ -121,8 +121,8 @@ bool testKKTStationarity(const VectorConstRef & x,
                          double tau_d)
 {
   checkDimensions(x, u, G, a, C, bl, bu, xl, xu, transposedC);
-  int n = x.size();
-  int m = bl.size();
+  int n = static_cast<int>(x.size());
+  int m = static_cast<int>(bl.size());
   double tau_u = tau_d * (1 + u.template lpNorm<Infinity>());
   VectorXd dL = G * x + a;
   if(xl.size())
@@ -161,8 +161,8 @@ bool testKKTFeasibility(const VectorConstRef & x,
                         double tau_d)
 {
   checkDimensions(x, u, C, bl, bu, xl, xu, transposedC);
-  int n = x.size();
-  int m = bl.size();
+  int n = static_cast<int>(x.size());
+  int m = static_cast<int>(bl.size());
 
   double tau_x = tau_p * (1 + x.template lpNorm<Infinity>());
   double tau_u = tau_d * (1 + u.template lpNorm<Infinity>());

@@ -113,10 +113,10 @@ static void BM_Mult_VectorXd_TriangularOptim4(benchmark::State & state)
   const int bsize = 4;
   for(auto _ : state)
   {
-    int nBlock = A.cols() / bsize;
+    int nBlock = static_cast<int>(A.cols()) / bsize;
     y.setZero();
     int s = 0;
-    int r = A.cols();
+    int r = static_cast<int>(A.cols());
     for(int i = 0; i < nBlock; ++i)
     {
       y.tail(r).noalias() += A.block(s, s, r, bsize) * x.segment(s, bsize);
@@ -138,10 +138,10 @@ static void BM_Mult_VectorXd_TriangularOptim8(benchmark::State & state)
   const int bsize = 8;
   for(auto _ : state)
   {
-    int nBlock = A.cols() / bsize;
+    int nBlock = static_cast<int>(A.cols()) / bsize;
     y.setZero();
     int s = 0;
-    int r = A.cols();
+    int r = static_cast<int>(A.cols());
     for(int i = 0; i < nBlock; ++i)
     {
       y.tail(r).noalias() += A.block(s, s, r, bsize) * x.segment(s, bsize);
@@ -163,10 +163,10 @@ static void BM_Mult_VectorXd_TriangularOptim16(benchmark::State & state)
   const int bsize = 16;
   for(auto _ : state)
   {
-    int nBlock = A.cols() / bsize;
+    int nBlock = static_cast<int>(A.cols()) / bsize;
     y.setZero();
     int s = 0;
-    int r = A.cols();
+    int r = static_cast<int>(A.cols());
     for(int i = 0; i < nBlock; ++i)
     {
       y.tail(r).noalias() += A.block(s, s, r, bsize) * x.segment(s, bsize);
@@ -248,10 +248,10 @@ static void BM_Mult_MatrixXd_TriangularOptim4(benchmark::State & state)
   const int bsize = 4;
   for(auto _ : state)
   {
-    int nBlock = A.cols() / bsize;
+    int nBlock = static_cast<int>(A.cols()) / bsize;
     C.setZero();
     int s = 0;
-    int r = A.cols();
+    int r = static_cast<int>(A.cols());
     for(int i = 0; i < nBlock; ++i)
     {
       C.bottomRows(r).noalias() += A.block(s, s, r, bsize) * B.middleRows(s, bsize);
@@ -273,10 +273,10 @@ static void BM_Mult_MatrixXd_TriangularOptim8(benchmark::State & state)
   const int bsize = 8;
   for(auto _ : state)
   {
-    int nBlock = A.cols() / bsize;
+    int nBlock = static_cast<int>(A.cols()) / bsize;
     C.setZero();
     int s = 0;
-    int r = A.cols();
+    int r = static_cast<int>(A.cols());
     for(int i = 0; i < nBlock; ++i)
     {
       C.bottomRows(r).noalias() += A.block(s, s, r, bsize) * B.middleRows(s, bsize);
@@ -298,10 +298,10 @@ static void BM_Mult_MatrixXd_TriangularOptim16(benchmark::State & state)
   const int bsize = 16;
   for(auto _ : state)
   {
-    int nBlock = A.cols() / bsize;
+    int nBlock = static_cast<int>(A.cols()) / bsize;
     C.setZero();
     int s = 0;
-    int r = A.cols();
+    int r = static_cast<int>(A.cols());
     for(int i = 0; i < nBlock; ++i)
     {
       C.bottomRows(r).noalias() += A.block(s, s, r, bsize) * B.middleRows(s, bsize);

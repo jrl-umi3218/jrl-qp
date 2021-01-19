@@ -14,8 +14,8 @@ TerminationStatus BoxAndSingleConstraintSolver::solve(const VectorConstRef & x0,
                                                       const VectorConstRef & xl,
                                                       const VectorConstRef & xu)
 {
-  int nbVar = x0.size();
-  int nbCstr = c.cols();
+  int nbVar = static_cast<int>(x0.size());
+  int nbCstr = static_cast<int>(c.cols());
   bool useBnd = xl.size() > 0;
 
   LOG_RESET(log_);

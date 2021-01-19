@@ -23,18 +23,18 @@ bool doubleSided(const QPProblem<true> & pb)
 int me(const QPProblem<true> & pb)
 {
   if(pb.transposedMat)
-    return pb.E.cols();
+    return static_cast<int>(pb.E.cols());
   else
-    return pb.E.rows();
+    return static_cast<int>(pb.E.rows());
 }
 
 // number of inequality in the problem
 int mi(const QPProblem<true> & pb)
 {
   if(pb.transposedMat)
-    return pb.C.cols();
+    return static_cast<int>(pb.C.cols());
   else
-    return pb.C.rows();
+    return static_cast<int>(pb.C.rows());
 }
 } // namespace
 
@@ -47,7 +47,7 @@ EigenQuadprogPb::EigenQuadprogPb(const QPProblem<true> & pb)
   Q = pb.G;
   c = pb.a;
 
-  int nVar = pb.a.size();
+  int nVar = static_cast<int>(pb.a.size());
 
   int nIneq = 0;
   int nl, nu, nxl, nxu;
@@ -67,13 +67,13 @@ EigenQuadprogPb::EigenQuadprogPb(const QPProblem<true> & pb)
   int startxl = nIneq;
   if(hasFiniteElements(pb.xl))
   {
-    nxl = pb.xl.size();
+    nxl = static_cast<int>(pb.xl.size());
     nIneq += nxl;
   }
   int startxu = nIneq;
   if(hasFiniteElements(pb.xu))
   {
-    nxu = pb.xu.size();
+    nxu = static_cast<int>(pb.xu.size());
     nIneq += nxu;
   }
   Aineq.resize(nIneq, nVar);
@@ -106,7 +106,7 @@ LssolPb::LssolPb(const QPProblem<true> & pb)
   assert(pb.wellFormed());
   Q = pb.G;
   p = pb.a;
-  int nVar = p.size();
+  int nVar = static_cast<int>(p.size());
   int nEq = me(pb);
   int nIneq = mi(pb);
 
@@ -147,7 +147,7 @@ QLDPb::QLDPb(const QPProblem<true> & pb)
   Q = pb.G;
   c = pb.a;
 
-  int nVar = pb.a.size();
+  int nVar = static_cast<int>(pb.a.size());
   int nEq = me(pb);
 
   int nIneq = nEq;

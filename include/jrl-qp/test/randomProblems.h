@@ -121,8 +121,8 @@ struct JRLQP_DLLAPI RandomLeastSquare : public LeastSquareProblem<true>
   Eigen::VectorXd lambdaEq;
   Eigen::VectorXd lambdaIneq;
   Eigen::VectorXd lambdaBnd;
-  bool doubleSidedIneq;
-  bool bounds;
+  bool doubleSidedIneq = false;
+  bool bounds = false;
 
   struct KKT
   {
