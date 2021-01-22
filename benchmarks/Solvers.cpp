@@ -607,32 +607,35 @@ private:
   BENCH_QLD(fixture, otherArgs);      \
   BENCH_CLEAR(fixture)->DenseRange(1, 1, 1);
 
+auto minl = [](const std::vector<double> & v) { return *(std::min_element(std::begin(v), std::end(v))); };
+auto maxl = [](const std::vector<double> & v) { return *(std::max_element(std::begin(v), std::end(v))); };
+
 // Varying size, fixed 40% equality
 using test1 = ProblemFixture<100, Var<0>, FFrac<40>, Fixed<0>, Fixed<0>, false, Fixed<0>>;
-BENCH_ALL(test1, ->DenseRange(10, 100, 10));
+BENCH_ALL(test1, ->DenseRange(10, 100, 10)->ComputeStatistics("min", minl)->ComputeStatistics("max", maxl));
 
 // Fixed nVar = 50 and nIneq=80, varying number of active constraints from 0 to 100%
 using test2 = ProblemFixture<100, Fixed<50>, Fixed<0>, Fixed<80>, VFrac<0>, false, Fixed<0>>;
-BENCH_ALL(test2, ->DenseRange(0, 100, 10));
+BENCH_ALL(test2, ->DenseRange(0, 100, 10)->ComputeStatistics("min", minl)->ComputeStatistics("max", maxl));
 
 // Varying size, fixed 20% equality, fixed 100% inequality, with 30% active, bounds
 using test3 = ProblemFixture<100, Var<0>, FFrac<20>, FFrac<100>, FFrac<30>, true, FFrac<10>, true>;
-BENCH_ALL(test3, ->DenseRange(10, 100, 10));
+BENCH_ALL(test3, ->DenseRange(10, 100, 10)->ComputeStatistics("min", minl)->ComputeStatistics("max", maxl));
 
 // Fixed size, varying equality
 using test4 = ProblemFixture<100, Fixed<50>, VFrac<0>, Fixed<0>, Fixed<0>, false, Fixed<0>>;
-BENCH_ALL(test4, ->DenseRange(10, 100, 10));
+BENCH_ALL(test4, ->DenseRange(10, 100, 10)->ComputeStatistics("min", minl)->ComputeStatistics("max", maxl));
 
 // Fixed size, as many single-sided inequality, varying active
 using test5 = ProblemFixture<100, Fixed<50>, Fixed<0>, Fixed<50>, VFrac<0>, false, Fixed<0>>;
-BENCH_ALL(test5, ->DenseRange(10, 100, 10));
+BENCH_ALL(test5, ->DenseRange(10, 100, 10)->ComputeStatistics("min", minl)->ComputeStatistics("max", maxl));
 
 // Fixed size, as many double-sided inequality, varying active
 using test6 = ProblemFixture<100, Fixed<50>, Fixed<0>, Fixed<50>, VFrac<0>, false, Fixed<0>, true>;
-BENCH_ALL(test6, ->DenseRange(10, 100, 10));
+BENCH_ALL(test6, ->DenseRange(10, 100, 10)->ComputeStatistics("min", minl)->ComputeStatistics("max", maxl));
 
 // Fixed size, only bounds, varying active
 using test7 = ProblemFixture<100, Fixed<50>, Fixed<0>, Fixed<0>, Fixed<0>, true, VFrac<0>>;
-BENCH_ALL(test7, ->DenseRange(10, 100, 10));
+BENCH_ALL(test7, ->DenseRange(10, 100, 10)->ComputeStatistics("min", minl)->ComputeStatistics("max", maxl));
 
 BENCHMARK_MAIN();
