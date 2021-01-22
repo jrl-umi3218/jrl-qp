@@ -121,6 +121,7 @@ RandomLeastSquare randomProblem(const ProblemCharacteristics & characs)
   pb.lambdaBnd.resize(nBounds);
   pb.lambdaBnd.head(nStrongActBounds) = reducedMultipliers.tail(nStrongActBounds);
   pb.lambdaBnd.tail(nBounds - nStrongActBounds).setZero();
+  pb.bounds = bounds;
 
   // 4 - Now we add weakly active and inactive constraints
   if(nWeakActIneq <= nstrong)
