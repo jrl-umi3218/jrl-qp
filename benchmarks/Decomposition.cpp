@@ -56,7 +56,7 @@ static void BM_QR_Decomposition(benchmark::State & state)
 }
 MAT_BENCHMARK(BM_QR_Decomposition);
 
-// QR of A
+// QR of A in place
 static void BM_QR_Decomposition_Inplace(benchmark::State & state)
 {
   MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
@@ -67,6 +67,25 @@ static void BM_QR_Decomposition_Inplace(benchmark::State & state)
   }
 }
 MAT_BENCHMARK(BM_QR_Decomposition_Inplace);
+
+// QR of A in place using internals
+static void BM_QR_Decomposition_Inplace_Internal(benchmark::State & state)
+{
+  MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
+  HouseholderQR<MatrixXd> qr(A);
+  Index rows = qr.rows();
+  Index cols = qr.cols();
+  Index size = (std::min)(rows, cols);
+
+  VectorXd m_hCoeffs(size);
+  VectorXd m_temp(cols);
+
+  for(auto _ : state)
+  {
+    internal::householder_qr_inplace_blocked<MatrixXd, VectorXd>::run(A, m_hCoeffs, 48, m_temp.data());
+  }
+}
+MAT_BENCHMARK(BM_QR_Decomposition_Inplace_Internal);
 
 // Col piv QR of A
 static void BM_ColPivQR_Decomposition(benchmark::State & state)
