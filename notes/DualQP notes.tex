@@ -55,21 +55,55 @@ The optimality conditions for $P_\act$ are
 \end{equation}
 There are several ways to solve this system, including the nullspace approach and the Schur approach\cite[Chap. 16]{nocedal:book:2006}. Goldfarb and Idani are using the latter.
 
+\subsection{A Schur complement approach}
 Let's $M$ denote the matrix of the system. A simple application of block-inverse formula leads to
 \begin{equation}
 M^{-1} = \BIN G^{-1} - G^{-1} N (N^T G^{-1} N)^{-1} N^T G^{-1} & G^{-1} N (N^T G^{-1} N)^{-1} \\ - (N^T G^{-1} N)^{-1} N^T G^{-1} & (N^T G^{-1} N)^{-1} \BOUT
 \end{equation}
 Noting $S = (N^T G^{-1} N)^{-1}$, $N^* = S N^T G^{-1}$\newline and $H = G^{-1} - G^{-1} N S N^T G^{-1} = G^{-1}(I-N N^*)$, we have
 \begin{equation}
-M^{-1} = \BIN H & N^{*T} \\ - N* & S \BOUT
+M^{-1} = \BIN H & N^{*T} \\ - N^* & S \BOUT
 \end{equation}
 This leads to 
 \begin{equation}
-	\BIN x \\ u \BOUT = \BIN -H a + N^{*T} b_\act \\ N^* a + S b_act\BOUT
+	\BIN x \\ u \BOUT = \BIN -H a + N^{*T} b_\act \\ N^* a + S b_\act\BOUT \label{eq:primalDualSol}
 \end{equation}
 
 Note that because $N^* N = I$, we can also express $u$ as a function of $x$: $u = N^* (Gx+a) = N^* \nabla f$.
 
+\subsection{Efficient implementation}
+Following the paper, we consider the Cholesky decomposition
+\begin{equation}
+	G = L L^T
+\end{equation}
+and define $B = L^{-1} N$. The QR factorization of $B$ yields
+\begin{equation}
+	B = \BIN Q_1 & Q_2\BOUT \BIN R \\ 0 \BOUT
+\end{equation}
+We define $Q = \BIN Q_1 & Q_2\BOUT$ and
+\begin{equation}
+	J = \BIN J_1 & J_2\BOUT = L^{-T} \BIN Q_1 & Q_2\BOUT
+\end{equation}
+It follows that
+\begin{align}
+	S &= R^{-1}R^{-T} \\
+	H &= J_2 J_2^T \\
+	N^*& = R^{-1} J_1^T
+\end{align}
+If we define the following quantities:
+\begin{align}
+	\BIN \alpha_1 \\ \alpha_2 \BOUT &= \BIN J_1^T \\ J_2^T \BOUT a \\
+	\beta &= R^{-T} b_\act \\
+	\chi & = \BIN \beta \\ -\alpha_2 \BOUT
+\end{align}
+then \eqref{eq:primalDualSol} rewrites
+\begin{equation}
+	\BIN x \\ u \BOUT = \BIN J \chi \\ R^{-1} (\alpha_1 + \beta) \BOUT
+\end{equation}
+Finally, noting that $J^T G J = Q L^{-1} G L^{-T} Q = I$, we have that
+\begin{equation}
+	f = \frac{1}{2} x^T G x + x^T a = \frac{1}{2} \chi^T J^T G J \chi + \chi^T J^T a = \frac{1}{2} \chi^T \chi + \chi^T \alpha
+\end{equation}
 
 \section{Step computation}
 Now consider that we have a S-pair $(x,\act)$, but that a constraint $p \in \mathcal{K} \backslash \act$ is violated. Noting $n^+$ the column of $C$ corresponding to this constraint and $b^+$ the associated element of $b$, we are looking for a step such that the optimality conditions are met again if we activate this constraint. The constraint was so far associated to a zero Lagrange multiplier. We want to solve
