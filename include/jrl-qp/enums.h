@@ -30,8 +30,9 @@ enum class TerminationStatus
   NON_POS_HESSIAN, // Quadratic matrix of the problem is expected to be positive definite, but is not.
   INFEASIBLE, // Problem is infeasible
   MAX_ITER_REACHED, // Maximum number of iteration was reached. You can increase this number by using the solver options.
-  LINEAR_DEPENDENCY_DETECTED // Some active constraints are linearly dependent and the solver doesn't know how to handle
-                             // this case.
+  LINEAR_DEPENDENCY_DETECTED, // Some active constraints are linearly dependent and the solver doesn't know how to handle
+                              // this case.
+  OVERCONSTRAINED_PROBLEM, // Too many equality constraints and fixed variables
 };
 
 /** Flags for the log and debug outputs.*/
@@ -44,6 +45,7 @@ enum class LogFlags : std::uint32_t
   ITERATION_ADVANCE_DETAILS = 1 << 3,
   ACTIVE_SET = 1 << 4,
   ACTIVE_SET_DETAILS = 1 << 5,
+  INIT = 1 << 6,
   MISC = 1 << 30,
   NO_ITER = constant::noIterationFlag
 };
