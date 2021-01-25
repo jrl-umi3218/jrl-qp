@@ -69,4 +69,36 @@ template<typename T>
 class always_false : public std::false_type
 {
 };
+
+/** Identity functor.
+ * 
+ * Taken from https://stackoverflow.com/a/15202612
+ */
+struct identity
+{
+  template<typename T>
+  constexpr auto operator()(T && v) const noexcept -> decltype(std::forward<T>(v))
+  {
+    return std::forward<T>(v);
+  }
+};
+
+/** Functor to convert an enumeration to its undelying type.*/
+struct to_underlying_type
+{
+  template<typename T>
+  constexpr auto operator()(const T & v) const noexcept
+  {
+    static_assert(std::is_enum_v<T>, "This is needed before C++20.");
+    return static_cast<std::underlying_type_t<T>>(v);
+  }
+};
+
+/** Helper functor that takes an argument and
+ *  - returns it as is, if it is not an enum
+ *  - cast it as its underlying type if it is one
+ */
+template<typename T>
+using cast_as_underlying_if_enum = std::conditional_t<std::is_enum_v<T>, to_underlying_type, identity>;
+
 } // namespace jrl::qp::internal
