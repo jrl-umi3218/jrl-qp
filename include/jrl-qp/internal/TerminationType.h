@@ -37,6 +37,8 @@ private:
 
 class InitTermination : public TerminationType
 {
+public:
   using TerminationType::TerminationType;
+  InitTermination(const TerminationType& tt) : TerminationType(tt) {}
 };
 } // namespace jrl::qp::internal

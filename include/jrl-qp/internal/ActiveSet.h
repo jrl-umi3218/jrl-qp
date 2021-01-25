@@ -10,7 +10,7 @@
 
 namespace jrl::qp::internal
 {
-/** A class to track the active status of a set of constraints and bounds.
+/** A class to track the activation status of a set of constraints and bounds.
  *
  * This class uses two types of representations and accompanying indices:
  *  - on one hand, it maintains a vector with the status of all constraints
