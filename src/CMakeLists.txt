@@ -3,6 +3,7 @@ set(JRLQP_SOURCES
   GoldfarbIdnaniSolver.cpp
   SolverOptions.cpp
   experimental/BoxAndSingleConstraintSolver.cpp
+  experimental/GoldfarbIdnaniSolver.cpp
   internal/ActiveSet.cpp
   internal/memoryChecks.cpp
   test/kkt.cpp
@@ -20,6 +21,7 @@ set(JRLQP_HEADERS
   ${JRLQP_INCLUDE_DIR}/GoldfarbIdnaniSolver.h
   ${JRLQP_INCLUDE_DIR}/SolverOptions.h
   ${JRLQP_INCLUDE_DIR}/experimental/BoxAndSingleConstraintSolver.h
+  ${JRLQP_INCLUDE_DIR}/experimental/GoldfarbIdnaniSolver.h
   ${JRLQP_INCLUDE_DIR}/internal/ActiveSet.h
   ${JRLQP_INCLUDE_DIR}/internal/meta.h
   ${JRLQP_INCLUDE_DIR}/internal/memoryChecks.h
