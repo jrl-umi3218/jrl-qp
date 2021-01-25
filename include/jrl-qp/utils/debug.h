@@ -63,8 +63,8 @@ inline constexpr bool DEBUG_OUTPUT = 1;
 #define LOG_AS(...) PP_ID(ENABLE_LOG_(LOG_AS_, __VA_ARGS__))
 #define DBG_AS(...) PP_ID(ENABLE_DEBUG_(LOG_AS_, __VA_ARGS__))
 
-#define LOG_COMMENT(logger, flag, s) ENABLE_LOG_(logger.comment, static_cast<uint32_t>(flag), s)
-#define DBG_COMMENT(logger, flag, s) ENABLE_DEBUG_(logger.comment, static_cast<uint32_t>(flag), s)
+#define LOG_COMMENT(logger, flag, ...) PP_ID(ENABLE_LOG_(logger.comment, static_cast<uint32_t>(flag), __VA_ARGS__))
+#define DBG_COMMENT(logger, flag, ...) PP_ID(ENABLE_DEBUG_(logger.comment, static_cast<uint32_t>(flag), __VA_ARGS__))
 
 #define LOG_NEW_ITER(logger, it) ENABLE_LOG_(logger.startIter, it)
 #define DBG_NEW_ITER(logger, it) ENABLE_DEBUG_(logger.startIter, it)

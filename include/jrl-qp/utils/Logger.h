@@ -36,7 +36,8 @@ public:
   Logger & setOutputStream(std::ostream & os);
 
   /** Log a comment \p c, if \p flag pass the filter.*/
-  void comment(std::uint32_t flag, std::string_view c) const;
+  template<typename... Args>
+  void comment(std::uint32_t flag, Args &&... args) const;
   /** Indicate that a new iteration of the solver is starting.*/
   void startIter(int i);
   /** Log a given number of values.
@@ -80,6 +81,9 @@ private:
   template<bool b, typename Derived>
   void logVal_(const std::string & valName, const Eigen::EigenBase<Derived> & M) const;
 
+  template<bool b, typename T>
+  void logVal_(const std::string & valName, const std::vector<T> & v) const;
+
   template<bool b,
            typename Other,
            typename std::enable_if<(!internal::derives_from<Other, Eigen::EigenBase>()), int>::type = 0>
@@ -103,6 +107,12 @@ inline std::ostream & Logger::logIter<false>() const
 {
   *os_ << name_ << "Data";
   return *os_;
+}
+
+template<typename... Args>
+inline void Logger::comment(std::uint32_t flag, Args &&... args) const
+{
+  if(flag & flags_) ((*os_ << "% ") << ... << args) << "\n";
 }
 
 template<typename... Args>
@@ -134,6 +144,18 @@ template<bool b, typename Derived>
 inline void Logger::logVal_(const std::string & valName, const Eigen::EigenBase<Derived> & M) const
 {
   logIter<b>() << "." << valName << " = " << (toMatlab)M.const_derived() << ";\n";
+}
+
+template<bool b, typename T>
+inline void Logger::logVal_(const std::string & valName, const std::vector<T> & v) const
+{
+  if(v.empty()) return;
+  auto & line = logIter<b>() << "." << valName << " = [";
+  for(size_t i = 0; i < v.size() - 1; ++i)
+  {
+    line << internal::cast_as_underlying_if_enum<T>{}(v[i]) << ", ";
+  }
+  line << internal::cast_as_underlying_if_enum<T>{}(v.back()) << "];\n";
 }
 
 template<bool b, typename Other, typename std::enable_if<(!internal::derives_from<Other, Eigen::EigenBase>()), int>::type>

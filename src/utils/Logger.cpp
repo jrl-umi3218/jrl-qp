@@ -19,11 +19,6 @@ Logger & Logger::setOutputStream(std::ostream & os)
   return *this;
 }
 
-void Logger::comment(std::uint32_t flag, std::string_view c) const
-{
-  if(flag & flags_) *os_ << "% " << c << "\n";
-}
-
 void Logger::startIter(int i)
 {
   iter_ = i;
