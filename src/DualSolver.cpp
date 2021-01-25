@@ -73,17 +73,22 @@ double DualSolver::objectiveValue() const
   return f_;
 }
 
+const std::vector<ActivationStatus> & DualSolver::activeSet() const
+{
+  return A_.activationStatus();
+}
+
 TerminationStatus DualSolver::solve()
 {
+  if(auto rt = init(); !rt) // step 0
+    return terminate(rt);
+
   bool skipStep1 = false;
   internal::ConstraintNormal np;
   WVector x = work_x_.asVector(nbVar_);
   WVector z = work_z_.asVector(nbVar_);
-  WVector u = work_u_.asVector(0);
+  WVector u = work_u_.asVector(A_.nbActiveCstr());
   WVector r = work_r_.asVector(0);
-
-  if(auto rt = init(); !rt) // step 0
-    return terminate(rt);
 
   for(int it = 0; it < options_.maxIter_; ++it)
   {
@@ -187,7 +192,7 @@ internal::InitTermination DualSolver::init()
   DEBUG_ONLY(work_r_.setZero());
 
   needToExpandMultipliers_ = true;
-  A_.reset();
+  if(!options_.warmStart_) A_.reset();
   return init_();
 }
 
@@ -236,7 +241,6 @@ void DualSolver::resize_p(int nbVar, int nbCstr, bool useBounds)
   int nbBnd = useBounds ? nbVar : 0;
   if(nbCstr + nbBnd != A_.nbAll())
   {
-    A_.resize(nbCstr, nbBnd);
     // We need to have work_u_ size at least as big as the number of constraints because we
     // are using it for storing the final multipliers.
     // work_r_ size could be restricted to at most nbVar, as long as we make sure that we'll
@@ -244,6 +248,10 @@ void DualSolver::resize_p(int nbVar, int nbCstr, bool useBounds)
     // However, this would complicate the resize logic.
     work_u_.resize(nbCstr + nbBnd);
     work_r_.resize(nbCstr + nbBnd);
+  }
+  if(nbCstr != A_.nbCstr() || nbBnd != A_.nbBnd())
+  {
+    A_.resize(nbCstr, nbBnd);
   }
 }
 } // namespace jrl::qp

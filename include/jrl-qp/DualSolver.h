@@ -47,6 +47,13 @@ public:
   /** Get the objective value at the solution.*/
   double objectiveValue() const;
 
+  /** Get the active set at the solution.
+   *
+   * The i-th element corresponds to the activation status of the i-th constraint
+   * with the general constraints first, followed by the bound constraints.
+   */
+  const std::vector<ActivationStatus> & activeSet() const;
+
 protected:
   struct StepLength
   {
