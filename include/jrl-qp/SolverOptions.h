@@ -16,7 +16,7 @@ struct JRLQP_DLLAPI SolverOptions
   int maxIter_ = 500;
   double bigBnd_ = 1e100;
   bool warmStart_ = false; 
-  std::uint32_t logFlags_;
+  std::uint32_t logFlags_ = 0;
   std::ostream * logStream_ = &defaultStream_;
 
   static std::ostream & defaultStream_;
