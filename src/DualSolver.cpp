@@ -5,7 +5,7 @@
 namespace jrl::qp
 {
 DualSolver::DualSolver()
-: options_(SolverOptions()), log_(SolverOptions::defaultStream_, "log"), nbVar_(0), A_(0), f_(0), work_x_(0),
+: options_(SolverOptions()), log_(SolverOptions::defaultStream_, "log"), it_(0), nbVar_(0), A_(0), f_(0), work_x_(0),
   work_z_(0), work_u_(0), work_r_(0), needToExpandMultipliers_(false)
 {
 }
@@ -73,6 +73,11 @@ double DualSolver::objectiveValue() const
   return f_;
 }
 
+int DualSolver::iterations() const
+{
+  return it_;
+}
+
 const std::vector<ActivationStatus> & DualSolver::activeSet() const
 {
   return A_.activationStatus();
@@ -90,9 +95,9 @@ TerminationStatus DualSolver::solve()
   WVector u = work_u_.asVector(A_.nbActiveCstr());
   WVector r = work_r_.asVector(0);
 
-  for(int it = 0; it < options_.maxIter_; ++it)
+  for(it_ = 0; it_ < options_.maxIter_; ++it_)
   {
-    LOG_NEW_ITER(log_, it);
+    LOG_NEW_ITER(log_, it_);
     LOG(log_, LogFlags::ACTIVE_SET_DETAILS, A_);
     int q = A_.nbActiveCstr();
     LOG(log_, LogFlags::ITERATION_BASIC_DETAILS, x, u, f_);
