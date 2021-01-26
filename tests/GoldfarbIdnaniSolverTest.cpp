@@ -124,6 +124,47 @@ TEST_CASE_TEMPLATE("Multiple uses", T, GoldfarbIdnaniSolver, experimental::Goldf
   }
 }
 
+TEST_CASE("Warm-start")
+{
+  std::vector problems = {
+      randomProblem(ProblemCharacteristics(5, 5)), randomProblem(ProblemCharacteristics(5, 5).nEq(2)),
+      randomProblem(ProblemCharacteristics(5, 5).nIneq(8).nStrongActIneq(4)),
+      randomProblem(ProblemCharacteristics(5, 5, 2, 6).nStrongActIneq(3)),
+      randomProblem(ProblemCharacteristics(5, 5, 2, 6).nStrongActIneq(1).bounds(true).nStrongActBounds(2))};
+
+  for(const auto & pb : problems)
+  {
+    QPProblem qpp(pb);
+    MatrixXd G = qpp.G; // copy for restore and later check
+    GoldfarbIdnaniSolver solverNoWS(static_cast<int>(qpp.G.rows()), static_cast<int>(qpp.C.rows()),
+                                               pb.bounds);
+    experimental::GoldfarbIdnaniSolver solverWS(static_cast<int>(qpp.G.rows()), static_cast<int>(qpp.C.rows()),
+                                               pb.bounds);
+    SolverOptions opt;
+    opt.warmStart_ = true;
+    solverWS.options(opt);
+    //    jrl::qp::internal::set_is_malloc_allowed(false);
+    auto retNoWS = solverNoWS.solve(qpp.G, qpp.a, qpp.C.transpose(), qpp.l, qpp.u, qpp.xl, qpp.xu);
+    qpp.G = G;
+    auto retWS = solverWS.solve(qpp.G, qpp.a, qpp.C.transpose(), qpp.l, qpp.u, qpp.xl, qpp.xu, solverNoWS.activeSet());
+    //    jrl::qp::internal::set_is_malloc_allowed(true);
+
+    FAST_CHECK_EQ(retNoWS, TerminationStatus::SUCCESS);
+    FAST_CHECK_EQ(retWS, TerminationStatus::SUCCESS);
+    FAST_CHECK_UNARY(test::testKKT(solverWS.solution(), solverWS.multipliers(), G, qpp.a, qpp.C, qpp.l, qpp.u, qpp.xl, qpp.xu, false));
+    FAST_CHECK_UNARY(solverWS.solution().isApprox(pb.x, 1e-6));
+    FAST_CHECK_UNARY(solverWS.multipliers().head(pb.E.rows()).isApprox(pb.lambdaEq, 1e-6));
+    FAST_CHECK_UNARY(solverWS.multipliers().segment(pb.E.rows(), pb.C.rows()).isApprox(pb.lambdaIneq, 1e-6));
+    FAST_CHECK_UNARY(solverWS.multipliers().tail(pb.xl.size()).isApprox(pb.lambdaBnd, 1e-6));
+    FAST_CHECK_EQ(solverWS.iterations(), 0);
+
+    // Check warm start reusing previous active set
+    qpp.G = G;
+    solverWS.solve(qpp.G, qpp.a, qpp.C.transpose(), qpp.l, qpp.u, qpp.xl, qpp.xu);
+    FAST_CHECK_EQ(solverWS.iterations(), 0);
+  }
+}
+
 #ifdef QPS_TESTS_DIR
 template<typename Solver>
 struct ExcludePb
