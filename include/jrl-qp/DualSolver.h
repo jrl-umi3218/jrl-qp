@@ -46,6 +46,8 @@ public:
   WConstVector multipliers() const;
   /** Get the objective value at the solution.*/
   double objectiveValue() const;
+  /** Get the number of active-set iterations used to find the solution*/
+  int iterations() const;
 
   /** Get the active set at the solution.
    *
@@ -118,6 +120,8 @@ private:
 protected:
   SolverOptions options_;
   utils::Logger log_;
+
+  int it_; //number of iterations
 
   int nbVar_;
   internal::ActiveSet A_;
