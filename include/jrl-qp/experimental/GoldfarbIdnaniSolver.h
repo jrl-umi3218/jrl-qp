@@ -78,10 +78,10 @@ protected:
   mutable internal::Workspace<> work_d_;
   internal::Workspace<> work_J_;
   internal::Workspace<> work_R_;
-  internal::Workspace<> work_tmp_;    // for multiplication by Householder transform
-  internal::Workspace<> work_hCoeffs_;// for initial QR decomposition
+  internal::Workspace<> work_tmp_; // for multiplication by Householder transform
+  internal::Workspace<> work_hCoeffs_; // for initial QR decomposition
   internal::Workspace<> work_bact_;
   Problem pb_;
 };
 
-} // namespace jrl::qp
+} // namespace jrl::qp::experimental

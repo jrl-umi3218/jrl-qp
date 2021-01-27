@@ -160,4 +160,4 @@ const std::vector<QPSPbData> marosMeszarosPbList =
     {"zecevic2",-4.1250000e+00, Inf          , 2     , 2    , 4     , 1    , 0      }
 };
 // clang-format on
-}
+} // namespace jrl::qp::test

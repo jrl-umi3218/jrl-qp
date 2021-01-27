@@ -124,7 +124,7 @@ protected:
   SolverOptions options_;
   utils::Logger log_;
 
-  int it_; //number of iterations
+  int it_; // number of iterations
 
   int nbVar_;
   internal::ActiveSet A_;

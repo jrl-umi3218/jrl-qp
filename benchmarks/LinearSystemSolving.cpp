@@ -44,7 +44,7 @@ static void BM_TriangularSolve_InversePrecompute(benchmark::State & state)
     }
   }
 }
-//BENCHMARK(BM_TriangularSolve_InversePrecompute)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
+// BENCHMARK(BM_TriangularSolve_InversePrecompute)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
 
 static void BM_TriangularInverse_AtOnce(benchmark::State & state)
 {
@@ -57,7 +57,7 @@ static void BM_TriangularInverse_AtOnce(benchmark::State & state)
     A.template triangularView<Eigen::Lower>().solveInPlace(invA);
   }
 }
-//BENCHMARK(BM_TriangularInverse_AtOnce)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
+// BENCHMARK(BM_TriangularInverse_AtOnce)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
 
 static void BM_TriangularInverse_Transpose(benchmark::State & state)
 {
@@ -79,14 +79,14 @@ static void BM_TriangularInverse_Transpose_ByHand(benchmark::State & state)
   MatrixXd invA(state.range(0), state.range(0));
   for(auto _ : state)
   {
-    //for(int i=n-1; i>=0; --i)
+    // for(int i=n-1; i>=0; --i)
     //{
     //  invA(i, i) = 1. / A(i, i);
     //  invA.col(i).head(i - 1) = -invA(i, i) * A.row(i).head(i - 1).transpose();
     //  //invA.col(i).tail(n - i - 1).setZero();
     //}
     invA(0, 0) = 1. / A(0, 0);
-    for(int i=0; i<n-1; ++i)
+    for(int i = 0; i < n - 1; ++i)
     {
       int i1 = i + 1;
       invA(i1, i1) = 1. / A(i1, i1);
@@ -97,7 +97,6 @@ static void BM_TriangularInverse_Transpose_ByHand(benchmark::State & state)
   }
 }
 BENCHMARK(BM_TriangularInverse_Transpose_ByHand)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
-
 
 static void BM_TriangularInverse_ByCol(benchmark::State & state)
 {
@@ -116,7 +115,7 @@ static void BM_TriangularInverse_ByCol(benchmark::State & state)
     }
   }
 }
-//BENCHMARK(BM_TriangularInverse_ByCol)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
+// BENCHMARK(BM_TriangularInverse_ByCol)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
 
 static void BM_PSD_Solve_Overhead(benchmark::State & state)
 {
@@ -127,7 +126,7 @@ static void BM_PSD_Solve_Overhead(benchmark::State & state)
     Matrix<double, 6, 6> A = R.transpose() * R;
   }
 }
-//BENCHMARK(BM_PSD_Solve_Overhead);
+// BENCHMARK(BM_PSD_Solve_Overhead);
 
 static void BM_PSD_Solve(benchmark::State & state)
 {
@@ -142,7 +141,7 @@ static void BM_PSD_Solve(benchmark::State & state)
     x = A.llt().solve(b);
   }
 }
-//BENCHMARK(BM_PSD_Solve);
+// BENCHMARK(BM_PSD_Solve);
 
 static void BM_PSD_SolveInPlace(benchmark::State & state)
 {
@@ -157,7 +156,7 @@ static void BM_PSD_SolveInPlace(benchmark::State & state)
     A.llt().solveInPlace(b);
   }
 }
-//BENCHMARK(BM_PSD_SolveInPlace);
+// BENCHMARK(BM_PSD_SolveInPlace);
 
 static void BM_PSD_AllInPlace(benchmark::State & state)
 {
@@ -173,7 +172,7 @@ static void BM_PSD_AllInPlace(benchmark::State & state)
     llt.solveInPlace(b);
   }
 }
-//BENCHMARK(BM_PSD_AllInPlace);
+// BENCHMARK(BM_PSD_AllInPlace);
 
 static void BM_PSD_AllInPlaceByHand(benchmark::State & state)
 {
@@ -191,6 +190,6 @@ static void BM_PSD_AllInPlaceByHand(benchmark::State & state)
     L.transpose().solveInPlace(b);
   }
 }
-//BENCHMARK(BM_PSD_AllInPlaceByHand);
+// BENCHMARK(BM_PSD_AllInPlaceByHand);
 
 BENCHMARK_MAIN();
