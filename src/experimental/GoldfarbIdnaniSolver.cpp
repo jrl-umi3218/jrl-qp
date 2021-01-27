@@ -305,13 +305,13 @@ internal::TerminationType GoldfarbIdnaniSolver::processInitialActiveSet()
   for(int i = 0; i < A_.nbBnd(); ++i)
   {
     int bi = A_.nbCstr() + i;
-    auto s = pb_.as[bi];
     if(pb_.xl[i] == pb_.xu[i])
     {
       A_.activate(bi, ActivationStatus::FIXED);
     }
-    else if(options_.warmStart_ && s != ActivationStatus::INACTIVE)
+    else if(!pb_.as.empty() && options_.warmStart_ && pb_.as[bi] != ActivationStatus::INACTIVE)
     {
+      auto s = pb_.as[bi];
       assert(s > ActivationStatus::EQUALITY);
       if(s == ActivationStatus::FIXED)
       {
@@ -329,13 +329,13 @@ internal::TerminationType GoldfarbIdnaniSolver::processInitialActiveSet()
   }
   for(int i = 0; i < A_.nbCstr(); ++i)
   {
-    auto s = pb_.as[i];
     if(pb_.bl[i] == pb_.bu[i])
     {
       A_.activate(i, ActivationStatus::EQUALITY);
     }
-    else if(options_.warmStart_ && s != ActivationStatus::INACTIVE)
+    else if(!pb_.as.empty() && options_.warmStart_ && pb_.as[i] != ActivationStatus::INACTIVE)
     {
+      auto s = pb_.as[i];
       assert(s <= ActivationStatus::EQUALITY);
       if(s == ActivationStatus::FIXED)
       {
