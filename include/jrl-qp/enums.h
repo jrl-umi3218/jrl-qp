@@ -30,8 +30,8 @@ enum class TerminationStatus
   NON_POS_HESSIAN, // Quadratic matrix of the problem is expected to be positive definite, but is not.
   INFEASIBLE, // Problem is infeasible
   MAX_ITER_REACHED, // Maximum number of iteration was reached. You can increase this number by using the solver options.
-  LINEAR_DEPENDENCY_DETECTED, // Some active constraints are linearly dependent and the solver doesn't know how to handle
-                              // this case.
+  LINEAR_DEPENDENCY_DETECTED, // Some active constraints are linearly dependent and the solver doesn't know how to
+                              // handle this case.
   OVERCONSTRAINED_PROBLEM, // Too many equality constraints and fixed variables
 };
 

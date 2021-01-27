@@ -71,7 +71,7 @@ class always_false : public std::false_type
 };
 
 /** Identity functor.
- * 
+ *
  * Taken from https://stackoverflow.com/a/15202612
  */
 struct identity

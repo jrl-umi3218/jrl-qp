@@ -136,10 +136,9 @@ TEST_CASE("Warm-start")
   {
     QPProblem qpp(pb);
     MatrixXd G = qpp.G; // copy for restore and later check
-    GoldfarbIdnaniSolver solverNoWS(static_cast<int>(qpp.G.rows()), static_cast<int>(qpp.C.rows()),
-                                               pb.bounds);
+    GoldfarbIdnaniSolver solverNoWS(static_cast<int>(qpp.G.rows()), static_cast<int>(qpp.C.rows()), pb.bounds);
     experimental::GoldfarbIdnaniSolver solverWS(static_cast<int>(qpp.G.rows()), static_cast<int>(qpp.C.rows()),
-                                               pb.bounds);
+                                                pb.bounds);
     SolverOptions opt;
     opt.warmStart_ = true;
     solverWS.options(opt);
@@ -151,7 +150,8 @@ TEST_CASE("Warm-start")
 
     FAST_CHECK_EQ(retNoWS, TerminationStatus::SUCCESS);
     FAST_CHECK_EQ(retWS, TerminationStatus::SUCCESS);
-    FAST_CHECK_UNARY(test::testKKT(solverWS.solution(), solverWS.multipliers(), G, qpp.a, qpp.C, qpp.l, qpp.u, qpp.xl, qpp.xu, false));
+    FAST_CHECK_UNARY(test::testKKT(solverWS.solution(), solverWS.multipliers(), G, qpp.a, qpp.C, qpp.l, qpp.u, qpp.xl,
+                                   qpp.xu, false));
     FAST_CHECK_UNARY(solverWS.solution().isApprox(pb.x, 1e-6));
     FAST_CHECK_UNARY(solverWS.multipliers().head(pb.E.rows()).isApprox(pb.lambdaEq, 1e-6));
     FAST_CHECK_UNARY(solverWS.multipliers().segment(pb.E.rows(), pb.C.rows()).isApprox(pb.lambdaIneq, 1e-6));
@@ -166,7 +166,7 @@ TEST_CASE("Warm-start")
     // Check warm start with rubish guess
     qpp.G = G;
     auto as = solverWS.activeSet();
-    for(size_t i=0; i<as.size(); ++i)
+    for(size_t i = 0; i < as.size(); ++i)
     {
       if(as[i] == ActivationStatus::INACTIVE)
       {
@@ -221,7 +221,7 @@ const std::vector<std::string> ExcludePb<experimental::GoldfarbIdnaniSolver>::li
     "qforplan", // requires the QPS reader to handle names with spaces
     "qpcboei1", // See above for this one and the next
     "qpcboei2", //
-    "qpcstair"  // To be investigated
+    "qpcstair" // To be investigated
 };
 
 TEST_CASE_TEMPLATE("Test Suite", T, GoldfarbIdnaniSolver, experimental::GoldfarbIdnaniSolver)
