@@ -78,6 +78,34 @@ internal::InitTermination GoldfarbIdnaniSolver::init_()
   initializeComputationData();
   initializePrimalDualPoints();
 
+  // If some constraints have ben activated with u<0, we deactivate them
+  while(true)
+  {
+    int q = A_.nbActiveCstr();
+    WVector u = work_u_.asVector(q);
+    WVector b_act = work_bact_.asVector(q);
+    double umin = -1e-14; // [Numerics] Do better.
+    int lmin = -1;
+    for(int l = 0; l < q; ++l)
+    {
+      int i = A_[l];
+      if(u[l] < umin && A_.activationStatus(i) != ActivationStatus::FIXED
+         && A_.activationStatus(i) != ActivationStatus::EQUALITY)
+      {
+        umin = u[l];
+        lmin = l;
+      }
+    }
+    if(lmin < 0) break; // no more constraint to deactivate
+
+    ++it_;
+    b_act.segment(lmin, q - 1 - lmin) = b_act.tail(q - 1 - lmin);
+    DEBUG_ONLY(u[q - 1] = 0);
+    A_.deactivate(lmin);
+    removeConstraint_(lmin);
+    initializePrimalDualPoints();
+  }
+
   return TerminationStatus::SUCCESS;
 }
 
@@ -261,6 +289,7 @@ void GoldfarbIdnaniSolver::resize_(int nbVar, int nbCstr, bool useBounds)
     work_R_.resize(nbVar, nbVar);
     work_tmp_.resize(nbVar);
     work_hCoeffs_.resize(nbVar);
+    work_bact_.resize(nbVar);
   }
 }
 
@@ -276,39 +305,49 @@ internal::TerminationType GoldfarbIdnaniSolver::processInitialActiveSet()
   for(int i = 0; i < A_.nbBnd(); ++i)
   {
     int bi = A_.nbCstr() + i;
+    auto s = pb_.as[bi];
     if(pb_.xl[i] == pb_.xu[i])
     {
       A_.activate(bi, ActivationStatus::FIXED);
     }
-    else if(options_.warmStart_ && pb_.as[bi] != ActivationStatus::INACTIVE)
+    else if(options_.warmStart_ && s != ActivationStatus::INACTIVE)
     {
-      assert(pb_.as[bi] > ActivationStatus::EQUALITY);
-      if(pb_.as[bi] == ActivationStatus::FIXED)
+      assert(s > ActivationStatus::EQUALITY);
+      if(s == ActivationStatus::FIXED)
       {
-        LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for bound ", i);
+        LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for bound ", i, " (bounds not equal)");
       }
       else
       {
-        A_.activate(bi, pb_.as[bi]);
+        if((s == ActivationStatus::LOWER_BOUND && pb_.xl[i] < -options_.bigBnd_)
+           || (s == ActivationStatus::UPPER_BOUND && pb_.xu[i] > +options_.bigBnd_))
+          LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for bound ", i, " (infinite bound)");
+        else
+          A_.activate(bi, s);
       }
     }
   }
   for(int i = 0; i < A_.nbCstr(); ++i)
   {
+    auto s = pb_.as[i];
     if(pb_.bl[i] == pb_.bu[i])
     {
       A_.activate(i, ActivationStatus::EQUALITY);
     }
-    else if(options_.warmStart_ && pb_.as[i] != ActivationStatus::INACTIVE)
+    else if(options_.warmStart_ && s != ActivationStatus::INACTIVE)
     {
-      assert(pb_.as[i] <= ActivationStatus::EQUALITY);
-      if(pb_.as[i] == ActivationStatus::FIXED)
+      assert(s <= ActivationStatus::EQUALITY);
+      if(s == ActivationStatus::FIXED)
       {
         LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for constraint ", i);
       }
       else
       {
-        A_.activate(i, pb_.as[i]);
+        if((s == ActivationStatus::LOWER && pb_.bl[i] < -options_.bigBnd_)
+           || (s == ActivationStatus::UPPER && pb_.bu[i] > +options_.bigBnd_))
+          LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for constraint ", i, " (infinite bound)");
+        else
+          A_.activate(i, s);
       }
     }
   }
@@ -318,7 +357,7 @@ internal::TerminationType GoldfarbIdnaniSolver::processInitialActiveSet()
   {
     if(A_.nbActiveEquality() + A_.nbFixedVariable() > nbVar_) return TerminationStatus::OVERCONSTRAINED_PROBLEM;
 
-    // Lambda testing if the i-th activated constraint is an equality constraint or fixed variable.
+    // Lambda testing if the l-th activated constraint is an equality constraint or fixed variable.
     auto isEqualityOrFixed = [this](int i) {
       auto a = A_.activationStatus(A_[i]);
       return a == ActivationStatus::EQUALITY || a == ActivationStatus::FIXED;
@@ -342,7 +381,7 @@ internal::TerminationType GoldfarbIdnaniSolver::initializeComputationData()
 
   int q = A_.nbActiveCstr();
   auto N = work_R_.asMatrix(nbVar_, q, nbVar_);
-  auto b_act = work_r_.asVector(q); // We hijack work_r_ as it is not used for now
+  auto b_act = work_bact_.asVector(q);
   for(int i = 0; i < q; ++i)
   {
     int cstrIdx = A_[i];
@@ -398,10 +437,10 @@ internal::TerminationType GoldfarbIdnaniSolver::initializeComputationData()
   Q.applyThisOnTheRight(J, tmp);
   Eigen::internal::set_is_malloc_allowed(b);
 
-  //Set lower part of R to 0
+  // Set lower part of R to 0
   DEBUG_ONLY(for(int i = 0; i < q; ++i) N.col(i).tail(nbVar_ - i - 1).setZero(););
 
-  LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, N, J);
+  LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, N, J, b_act);
 
   return TerminationStatus::SUCCESS;
 }
@@ -411,6 +450,7 @@ internal::TerminationType GoldfarbIdnaniSolver::initializePrimalDualPoints()
   int q = A_.nbActiveCstr();
   auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
   auto R = work_R_.asMatrix(q, q, nbVar_).template triangularView<Eigen::Upper>();
+  WVector b_act = work_bact_.asVector(q);
   WVector alpha = work_tmp_.asVector(nbVar_);
   WVector beta = work_r_.asVector(q);
   WVector x = work_x_.asVector(nbVar_);
@@ -419,7 +459,7 @@ internal::TerminationType GoldfarbIdnaniSolver::initializePrimalDualPoints()
   auto alpha2 = alpha.tail(nbVar_ - q);
 
   alpha.noalias() = J.transpose() * pb_.a;
-  R.transpose().solveInPlace(beta);
+  beta = R.transpose().solve(b_act);
   x.noalias() = J.leftCols(q) * beta - J.rightCols(nbVar_ - q) * alpha2;
   u = alpha1 + beta;
   R.solveInPlace(u);

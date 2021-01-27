@@ -80,6 +80,7 @@ protected:
   internal::Workspace<> work_R_;
   internal::Workspace<> work_tmp_;    // for multiplication by Householder transform
   internal::Workspace<> work_hCoeffs_;// for initial QR decomposition
+  internal::Workspace<> work_bact_;
   Problem pb_;
 };
 
