@@ -58,6 +58,7 @@ addBenchmark(Decomposition)
 addBenchmark(LinearSystemSolving)
 
 addBenchmark(Solvers problemAdaptors.cpp)
+addBenchmark(SolversWarmStart problemAdaptors.cpp)
 addBenchmark(BoxAndSingleConstraintSolver)
 
 add_custom_command(TARGET jrlqp_benchmarks
