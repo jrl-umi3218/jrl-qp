@@ -56,6 +56,9 @@ public:
    */
   const std::vector<ActivationStatus> & activeSet() const;
 
+  /** Reset the active set.*/
+  void resetActiveSet();
+
 protected:
   struct StepLength
   {

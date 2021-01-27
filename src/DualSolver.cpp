@@ -83,6 +83,11 @@ const std::vector<ActivationStatus> & DualSolver::activeSet() const
   return A_.activationStatus();
 }
 
+void DualSolver::resetActiveSet()
+{
+  A_.reset();
+}
+
 TerminationStatus DualSolver::solve()
 {
   if(auto rt = init(); !rt) // step 0
@@ -95,7 +100,7 @@ TerminationStatus DualSolver::solve()
   WVector u = work_u_.asVector(A_.nbActiveCstr());
   WVector r = work_r_.asVector(0);
 
-  for(it_ = 0; it_ < options_.maxIter_; ++it_)
+  for(; it_ < options_.maxIter_; ++it_)
   {
     LOG_NEW_ITER(log_, it_);
     LOG(log_, LogFlags::ACTIVE_SET_DETAILS, A_);
@@ -198,6 +203,8 @@ internal::InitTermination DualSolver::init()
 
   needToExpandMultipliers_ = true;
   if(!options_.warmStart_) A_.reset();
+  it_ = 0;
+
   return init_();
 }
 
