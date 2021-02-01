@@ -60,15 +60,16 @@ protected:
   };
 
   internal::InitTermination init_() override;
-  internal::ConstraintNormal selectViolatedConstraint_(const VectorConstRef & x) const override;
-  void computeStep_(VectorRef z, VectorRef r, const internal::ConstraintNormal & np) const override;
-  StepLength computeStepLength_(const internal::ConstraintNormal & np,
+  internal::SelectedConstraint selectViolatedConstraint_(const VectorConstRef & x) const override;
+  void computeStep_(VectorRef z, VectorRef r, const internal::SelectedConstraint & sc) const override;
+  StepLength computeStepLength_(const internal::SelectedConstraint & sc,
                                 const VectorConstRef & x,
                                 const VectorConstRef & u,
                                 const VectorConstRef & z,
                                 const VectorConstRef & r) const override;
-  bool addConstraint_(const internal::ConstraintNormal & np) override;
+  bool addConstraint_(const internal::SelectedConstraint & sc) override;
   bool removeConstraint_(int l) override;
+  double dot_(const internal::SelectedConstraint & sc, const VectorConstRef & z) override;
   void resize_(int nbVar, int nbCstr, bool useBounds) override;
 
   virtual internal::TerminationType processInitialActiveSet();

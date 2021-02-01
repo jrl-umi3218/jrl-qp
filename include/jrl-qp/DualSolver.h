@@ -8,7 +8,7 @@
 #include <jrl-qp/api.h>
 #include <jrl-qp/defs.h>
 #include <jrl-qp/internal/ActiveSet.h>
-#include <jrl-qp/internal/ConstraintNormal.h>
+#include <jrl-qp/internal/SelectedConstraint.h>
 #include <jrl-qp/internal/TerminationType.h>
 #include <jrl-qp/internal/Workspace.h>
 #include <jrl-qp/utils/Logger.h>
@@ -76,43 +76,47 @@ protected:
    * and perform the initial decompositions.
    */
   internal::InitTermination init();
-  /** Select a violated constraint and return it's normal \p n+.*/
-  internal::ConstraintNormal selectViolatedConstraint(const VectorConstRef & x) const;
+  /** Select a violated constraint and return it as a description of \p n+.*/
+  internal::SelectedConstraint selectViolatedConstraint(const VectorConstRef & x) const;
   /** Compute a primal step z and dual step r, given \p n+*/
-  void computeStep(VectorRef z, VectorRef r, const internal::ConstraintNormal & np) const;
+  void computeStep(VectorRef z, VectorRef r, const internal::SelectedConstraint & sc) const;
   /** Compute a step length and update x and u given the data n+, z and r.*/
-  StepLength computeStepLength(const internal::ConstraintNormal & np,
+  StepLength computeStepLength(const internal::SelectedConstraint & sc,
                                const VectorConstRef & x,
                                const VectorConstRef & u,
                                const VectorConstRef & z,
                                const VectorConstRef & r) const;
   /** Add a constraint to the active set and update the computation data accordingly.*/
-  bool addConstraint(const internal::ConstraintNormal & np);
+  bool addConstraint(const internal::SelectedConstraint & sc);
   /** Remove the l-th active constraint from the active set and update the
    * computation data accordingly.
    */
   bool removeConstraint(int l, VectorRef u);
+  /** Compute the dot product between the vector corresponding to sc and z.*/
+  virtual double dot(const internal::SelectedConstraint & sc, const VectorConstRef & z);
 
   /** Compute the initial iterate, the corresponding objective value and
    * initialize any relevant data of the derived class.
    */
   virtual internal::InitTermination init_() = 0;
   /** Select the violated constraint to be considered for the current iteration.*/
-  virtual internal::ConstraintNormal selectViolatedConstraint_(const VectorConstRef & x) const = 0;
+  virtual internal::SelectedConstraint selectViolatedConstraint_(const VectorConstRef & x) const = 0;
   /** Compute a primal step z and dual step r, given \p n+*/
-  virtual void computeStep_(VectorRef z, VectorRef r, const internal::ConstraintNormal & np) const = 0;
+  virtual void computeStep_(VectorRef z, VectorRef r, const internal::SelectedConstraint & sc) const = 0;
   /** Compute a step length and update x and u given the data n+, z and r.*/
-  virtual StepLength computeStepLength_(const internal::ConstraintNormal & np,
+  virtual StepLength computeStepLength_(const internal::SelectedConstraint & sc,
                                         const VectorConstRef & x,
                                         const VectorConstRef & u,
                                         const VectorConstRef & z,
                                         const VectorConstRef & r) const = 0;
   /** Add a constraint to the active set and update the computation data accordingly.*/
-  virtual bool addConstraint_(const internal::ConstraintNormal & np) = 0;
+  virtual bool addConstraint_(const internal::SelectedConstraint & sc) = 0;
   /** Remove the l-th active constraint from the active set and update the
    * computation data accordingly.
    */
   virtual bool removeConstraint_(int l) = 0;
+  /** Compute the dot product between the vector corresponding to sc and z.*/
+  virtual double dot_(const internal::SelectedConstraint & sc, const VectorConstRef & z) = 0;
   /** Resize the data managed by the derived class.*/
   virtual void resize_(int nbVar, int nbCstr, bool useBounds) = 0;
 

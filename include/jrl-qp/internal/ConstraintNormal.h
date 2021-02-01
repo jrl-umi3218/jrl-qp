@@ -9,6 +9,7 @@
 #include <jrl-qp/api.h>
 #include <jrl-qp/defs.h>
 #include <jrl-qp/enums.h>
+#include <jrl-qp/internal/SelectedConstraint.h>
 #include <jrl-qp/utils/toMatlab.h>
 
 namespace jrl::qp::internal
@@ -39,6 +40,9 @@ public:
     assert((status < ActivationStatus::LOWER_BOUND && p < C_.cols())
            || (status >= ActivationStatus::LOWER_BOUND && p >= C.cols()));
   }
+
+  /** Same as the usual construtor, but with (p, status) given by a SelectedConstraint class.*/
+  ConstraintNormal(const MatrixConstRef & C, const SelectedConstraint& sc) : ConstraintNormal(C, sc.index(), sc.status()) {}
 
   ConstraintNormal(const ConstraintNormal & other) : p_(other.p_), status_(other.status_), C_(other.C_) {}
   ConstraintNormal(ConstraintNormal && other) noexcept
