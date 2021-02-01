@@ -36,6 +36,7 @@ addUnitTest(ActiveSetTest)
 addUnitTest(BoxAndSingleConstraintSolverTest)
 addUnitTest(GoldfarbIdnaniSolverTest QPSReader.cpp)
 addUnitTest(RandomProblemsTest)
+addUnitTest(triBlockDiagLLTTest)
 
 set(TESTSOURCES
     main.cpp
