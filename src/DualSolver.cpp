@@ -94,7 +94,7 @@ TerminationStatus DualSolver::solve()
     return terminate(rt);
 
   bool skipStep1 = false;
-  internal::ConstraintNormal np;
+  internal::SelectedConstraint sc;
   WVector x = work_x_.asVector(nbVar_);
   WVector z = work_z_.asVector(nbVar_);
   WVector u = work_u_.asVector(A_.nbActiveCstr());
@@ -110,19 +110,19 @@ TerminationStatus DualSolver::solve()
     // Step 1
     if(!skipStep1)
     {
-      np = selectViolatedConstraint(x);
-      if(np.status() == ActivationStatus::INACTIVE) return terminate(TerminationStatus::SUCCESS);
+      sc = selectViolatedConstraint(x);
+      if(sc.status() == ActivationStatus::INACTIVE) return terminate(TerminationStatus::SUCCESS);
 
-      LOG(log_, LogFlags::ACTIVE_SET, np);
-      // LOG_AS(log_, LogFlags::ACTIVE_SET, "selectedConstraint", np.index(), "status", static_cast<int>(np.status()));
+      LOG(log_, LogFlags::ACTIVE_SET, sc);
+      // LOG_AS(log_, LogFlags::ACTIVE_SET, "selectedConstraint", sc.index(), "status", static_cast<int>(sc.status()));
       new(&r) WVector(work_r_.asVector(q));
       new(&u) WVector(work_u_.asVector(q + 1));
       u[q] = 0;
     }
 
     // Step 2
-    computeStep(z, r, np);
-    auto [t1, t2, l] = computeStepLength(np, x, u, z, r);
+    computeStep(z, r, sc);
+    auto [t1, t2, l] = computeStepLength(sc, x, u, z, r);
     double t = std::min(t1, t2);
     LOG_COMMENT(log_, LogFlags::ITERATION_BASIC_DETAILS, "Step computation");
     LOG(log_, LogFlags::ITERATION_BASIC_DETAILS, z, r, t);
@@ -143,14 +143,14 @@ TerminationStatus DualSolver::solve()
     else
     {
       x += t * z;
-      f_ += t * np.dot(z) * (.5 * t + u[q]);
+      f_ += t * dot(sc, z) * (.5 * t + u[q]);
       // u = u + t*[-r;1]
       u.head(q) -= t * r;
       u[q] += t;
       if(t == t2)
       {
         LOG_AS(log_, LogFlags::ACTIVE_SET, "Activate", true, "l", l);
-        if(!addConstraint(np)) return terminate(TerminationStatus::LINEAR_DEPENDENCY_DETECTED);
+        if(!addConstraint(sc)) return terminate(TerminationStatus::LINEAR_DEPENDENCY_DETECTED);
         skipStep1 = false;
       }
       else
@@ -208,29 +208,29 @@ internal::InitTermination DualSolver::init()
   return init_();
 }
 
-internal::ConstraintNormal DualSolver::selectViolatedConstraint(const VectorConstRef & x) const
+internal::SelectedConstraint DualSolver::selectViolatedConstraint(const VectorConstRef & x) const
 {
   return selectViolatedConstraint_(x);
 }
 
-void DualSolver::computeStep(VectorRef z, VectorRef r, const internal::ConstraintNormal & np) const
+void DualSolver::computeStep(VectorRef z, VectorRef r, const internal::SelectedConstraint & sc) const
 {
-  computeStep_(z, r, np);
+  computeStep_(z, r, sc);
 }
 
-DualSolver::StepLength DualSolver::computeStepLength(const internal::ConstraintNormal & np,
+DualSolver::StepLength DualSolver::computeStepLength(const internal::SelectedConstraint & sc,
                                                      const VectorConstRef & x,
                                                      const VectorConstRef & u,
                                                      const VectorConstRef & z,
                                                      const VectorConstRef & r) const
 {
-  return computeStepLength_(np, x, u, z, r);
+  return computeStepLength_(sc, x, u, z, r);
 }
 
-bool DualSolver::addConstraint(const internal::ConstraintNormal & np)
+bool DualSolver::addConstraint(const internal::SelectedConstraint & sc)
 {
-  A_.activate(np.index(), np.status());
-  return addConstraint_(np);
+  A_.activate(sc.index(), sc.status());
+  return addConstraint_(sc);
 }
 
 bool DualSolver::removeConstraint(int l, VectorRef u)
@@ -240,6 +240,11 @@ bool DualSolver::removeConstraint(int l, VectorRef u)
   DEBUG_ONLY(u[q] = 0);
   A_.deactivate(l);
   return removeConstraint_(l);
+}
+
+double DualSolver::dot(const internal::SelectedConstraint & sc, const VectorConstRef & z)
+{
+  return dot_(sc, z);
 }
 
 void DualSolver::resize_p(int nbVar, int nbCstr, bool useBounds)

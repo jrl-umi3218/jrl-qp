@@ -4,6 +4,7 @@
 #include <Eigen/Jacobi>
 #include <Eigen/QR>
 #include <jrl-qp/experimental/GoldfarbIdnaniSolver.h>
+#include <jrl-qp/internal/ConstraintNormal.h>
 
 using Givens = Eigen::JacobiRotation<double>;
 
@@ -109,7 +110,7 @@ internal::InitTermination GoldfarbIdnaniSolver::init_()
   return TerminationStatus::SUCCESS;
 }
 
-internal::ConstraintNormal GoldfarbIdnaniSolver::selectViolatedConstraint_(const VectorConstRef & x) const
+internal::SelectedConstraint GoldfarbIdnaniSolver::selectViolatedConstraint_(const VectorConstRef & x) const
 {
   // We look for the constraint with the maximum violation
   //[NUMERIC] scale with constraint magnitude
@@ -158,23 +159,24 @@ internal::ConstraintNormal GoldfarbIdnaniSolver::selectViolatedConstraint_(const
     }
   }
 
-  return {pb_.C, p, status};
+  return {p, status};
 }
 
-void GoldfarbIdnaniSolver::computeStep_(VectorRef z, VectorRef r, const internal::ConstraintNormal & np) const
+void GoldfarbIdnaniSolver::computeStep_(VectorRef z, VectorRef r, const internal::SelectedConstraint & sc) const
 {
   int q = A_.nbActiveCstr();
   auto d = work_d_.asVector(nbVar_, {});
   auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
   auto R = work_R_.asMatrix(q, q, nbVar_).template triangularView<Eigen::Upper>();
 
+  internal::ConstraintNormal np(pb_.C, sc);
   np.preMultiplyByMt(d, J);
   z.noalias() = J.rightCols(nbVar_ - q) * d.tail(nbVar_ - q);
   r = R.solve(d.head(q));
   DBG(log_, LogFlags::ITERATION_ADVANCE_DETAILS, J, R, d);
 }
 
-DualSolver::StepLength GoldfarbIdnaniSolver::computeStepLength_(const internal::ConstraintNormal & np,
+DualSolver::StepLength GoldfarbIdnaniSolver::computeStepLength_(const internal::SelectedConstraint & sc,
                                                                 const VectorConstRef & x,
                                                                 const VectorConstRef & u,
                                                                 const VectorConstRef & z,
@@ -197,6 +199,7 @@ DualSolver::StepLength GoldfarbIdnaniSolver::computeStepLength_(const internal::
     }
   }
 
+  internal::ConstraintNormal np(pb_.C, sc);
   if(z.norm() > 1e-14) //[NUMERIC] better criterion
   {
     double b, cx, cz;
@@ -242,7 +245,7 @@ DualSolver::StepLength GoldfarbIdnaniSolver::computeStepLength_(const internal::
   return {t1, t2, l};
 }
 
-bool GoldfarbIdnaniSolver::addConstraint_(const internal::ConstraintNormal & np)
+bool GoldfarbIdnaniSolver::addConstraint_(const internal::SelectedConstraint & sc)
 {
   int q = A_.nbActiveCstr(); // This already counts the new constraint
   auto d = work_d_.asVector(nbVar_);
@@ -278,6 +281,12 @@ bool GoldfarbIdnaniSolver::removeConstraint_(int l)
   }
 
   return true;
+}
+
+double GoldfarbIdnaniSolver::dot_(const internal::SelectedConstraint & sc, const VectorConstRef & z)
+{
+  internal::ConstraintNormal np(pb_.C, sc);
+  return np.dot(z);
 }
 
 void GoldfarbIdnaniSolver::resize_(int nbVar, int nbCstr, bool useBounds)

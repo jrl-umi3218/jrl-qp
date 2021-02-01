@@ -28,6 +28,7 @@ set(JRLQP_HEADERS
   ${JRLQP_INCLUDE_DIR}/internal/meta.h
   ${JRLQP_INCLUDE_DIR}/internal/memoryChecks.h
   ${JRLQP_INCLUDE_DIR}/internal/ConstraintNormal.h
+  ${JRLQP_INCLUDE_DIR}/internal/SelectedConstraint.h
   ${JRLQP_INCLUDE_DIR}/internal/TerminationType.h
   ${JRLQP_INCLUDE_DIR}/internal/Workspace.h
   ${JRLQP_INCLUDE_DIR}/test/kkt.h
