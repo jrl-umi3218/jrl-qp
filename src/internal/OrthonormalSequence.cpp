@@ -213,7 +213,7 @@ void OrthonormalSequence::applyToTheLeft(VectorRef out, const SingleNZSegmentVec
     if(Hi.start >= end || Hi.start + Hi.H.n() < start) continue; // We skip if Hi would multiply zero
     int s = std::max(0, start - Hi.start);
     int n = std::min(Hi.H.n(), end - Hi.start);
-    Hi.H.applyToTheLeft(out.segment(Hi.start, Hi.H.n()), s, n);
+    Hi.H.applyToTheLeft(out.segment(Hi.start, Hi.H.n()), s, n - s);
     start = std::min(start, Hi.start);
     end = std::max(end, Hi.start + Hi.H.n());
   }
@@ -232,7 +232,7 @@ void OrthonormalSequence::applyTransposeToTheLeft(VectorRef out, const SingleNZS
     if(Hi.start >= end || Hi.start + Hi.H.n() < start) continue; // We skip if Hi would multiply zero
     int s = std::max(0, start - Hi.start);
     int n = std::min(Hi.H.n(), end - Hi.start);
-    Hi.H.applyTransposeToTheLeft(out.segment(Hi.start, Hi.H.n()), s, n);
+    Hi.H.applyTransposeToTheLeft(out.segment(Hi.start, Hi.H.n()), s, n - s);
     start = std::min(start, Hi.start);
     end = std::max(end, Hi.start + Hi.H.n());
   }
