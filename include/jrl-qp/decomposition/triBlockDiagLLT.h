@@ -13,4 +13,5 @@
 namespace jrl::qp::decomposition
 {
 JRLQP_DLLAPI bool triBlockDiagLLT(const std::vector<MatrixRef> & diag, const std::vector<MatrixRef> & subDiag);
+
 }
