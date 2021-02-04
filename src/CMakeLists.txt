@@ -3,10 +3,15 @@ set(JRLQP_SOURCES
   GoldfarbIdnaniSolver.cpp
   SolverOptions.cpp
   decomposition/triBlockDiagLLT.cpp
+  experimental/BlockGISolver.cpp
   experimental/BoxAndSingleConstraintSolver.cpp
   experimental/GoldfarbIdnaniSolver.cpp
   internal/ActiveSet.cpp
   internal/memoryChecks.cpp
+  internal/OrthonormalSequence.cpp
+  structured/StructuredC.cpp
+  structured/StructuredG.cpp
+  structured/StructuredJR.cpp
   test/kkt.cpp
   test/problems.cpp
   test/randomProblems.cpp
@@ -22,15 +27,21 @@ set(JRLQP_HEADERS
   ${JRLQP_INCLUDE_DIR}/GoldfarbIdnaniSolver.h
   ${JRLQP_INCLUDE_DIR}/SolverOptions.h
   ${JRLQP_INCLUDE_DIR}/decomposition/triBlockDiagLLT.h
+  ${JRLQP_INCLUDE_DIR}/experimental/BlockGISolver.h
   ${JRLQP_INCLUDE_DIR}/experimental/BoxAndSingleConstraintSolver.h
   ${JRLQP_INCLUDE_DIR}/experimental/GoldfarbIdnaniSolver.h
   ${JRLQP_INCLUDE_DIR}/internal/ActiveSet.h
   ${JRLQP_INCLUDE_DIR}/internal/meta.h
   ${JRLQP_INCLUDE_DIR}/internal/memoryChecks.h
   ${JRLQP_INCLUDE_DIR}/internal/ConstraintNormal.h
+  ${JRLQP_INCLUDE_DIR}/internal/OrthonormalSequence.h
   ${JRLQP_INCLUDE_DIR}/internal/SelectedConstraint.h
+  ${JRLQP_INCLUDE_DIR}/internal/SingleNZSegmentVector.h
   ${JRLQP_INCLUDE_DIR}/internal/TerminationType.h
   ${JRLQP_INCLUDE_DIR}/internal/Workspace.h
+  ${JRLQP_INCLUDE_DIR}/structured/StructuredC.h
+  ${JRLQP_INCLUDE_DIR}/structured/StructuredG.h
+  ${JRLQP_INCLUDE_DIR}/structured/StructuredJR.h
   ${JRLQP_INCLUDE_DIR}/test/kkt.h
   ${JRLQP_INCLUDE_DIR}/test/problems.h
   ${JRLQP_INCLUDE_DIR}/test/randomMatrices.h

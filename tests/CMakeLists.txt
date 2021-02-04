@@ -35,7 +35,9 @@ endmacro(addUnitTest)
 addUnitTest(ActiveSetTest)
 addUnitTest(BoxAndSingleConstraintSolverTest)
 addUnitTest(GoldfarbIdnaniSolverTest QPSReader.cpp)
+addUnitTest(InternalTest)
 addUnitTest(RandomProblemsTest)
+addUnitTest(StructuredTest)
 addUnitTest(triBlockDiagLLTTest)
 
 set(TESTSOURCES
