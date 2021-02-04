@@ -6,6 +6,7 @@
 #include <jrl-qp/defs.h>
 
 #include <jrl-qp/internal/OrthonormalSequence.h>
+#include <jrl-qp/internal/SelectedConstraint.h>
 #include <jrl-qp/internal/Workspace.h>
 #include <jrl-qp/structured/StructuredC.h>
 #include <jrl-qp/structured/StructuredG.h>
@@ -23,7 +24,7 @@ public:
   void resize(int nbVar);
 
   void premultByJ2(VectorRef out, const VectorConstRef & in) const;
-  void premultByJt(VectorRef out, const StructuredC & C, int i) const;
+  void premultByJt(VectorRef out, const StructuredC & C, const internal::SelectedConstraint & sc) const;
 
   void setRToZero();
   void RSolve(VectorRef out, const VectorConstRef & in) const;

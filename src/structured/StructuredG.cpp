@@ -20,24 +20,27 @@ jrl::qp::structured::StructuredG::StructuredG(Type t,
 
 bool jrl::qp::structured::StructuredG::lltInPlace()
 {
+  bool done;
   switch(type_)
   {
     case Type::TriBlockDiagonal:
-      return decomposition::triBlockDiagLLT(diag_, offDiag_);
+      done = decomposition::triBlockDiagLLT(diag_, offDiag_);
       break;
     case Type::BlockArrow:
       assert(false);
-      return false;
+      done = false;
       break;
     case Type::BlockArrowWithDiagOffBlocks:
       assert(false);
-      return false;
+      done =  false;
       break;
     default:
       assert(false);
-      return false;
+      done = false;
       break;
   }
+  decomposed_ = done;
+  return done;
 }
 
 void jrl::qp::structured::StructuredG::solveInPlaceLTranspose(VectorRef v) const

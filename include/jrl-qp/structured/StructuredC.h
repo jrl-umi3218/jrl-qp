@@ -11,7 +11,7 @@
 
 namespace jrl::qp::structured
 {
-class StructuredC
+class JRLQP_DLLAPI StructuredC
 {
 public:
   enum class Type
@@ -21,6 +21,8 @@ public:
 
   StructuredC();
 
+  StructuredC(std::vector<MatrixConstRef> C);
+
   StructuredC & operator=(const StructuredC & other);
 
   const MatrixConstRef & diag(int i) const;
@@ -29,7 +31,7 @@ public:
   int nbVar(int i) const;
   int nbCstr() const;
   int nbCstr(int i) const;
-  const internal::SingleNZSegmentVector & col(int i) const;
+  internal::SingleNZSegmentVector col(int i) const;
 
   friend std::ostream & operator<<(std::ostream & os, const StructuredC & C)
   { 
@@ -41,7 +43,8 @@ private:
   Type type_;
   std::vector<MatrixConstRef> diag_;
   //std::vector<MatrixConstRef> offDiag_;
-  std::vector<int> start_;
+  std::vector<int> cumulNbVar_;
+  std::vector<int> cumulNbCstr_;
   std::vector<int> toBlock_;
   int nbVar_;
   int nbCstr_;

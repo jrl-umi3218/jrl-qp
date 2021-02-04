@@ -50,9 +50,12 @@ void StructuredJR::reset()
 
 void StructuredJR::resize(int nbVar)
 {
+  Q_.resize(nbVar);
   work_R_.resize(nbVar, nbVar);
   work_tmp_.resize(nbVar);
   work_essential_.resize(nbVar);
+  nbVar_ = nbVar;
+  ldR_ = std::min(10, static_cast<int>(std::sqrt(nbVar))); //TODO Ability to change this heuristics.
 }
 
 void StructuredJR::premultByJ2(VectorRef out, const VectorConstRef & in) const
@@ -66,9 +69,19 @@ void StructuredJR::premultByJ2(VectorRef out, const VectorConstRef & in) const
   L_->solveInPlaceLTranspose(out);
 }
 
-void StructuredJR::premultByJt(VectorRef out, const StructuredC& C, int i) const
+void StructuredJR::premultByJt(VectorRef out, const StructuredC & C, const internal::SelectedConstraint & sc) const
 {
-  L_->solveL(out, C.col(i));
+  if(sc.status() <= ActivationStatus::EQUALITY)
+  {
+    L_->solveL(out, C.col(sc.index()));
+    if(sc.status() == ActivationStatus::UPPER) out *=-1;
+  }
+  else
+  {
+    Eigen::Matrix<double, 1, 1> e;
+    e[0] = sc.status() == ActivationStatus::UPPER_BOUND ? -1 : 1;
+    L_->solveL(out, internal::SingleNZSegmentVector(e, sc.index() - C.nbCstr(), nbVar_));
+  }
   Q_.applyTransposeToTheLeft(out);
 }
 
@@ -92,6 +105,7 @@ bool StructuredJR::add(const VectorConstRef & d)
   auto R = getR(q_+1);
   R.rightCols<1>().head(q_) = d.head(q_);
   R(q_, q_) = beta;
+  Q_.prepare(internal::OSeqType::Householder, nbVar_ - q_, 1);
   Q_.add(q_, e, tau);
   ++q_;
 
@@ -103,6 +117,7 @@ bool StructuredJR::remove(int l)
   --q_;
   auto R = getR(q_ + 1);
 
+  Q_.prepare(internal::OSeqType::Givens, q_ - l + 1, q_ - l);
   for(int i = l; i < q_; ++i)
   {
     Givens Qi;

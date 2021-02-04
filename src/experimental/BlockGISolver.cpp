@@ -162,7 +162,7 @@ void BlockGISolver::computeStep_(VectorRef z, VectorRef r, const internal::Selec
 {
   int q = A_.nbActiveCstr();
   auto d = work_d_.asVector(nbVar_, {});
-  JR_.premultByJt(d, pb_.C, sc.index());
+  JR_.premultByJt(d, pb_.C, sc);
   JR_.premultByJ2(z, d.tail(nbVar_ - q));
   JR_.RSolve(r, d.head(q));
   //DBG(log_, LogFlags::ITERATION_ADVANCE_DETAILS, J, R, d);
