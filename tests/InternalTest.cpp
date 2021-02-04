@@ -286,6 +286,7 @@ TEST_CASE("OrthonormalSequence")
   H4.add(v5.tail(6), tau5);
   Q.middleCols(1, 7) *= H4.toDense();
 
+  // Test on full vector
   {
     VectorXd u = VectorXd::Random(16);
     VectorXd v = u;
@@ -298,5 +299,25 @@ TEST_CASE("OrthonormalSequence")
     H.applyTransposeToTheLeft(u);
     FAST_CHECK_UNARY(u.isApprox(Q.transpose() * v, 1e-8));
     FAST_CHECK_EQ(u.norm(), doctest::Approx(v.norm()));
+  }
+
+  // Test on partial vector
+  {
+    VectorXd r = VectorXd::Random(4);
+    for(int i=0; i<=12; ++i)
+    {
+      SingleNZSegmentVector u(r, i, 16);
+      VectorXd v(16);
+      u.toFullVector(v);
+      VectorXd w(16);
+
+      H.applyToTheLeft(w, u);
+      FAST_CHECK_UNARY(w.isApprox(Q * v, 1e-8));
+      FAST_CHECK_EQ(w.norm(), doctest::Approx(v.norm()));
+
+      H.applyTransposeToTheLeft(w, u);
+      FAST_CHECK_UNARY(w.isApprox(Q.transpose() * v, 1e-8));
+      FAST_CHECK_EQ(w.norm(), doctest::Approx(v.norm()));
+    }
   }
 }
