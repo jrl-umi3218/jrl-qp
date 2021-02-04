@@ -426,14 +426,16 @@ internal::TerminationType BlockGISolver::initializeComputationData()
 
   //LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, N, J, b_act);
 
+  //temp
+  JR_.reset();
+  JR_.setL(pb_.G);
+
   return TerminationStatus::SUCCESS;
 }
 
 internal::TerminationType BlockGISolver::initializePrimalDualPoints()
 {
   //int q = A_.nbActiveCstr();
-  //auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
-  //auto R = work_R_.asMatrix(q, q, nbVar_).template triangularView<Eigen::Upper>();
   //WVector b_act = work_bact_.asVector(q);
   //WVector alpha = work_tmp_.asVector(nbVar_);
   //WVector beta = work_r_.asVector(q);
@@ -451,6 +453,15 @@ internal::TerminationType BlockGISolver::initializePrimalDualPoints()
   //f_ = beta.dot(0.5 * beta + alpha1) - 0.5 * alpha2.squaredNorm();
 
   //LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, alpha, beta, x, u, f_);
+
+  //temp computation
+  assert(A_.nbActiveCstr() == 0);
+  // x = -G^-1 * a
+  auto x = work_x_.asVector(nbVar_);
+  pb_.G.solveL(x, pb_.a);
+  pb_.G.solveInPlaceLTranspose(x);
+  x = -x;
+  f_ = 0.5 * pb_.a.dot(x);
 
   return TerminationStatus::SUCCESS;
 }

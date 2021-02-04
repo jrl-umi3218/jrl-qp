@@ -1,5 +1,7 @@
 #include <jrl-qp/structured/StructuredG.h>
 
+#include <jrl-qp/decomposition/triBlockDiagLLT.h>
+
 jrl::qp::structured::StructuredG::StructuredG(Type t,
                                               const std::vector<MatrixRef> & diag,
                                               const std::vector<MatrixRef> & offDiag)
@@ -18,9 +20,89 @@ jrl::qp::structured::StructuredG::StructuredG(Type t,
 
 bool jrl::qp::structured::StructuredG::lltInPlace()
 {
-  return false;
+  switch(type_)
+  {
+    case Type::TriBlockDiagonal:
+      return decomposition::triBlockDiagLLT(diag_, offDiag_);
+      break;
+    case Type::BlockArrow:
+      assert(false);
+      return false;
+      break;
+    case Type::BlockArrowWithDiagOffBlocks:
+      assert(false);
+      return false;
+      break;
+    default:
+      assert(false);
+      return false;
+      break;
+  }
 }
 
-void jrl::qp::structured::StructuredG::solveInPlaceLTranspose(VectorRef v) const {}
+void jrl::qp::structured::StructuredG::solveInPlaceLTranspose(VectorRef v) const
+{
+  assert(v.size() == nbVar_);
 
-void jrl::qp::structured::StructuredG::solveL(VectorRef out, const internal::SingleNZSegmentVector & in) const {}
+  switch(type_)
+  {
+    case Type::TriBlockDiagonal:
+      return decomposition::triBlockDiagLTransposeSolve(diag_, offDiag_, v);
+      break;
+    case Type::BlockArrow:
+      assert(false);
+      break;
+    case Type::BlockArrowWithDiagOffBlocks:
+      assert(false);
+      break;
+    default:
+      assert(false);
+      break;
+  }
+}
+
+void jrl::qp::structured::StructuredG::solveL(VectorRef out, const VectorConstRef & in) const
+{
+  assert(in.size() == nbVar_);
+  assert(out.size() == nbVar_);
+  out = in;
+
+  switch(type_)
+  {
+    case Type::TriBlockDiagonal:
+      return decomposition::triBlockDiagLSolve(diag_, offDiag_, out);
+      break;
+    case Type::BlockArrow:
+      assert(false);
+      break;
+    case Type::BlockArrowWithDiagOffBlocks:
+      assert(false);
+      break;
+    default:
+      assert(false);
+      break;
+  }
+}
+
+void jrl::qp::structured::StructuredG::solveL(VectorRef out, const internal::SingleNZSegmentVector & in) const
+{
+  assert(in.size() == nbVar_);
+  assert(out.size() == nbVar_);
+  in.toFullVector(out);
+
+  switch(type_)
+  {
+    case Type::TriBlockDiagonal:
+      return decomposition::triBlockDiagLSolve(diag_, offDiag_, out, in.start());
+      break;
+    case Type::BlockArrow:
+      assert(false);
+      break;
+    case Type::BlockArrowWithDiagOffBlocks:
+      assert(false);
+      break;
+    default:
+      assert(false);
+      break;
+  }
+}
