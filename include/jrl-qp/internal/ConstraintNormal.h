@@ -88,10 +88,10 @@ public:
         break;
       case ActivationStatus::FIXED: // fallthrough
       case ActivationStatus::LOWER_BOUND:
-        out = M.row(p_ - C_.cols());
+        out = M.row(p_ - C_.cols()).transpose();
         break;
       case ActivationStatus::UPPER_BOUND:
-        out = -M.row(p_ - C_.cols());
+        out = -M.row(p_ - C_.cols()).transpose();
         break;
       default:
         assert(false);

@@ -21,7 +21,7 @@ public:
 
   /** Solve the problem
    *  min. 0.5 x^T G x + a^T x
-   *  s.t. bl <= Cx <= bu
+   *  s.t. bl <= C^T x <= bu
    *       xl <=  x <= xu
    */
   TerminationStatus solve(MatrixRef G,
