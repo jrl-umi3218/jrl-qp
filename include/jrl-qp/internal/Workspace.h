@@ -15,7 +15,7 @@ struct NotConst
 
 /** Class providing a memory buffer and the ablity to see it as a matrix or vector.*/
 template<typename Scalar = double>
-class JRLQP_DLLAPI Workspace
+class Workspace
 {
 public:
   /** Default constructor, providing a buffer of size 0.*/
@@ -52,6 +52,34 @@ public:
   void resize(int rows, int cols, bool fit = false)
   {
     resize(rows * cols, fit);
+  }
+
+  /** Change the leading dimension used to organize data in memory.
+    *
+    * this->asMatrix(rows, cols, oldLd) before call to this function and
+    * this->asMatrix(rows, cols, newLd) after will give the same matrix.
+    */
+  void changeLd(int rows, int cols, int oldLd, int newLd) 
+  {
+    if(oldLd < newLd)
+    {
+      assert(cols * newLd < buffer_.size());
+      for(int i=cols-1; i>0; --i)
+      {
+        void * src = reinterpret_cast<void*>(&buffer_[i * oldLd]);
+        void * dst = reinterpret_cast<void*>(&buffer_[i * newLd]);
+        memmove(dst, src, rows * sizeof(double));
+      }
+    }
+    else if(oldLd > newLd)
+    {
+      for(int i=1; i<cols; ++i)
+      {
+        void * src = reinterpret_cast<void *>(&buffer_[i * oldLd]);
+        void * dst = reinterpret_cast<void *>(&buffer_[i * newLd]);
+        memmove(dst, src, rows * sizeof(double));
+      }
+    }
   }
 
   /** Return the buffer as a Eigen::Vector-like object of the required size.
