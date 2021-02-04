@@ -3,6 +3,7 @@
 #pragma once
 
 #include <Eigen/Core>
+#include <Eigen/Jacobi>
 
 namespace jrl::qp
 {
@@ -13,6 +14,8 @@ using VectorConstRef = Eigen::Ref<const Eigen::VectorXd>;
 using VectorRef = Eigen::Ref<Eigen::VectorXd>;
 inline const Eigen::MatrixXd EmptyMatrix = Eigen::MatrixXd(0, 0);
 inline const Eigen::VectorXd EmptyVector = Eigen::VectorXd(0);
+
+using Givens = Eigen::JacobiRotation<double>;
 
 namespace constant
 {

@@ -1,13 +1,10 @@
 /* Copyright 2020 CNRS-AIST JRL */
 
-#include "..\include\jrl-qp\experimental\GoldfarbIdnaniSolver.h"
+#include <jrl-qp/experimental/GoldfarbIdnaniSolver.h>
 #include <Eigen/Cholesky>
-#include <Eigen/Jacobi>
 #include <Eigen/QR>
 #include <jrl-qp/GoldfarbIdnaniSolver.h>
 #include <jrl-qp/internal/ConstraintNormal.h>
-
-using Givens = Eigen::JacobiRotation<double>;
 
 namespace jrl::qp
 {
