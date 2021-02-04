@@ -45,6 +45,7 @@ void StructuredJR::reset()
 {
   q_ = 0;
   Q_.clear();
+  L_ = nullptr;
 }
 
 void StructuredJR::resize(int nbVar)

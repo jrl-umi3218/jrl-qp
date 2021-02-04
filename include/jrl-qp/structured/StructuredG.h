@@ -56,6 +56,7 @@ public:
   }
 
   void solveInPlaceLTranspose(VectorRef v) const;
+  void solveL(VectorRef out, const VectorConstRef & in) const;
   void solveL(VectorRef out, const internal::SingleNZSegmentVector & in) const;
 
   friend std::ostream & operator<<(std::ostream & os, const StructuredG & G)
