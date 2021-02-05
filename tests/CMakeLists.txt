@@ -33,6 +33,8 @@ macro(addUnitTest name)
 endmacro(addUnitTest)
 
 addUnitTest(ActiveSetTest)
+addUnitTest(blockArrowLLTTest)
+addUnitTest(BlockGISolverTest IKmatReader.cpp)
 addUnitTest(BoxAndSingleConstraintSolverTest)
 addUnitTest(GoldfarbIdnaniSolverTest QPSReader.cpp)
 addUnitTest(InternalTest)
