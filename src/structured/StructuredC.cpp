@@ -65,7 +65,10 @@ internal::SingleNZSegmentVector StructuredC::col(int i) const
 
 void StructuredC::transposeMult(VectorRef out, const VectorConstRef & in) const
 {
-  assert(type_ == Type::Diagonal);
+  assert(type_ == Type::Diagonal && "other implentations not done");
+  assert(in.size() == nbVar_);
+  assert(out.size() == nbCstr_);
+
   for(size_t i = 0; i < diag_.size(); ++i)
   {
     out.segment(cumulNbCstr_[i], diag_[i].cols()).noalias() = diag_[i].transpose() * in.segment(cumulNbVar_[i], diag_[i].rows());
