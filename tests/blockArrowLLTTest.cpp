@@ -82,8 +82,6 @@ TEST_CASE("Block down arrow LLT")
 
     MatrixXd B1 = B;
     decomposition::blockArrowLTransposeSolve(D, S, false, B1);
-    std::cout << B0 << "\n\n";
-    std::cout << B1 << "\n\n";
     FAST_CHECK_UNARY(B1.isApprox(B0, 1e-8));
 
     MatrixXd B2 = B;
@@ -147,6 +145,8 @@ TEST_CASE("Block up arrow LLT")
 
     MatrixXd B2 = B;
     decomposition::blockArrowLTransposeSolve(D, S, true, B2, 9);
+    std::cout << B0 << "\n\n";
+    std::cout << B2 << "\n\n";
     FAST_CHECK_UNARY(B2.isApprox(B0, 1e-8));
   }
 }

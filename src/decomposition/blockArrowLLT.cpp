@@ -127,8 +127,8 @@ void blockArrowLTransposeSolve(const std::vector<MatrixRef> & diag,
 
   auto Db = up ? diag.front() : diag.back();
   int nb = static_cast<int>(Db.rows());
-  auto vb = up ? v.topRows(nb) : v.bottomRows(nb);
-  int n = up ? 0 : nb;
+  auto vb = v.bottomRows(nb);
+  int n =  0;
   if(end > s - nb)
   {
     int r = end - s + nb;
@@ -136,7 +136,7 @@ void blockArrowLTransposeSolve(const std::vector<MatrixRef> & diag,
     Lb.transpose().solveInPlace(vb.topRows(r));
   }
   else
-    zero = up ? false : true; //[OPTIM] if v starts with 0, we can do better
+    zero = true;
 
   //[OPTIM] This loop can be fully parallelized
   for(int i = 0; i < b-1; ++i)
@@ -148,7 +148,12 @@ void blockArrowLTransposeSolve(const std::vector<MatrixRef> & diag,
     auto Li = Di.template triangularView<Eigen::Lower>();
     auto vi = v.middleRows(n, ni);
     if(!zero)
-      vi.noalias() -= side[i].transpose() * vb;
+    {
+      if(up)
+        vi.noalias() -= side[i] * vb;
+      else
+        vi.noalias() -= side[i].transpose() * vb;
+    }
     if(end >= n)
     {
       if(end>=n+ni)
@@ -159,7 +164,7 @@ void blockArrowLTransposeSolve(const std::vector<MatrixRef> & diag,
       else
       {
         assert(zero);
-        int r = n +ni - end;
+        int r = end - n;
         auto Li = Di.topLeftCorner(r,r).template triangularView<Eigen::Lower>();
         Li.transpose().solveInPlace(vi.topRows(r));
       }
