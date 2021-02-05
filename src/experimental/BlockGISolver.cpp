@@ -114,19 +114,22 @@ internal::SelectedConstraint BlockGISolver::selectViolatedConstraint_(const Vect
   int p = -1;
   ActivationStatus status = ActivationStatus::INACTIVE;
 
+  WVector cx = work_cx_.asVector(pb_.C.nbCstr());
+  pb_.C.transposeMult(cx, x);
+
   // Check general constraints
   for(int i = 0; i < A_.nbCstr(); ++i)
   {
     if(!A_.isActive(i))
     {
-      double cx = pb_.C.col(i).dot(x); // possible [OPTIM]: should we compute C^T x at once ?
-      if(double sl = cx - pb_.bl[i]; sl < smin)
+      //double cx = pb_.C.col(i).dot(x); // possible [OPTIM]: should we compute C^T x at once ?
+      if(double sl = cx[i] - pb_.bl[i]; sl < smin)
       {
         smin = sl;
         p = i;
         status = ActivationStatus::LOWER;
       }
-      else if(double su = pb_.bu[i] - cx; su < smin)
+      else if(double su = pb_.bu[i] - cx[i]; su < smin)
       {
         smin = su;
         p = i;
@@ -274,6 +277,10 @@ void BlockGISolver::resize_(int nbVar, int nbCstr, bool useBounds)
     work_d_.resize(nbVar);
     JR_.resize(nbVar);
     work_bact_.resize(nbVar);
+  }
+  if(nbCstr != A_.nbCstr())
+  {
+    work_cx_.resize(nbCstr);
   }
 }
 

@@ -86,6 +86,7 @@ protected:
   structured::StructuredJR JR_;
   //internal::Workspace<> work_tmp_; // for multiplication by Householder transform
   //internal::Workspace<> work_hCoeffs_; // for initial QR decomposition
+  mutable internal::Workspace<> work_cx_;
   internal::Workspace<> work_bact_;
   Problem pb_;
 };

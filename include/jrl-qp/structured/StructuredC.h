@@ -33,6 +33,8 @@ public:
   int nbCstr(int i) const;
   internal::SingleNZSegmentVector col(int i) const;
 
+  void transposeMult(VectorRef out, const VectorConstRef & in) const;
+
   friend std::ostream & operator<<(std::ostream & os, const StructuredC & C)
   { 
     // TODO

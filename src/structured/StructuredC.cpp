@@ -62,4 +62,13 @@ internal::SingleNZSegmentVector StructuredC::col(int i) const
   int bi = toBlock_[i];
   return {diag_[bi].col(i - cumulNbCstr_[bi]), cumulNbVar_[bi], nbVar_};
 }
+
+void StructuredC::transposeMult(VectorRef out, const VectorConstRef & in) const
+{
+  assert(type_ == Type::Diagonal);
+  for(size_t i = 0; i < diag_.size(); ++i)
+  {
+    out.segment(cumulNbCstr_[i], diag_[i].cols()).noalias() = diag_[i].transpose() * in.segment(cumulNbVar_[i], diag_[i].rows());
+  }
+}
 } // namespace jrl::qp::structured
