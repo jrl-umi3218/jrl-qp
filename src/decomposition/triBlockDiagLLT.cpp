@@ -2,7 +2,6 @@
 
 #include <jrl-qp/decomposition/triBlockDiagLLT.h>
 
-#include "..\..\include\jrl-qp\decomposition\triBlockDiagLLT.h"
 #include <Eigen/Cholesky>
 
 namespace jrl::qp::decomposition
@@ -30,9 +29,9 @@ bool triBlockDiagLLT(const std::vector<MatrixRef> & diag, const std::vector<Matr
     auto Li = Di.template triangularView<Eigen::Lower>();
     Li.transpose().solveInPlace<Eigen::OnTheRight>(subDiag[i]);
 
-    // L[i+1] -= Si Si^T
-    auto Li1 = diag[i + 1];
-    Li1.template selfadjointView<Eigen::Lower>().rankUpdate(subDiag[i], -1.);
+    // D[i+1] -= Si Si^T
+    auto Di1 = diag[i + 1];
+    Di1.template selfadjointView<Eigen::Lower>().rankUpdate(subDiag[i], -1.);
   }
   // Lb = chol(Db)
   auto Db = diag.back();
