@@ -2,6 +2,7 @@ set(JRLQP_SOURCES
   DualSolver.cpp
   GoldfarbIdnaniSolver.cpp
   SolverOptions.cpp
+  decomposition/blockArrowLLT.cpp
   decomposition/triBlockDiagLLT.cpp
   experimental/BlockGISolver.cpp
   experimental/BoxAndSingleConstraintSolver.cpp
@@ -26,6 +27,7 @@ set(JRLQP_HEADERS
   ${JRLQP_INCLUDE_DIR}/enums.h
   ${JRLQP_INCLUDE_DIR}/GoldfarbIdnaniSolver.h
   ${JRLQP_INCLUDE_DIR}/SolverOptions.h
+  ${JRLQP_INCLUDE_DIR}/decomposition/blockArrowLLT.h
   ${JRLQP_INCLUDE_DIR}/decomposition/triBlockDiagLLT.h
   ${JRLQP_INCLUDE_DIR}/experimental/BlockGISolver.h
   ${JRLQP_INCLUDE_DIR}/experimental/BoxAndSingleConstraintSolver.h
