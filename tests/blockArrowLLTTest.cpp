@@ -68,14 +68,18 @@ TEST_CASE("Block down arrow LLT")
 
         MatrixXd B1 = B;
         decomposition::blockArrowLSolve(D, S, false, B1);
+        //std::cout << "B0 =\n" << B0 << std::endl;
+        //std::cout << "B1 =\n" << B1 << std::endl;
         FAST_CHECK_UNARY(B1.isApprox(B0, 1e-8));
 
         MatrixXd B2 = B;
-        decomposition::blockArrowLSolve(D, S, false, B2, i);
+        decomposition::blockArrowLSolve(D, S, false, B2, i, j);
+        std::cout << "B0 =\n" << B0 << std::endl;
+        std::cout << "B2 =\n" << B2 << std::endl;
         FAST_CHECK_UNARY(B2.isApprox(B0, 1e-8));
       }
 
-      // Solve tranpose
+      // Solve transpose
       {
         MatrixXd B = MatrixXd::Zero(13, 5);
         B.middleRows(i, j - i).setRandom();
@@ -103,6 +107,7 @@ TEST_CASE("Block up arrow LLT")
   MatrixXd P(13, 13);
   P << MatrixXd::Zero(3, 10), MatrixXd::Identity(3, 3), MatrixXd::Identity(10, 10), MatrixXd::Zero(10, 3);
   MatrixXd H2 = P.transpose() * H1 * P;
+  MatrixXd H3 = H1;
 
   // Packing as vector
   std::vector<MatrixRef> D = {H1.block(0, 0, 3, 3), H1.block(3, 3, 5, 5), H1.block(8, 8, 2, 2), H1.block(10, 10, 3, 3)};
@@ -111,6 +116,7 @@ TEST_CASE("Block up arrow LLT")
   // Decomposition
   bool ret = decomposition::blockArrowLLT(D, S, true);
   Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(H2);
+  Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(H3);
 
   FAST_CHECK_UNARY(ret);
   FAST_CHECK_UNARY(H1.bottomRightCorner(10, 10).isApprox(H2.topLeftCorner(10, 10), 1e-8));
@@ -126,7 +132,7 @@ TEST_CASE("Block up arrow LLT")
         MatrixXd B = MatrixXd::Zero(13, 5);
         B.middleRows(i, j - i).setRandom();
 
-        MatrixXd B0 = B;
+        MatrixXd B0 = P.transpose()*B;
         auto L2 = H2.template triangularView<Eigen::Lower>();
         L2.solveInPlace(B0);
 
@@ -136,27 +142,27 @@ TEST_CASE("Block up arrow LLT")
         FAST_CHECK_UNARY(B1.isApprox(B0, 1e-8));
 
         MatrixXd B2 = B;
-        decomposition::blockArrowLSolve(D, S, true, B2, i);
+        decomposition::blockArrowLSolve(D, S, true, B2, i, j);
         FAST_CHECK_UNARY(B2.isApprox(B0, 1e-8));
       }
 
-      // Solve tranpose
-      {
-        MatrixXd B = MatrixXd::Zero(13, 5);
-        B.middleRows(i, j - i).setRandom();
+      //// Solve transpose
+      //{
+      //  MatrixXd B = MatrixXd::Zero(13, 5);
+      //  B.middleRows(i, j - i).setRandom();
 
-        MatrixXd B0 = B;
-        auto L2 = H2.template triangularView<Eigen::Lower>();
-        L2.transpose().solveInPlace(B0);
+      //  MatrixXd B0 = B;
+      //  auto L2 = H2.template triangularView<Eigen::Lower>();
+      //  L2.transpose().solveInPlace(B0);
 
-        MatrixXd B1 = B;
-        decomposition::blockArrowLTransposeSolve(D, S, true, B1);
-        FAST_CHECK_UNARY(B1.isApprox(B0, 1e-8));
+      //  MatrixXd B1 = B;
+      //  decomposition::blockArrowLTransposeSolve(D, S, true, B1);
+      //  FAST_CHECK_UNARY(B1.isApprox(B0, 1e-8));
 
-        MatrixXd B2 = B;
-        decomposition::blockArrowLTransposeSolve(D, S, true, B2, j);
-        FAST_CHECK_UNARY(B2.isApprox(B0, 1e-8));
-      }
+      //  MatrixXd B2 = B;
+      //  decomposition::blockArrowLTransposeSolve(D, S, true, B2, j);
+      //  FAST_CHECK_UNARY(B2.isApprox(B0, 1e-8));
+      //}
     }
   }
 }
