@@ -23,6 +23,8 @@ using namespace jrl::qp::experimental;
 using namespace jrl::qp::structured;
 using namespace jrl::qp::test;
 
+#define WITH_BENCH 0
+
 MatrixXd biBlockDiagRandom(const std::vector<int> & n)
 {
   int s = std::accumulate(n.begin(), n.end(), 0);
@@ -42,7 +44,29 @@ MatrixXd biBlockDiagRandom(const std::vector<int> & n)
   return B;
 }
 
-TEST_CASE("Small problem, ineq only")
+MatrixXd blockDiagAndOneColDiagRandom(const std::vector<int> & n, bool first)
+{
+  int s = std::accumulate(n.begin(), n.end(), 0);
+  MatrixXd B = MatrixXd::Zero(s, s);
+
+  int k = 0;
+  for(size_t i = 0; i < n.size(); ++i)
+  {
+    int ni = n[i];
+    B.block(k, k, ni, ni).setRandom();
+    if(first)
+      B.block(k, 0, ni, n[0]).setRandom();
+    else
+      B.block(k, s - n.back(), ni, n.back()).setRandom();
+    k += ni;
+  }
+  int nb = n.back();
+  B.bottomRightCorner(nb, nb).setRandom();
+
+  return B;
+}
+
+TEST_CASE("Small problem tridiag obj, ineq only")
 {
   std::vector n = {3, 5, 2, 3};
   std::vector mi = {3, 3, 3, 3};
@@ -93,6 +117,60 @@ TEST_CASE("Small problem, ineq only")
   FAST_CHECK_UNARY(solverB.solution().isApprox(solverD.solution(), 1e-8));
 }
 
+TEST_CASE("Small problem arrow up obj, ineq only")
+{
+  std::vector n = {3, 5, 2, 3};
+  std::vector mi = {3, 3, 3, 3};
+  MatrixXd A = blockDiagAndOneColDiagRandom(n, true);
+  MatrixXd GDense = A.transpose() * A;
+  MatrixXd G0 = GDense;
+  // Packing as vector
+  std::vector<MatrixRef> D = {GDense.block(0, 0, 3, 3), GDense.block(3, 3, 5, 5), GDense.block(8, 8, 2, 2),
+                              GDense.block(10, 10, 3, 3)};
+  std::vector<MatrixRef> S = {GDense.block(3, 0, 5, 3), GDense.block(8, 0, 2, 3), GDense.block(10, 0, 3, 3)};
+  StructuredG G(StructuredG::Type::BlockArrowUp, D, S);
+
+  VectorXd a = VectorXd::Random(13);
+
+  MatrixXd C0 = MatrixXd::Zero(13, 12);
+  std::vector<MatrixConstRef> Cs;
+  VectorXd l(12), u(12);
+  VectorXd xl(0), xu(0);
+  int r = 0;
+  int c = 0;
+  for(int i = 0; i < 4; ++i)
+  {
+    auto pb = randomProblem(ProblemCharacteristics(n[i], 0, 0, mi[i]).doubleSidedIneq(true));
+    C0.block(r, c, n[i], mi[i]) = pb.C.transpose();
+    Cs.push_back(C0.block(r, c, n[i], mi[i]));
+    l.segment(c, mi[i]) = pb.l;
+    u.segment(c, mi[i]) = pb.u;
+    r += n[i];
+    c += mi[i];
+  }
+  StructuredC C(Cs);
+
+  GoldfarbIdnaniSolver solverD(13, 12, false);
+   SolverOptions optD;
+   optD.logFlags(LogFlags::INPUT | LogFlags::ITERATION_BASIC_DETAILS | LogFlags::ACTIVE_SET
+                | LogFlags::ACTIVE_SET_DETAILS);
+   solverD.options(optD);
+  auto retD = solverD.solve(G0, a, C0, l, u, xl, xu);
+
+  BlockGISolver solverB(13, 12, false);
+   SolverOptions optB;
+   optB.logFlags(LogFlags::INPUT | LogFlags::ITERATION_BASIC_DETAILS | LogFlags::ACTIVE_SET
+                | LogFlags::ACTIVE_SET_DETAILS);
+   solverB.options(optB);
+  auto retB = solverB.solve(G, a, C, l, u, xl, xu);
+
+  FAST_CHECK_EQ(retB, retD);
+  std::cout << "xd = " << solverD.solution().transpose() << std::endl;
+  std::cout << "xb = " << solverB.solution().transpose() << std::endl;
+  FAST_CHECK_UNARY(solverB.solution().isApprox(solverD.solution(), 1e-8));
+}
+
+#if WITH_BENCH
 TEST_CASE("Sequential IK")
 {
   const std::string dir = "C:/Work/code/optim/jrl-qp/tests/problems/";
@@ -105,12 +183,9 @@ TEST_CASE("Sequential IK")
 
   MatrixXd GD = G0;
   GoldfarbIdnaniSolver solverD(G0.rows(), C.cols(), false);
-  //auto retD = solverD.solve(GD, a, C, l, u, VectorXd(0), VectorXd(0));
   auto retD = 0;
   VectorXd xd0 = solverD.solution();
 
-  // std::cout << solverD.solution().transpose() << std::endl;
-  // std::cout << x.transpose() << std::endl;
   std::cout << (xd0 - x).lpNorm<Infinity>() << std::endl;
   std::cout << static_cast<int>(retD) << std::endl;
   std::cout << solverD.iterations() << std::endl;
@@ -179,23 +254,19 @@ TEST_CASE("Sequential IK")
   auto t0 = std::chrono::steady_clock::now();
   for(int i=0; i<nTestD; ++i)
   {
-    //auto retDi = solverD.solve(GDs[i], a, C, l, u, VectorXd(0), VectorXd(0));
-    //dummy += static_cast<int>(retDi);
+    auto retDi = solverD.solve(GDs[i], a, C, l, u, VectorXd(0), VectorXd(0));
+    dummy += static_cast<int>(retDi);
   }
 
   auto t1 = std::chrono::steady_clock::now();
   for(int i = 0; i < nTestB; ++i)
   {
     auto retBi = solverB.solve(GBs[i], a, CB, l, u, VectorXd(0), VectorXd(0));
-    //std::cout << (solverB.solution() - xb0).lpNorm<Infinity>() << std::endl;
-    //std::cout << static_cast<int>(retBi) << std::endl;
-    //std::cout << solverB.iterations() << std::endl;
     dummy += static_cast<int>(retBi);
   }
   auto t2 = std::chrono::steady_clock::now();
   std::cout << dummy << std::endl;
   std::cout << "Vanilla   : " << std::chrono::duration<double>(t1 - t0).count() / nTestD * 1000 << "ms" << std::endl;
   std::cout << "Structured: " << std::chrono::duration<double>(t2 - t1).count() / nTestB * 1000 << "ms" << std::endl;
-
-
 }
+#endif
