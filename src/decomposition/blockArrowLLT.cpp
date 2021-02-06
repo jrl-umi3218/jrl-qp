@@ -37,7 +37,7 @@ struct get<true>
 {
   static auto D(const std::vector<MatrixRef> & diag, int i)
   {
-    return diag[(i+1)%diag.size()];
+    return diag[(i + 1) % diag.size()];
   }
 
   static auto B(const std::vector<MatrixRef> & side, int i)
@@ -45,7 +45,7 @@ struct get<true>
     return side[i].transpose();
   }
 };
-}
+} // namespace
 
 namespace jrl::qp::decomposition
 {
@@ -77,12 +77,12 @@ bool blockArrowLLT_(const std::vector<MatrixRef> & diag, const std::vector<Matri
   // Lb = chol(Db)
   auto ret = Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(Db);
 
-  return ret<=0;
+  return ret <= 0;
 }
 
 bool blockArrowLLT(const std::vector<MatrixRef> & diag, const std::vector<MatrixRef> & side, bool up)
 {
-  if(up) 
+  if(up)
     return blockArrowLLT_<true>(diag, side);
   else
     return blockArrowLLT_<false>(diag, side);
@@ -100,7 +100,7 @@ void blockArrowLSolve_(const std::vector<MatrixRef> & diag,
   int b = static_cast<int>(diag.size());
   int n = 0;
 
-  for(int i=0; i<b - 1; ++i)
+  for(int i = 0; i < b - 1; ++i)
   {
     auto Di = get<Up>::D(diag, i);
     assert(Di.rows() == Di.cols());
@@ -117,7 +117,7 @@ void blockArrowLSolve_(const std::vector<MatrixRef> & diag,
     auto Li = Di.bottomRightCorner(ni - s, ni - s).template triangularView<Eigen::Lower>();
     auto vi = v.middleRows(n + s, ni - s);
     Li.solveInPlace(vi);
-    v.bottomRows(diag.back().rows()).noalias() -= get<Up>::B(side, i).middleCols(s, ni -s) * vi;
+    v.bottomRows(diag.back().rows()).noalias() -= get<Up>::B(side, i).middleCols(s, ni - s) * vi;
     n += ni;
   }
   auto Db = get<Up>::D(diag, b - 1);
@@ -152,24 +152,20 @@ void blockArrowLSolve(const std::vector<MatrixRef> & diag,
   }
 }
 
-void blockArrowLTransposeSolve(const std::vector<MatrixRef> & diag,
-                               const std::vector<MatrixRef> & side,
-                               bool up,
-                               MatrixRef v,
-                               int start,
-                               int end)
+template<bool Up>
+void blockArrowLTransposeSolve_(const std::vector<MatrixRef> & diag,
+                                const std::vector<MatrixRef> & side,
+                                MatrixRef v,
+                                int start,
+                                int end)
 {
   int b = static_cast<int>(diag.size());
   int s = static_cast<int>(v.rows());
-  int shift = up ? 1 : 0;
   bool zero = false;
 
-  if(end < 0) end = s;
-
-  auto Db = up ? diag.front() : diag.back();
+  auto Db = get<Up>::D(diag, b - 1);
   int nb = static_cast<int>(Db.rows());
   auto vb = v.bottomRows(nb);
-  int n =  0;
   if(end > s - nb)
   {
     int r = end - s + nb;
@@ -179,25 +175,29 @@ void blockArrowLTransposeSolve(const std::vector<MatrixRef> & diag,
   else
     zero = true;
 
+  int n = 0;
   //[OPTIM] This loop can be fully parallelized
-  for(int i = 0; i < b-1; ++i)
+  for(int i = 0; i < b - 1; ++i)
   {
-    auto Di = diag[i + shift];
+    auto Di = get<Up>::D(diag, i);
     assert(Di.rows() == Di.cols());
     int ni = static_cast<int>(Di.rows());
 
-    auto Li = Di.template triangularView<Eigen::Lower>();
     auto vi = v.middleRows(n, ni);
-    if(!zero)
+    if(zero) // vb is zero
     {
-      if(up)
-        vi.noalias() -= side[i] * vb;
-      else
-        vi.noalias() -= side[i].transpose() * vb;
+      if(start >= n + ni) //vi is zero
+      {
+        n += ni;
+        continue;  // rhs is zero, no need to perform the inversion
+      }
     }
-    if(end >= n)
+    else
+      vi.noalias() -= get<Up>::B(side, i).transpose() * vb;
+
+    if(end >= n) //if not, we know that both vb and vi are zero
     {
-      if(end>=n+ni)
+      if(end >= n + ni)
       {
         auto Li = Di.template triangularView<Eigen::Lower>();
         Li.transpose().solveInPlace(vi);
@@ -206,11 +206,36 @@ void blockArrowLTransposeSolve(const std::vector<MatrixRef> & diag,
       {
         assert(zero);
         int r = end - n;
-        auto Li = Di.topLeftCorner(r,r).template triangularView<Eigen::Lower>();
+        auto Li = Di.topLeftCorner(r, r).template triangularView<Eigen::Lower>();
         Li.transpose().solveInPlace(vi.topRows(r));
       }
     }
     n += ni;
   }
 }
+
+void blockArrowLTransposeSolve(const std::vector<MatrixRef> & diag,
+                               const std::vector<MatrixRef> & side,
+                               bool up,
+                               MatrixRef v,
+                               int start,
+                               int end)
+{
+  if(end < 0) end = static_cast<int>(v.rows());
+
+  if(up)
+  {
+    blockArrowLTransposeSolve_<true>(diag, side, v, start, end);
+    Eigen::MatrixXd tmp = v;
+    int n0 = static_cast<int>(diag.front().rows());
+    auto s = v.rows() - n0;
+    v.bottomRows(s) = tmp.topRows(s);
+    v.topRows(n0) = tmp.bottomRows(n0);
+  }
+  else
+  {
+    blockArrowLTransposeSolve_<false>(diag, side, v, start, end);
+  }
+}
+
 } // namespace jrl::qp::decomposition
