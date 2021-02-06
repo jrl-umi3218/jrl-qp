@@ -25,6 +25,11 @@ public:
     return start_;
   }
 
+  int end() const
+  {
+    return start_ + static_cast<int>(v_.size());
+  }
+
   int size() const
   {
     return size_;

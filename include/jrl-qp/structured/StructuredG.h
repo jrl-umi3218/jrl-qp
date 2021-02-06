@@ -17,8 +17,8 @@ public:
   enum class Type
   {
     TriBlockDiagonal,
-    BlockArrow,
-    BlockArrowWithDiagOffBlocks
+    BlockArrowUp,
+    BlockArrowDown
   };
 
   StructuredG() = default;
