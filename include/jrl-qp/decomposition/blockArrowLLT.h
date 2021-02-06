@@ -18,10 +18,12 @@ JRLQP_DLLAPI void blockArrowLSolve(const std::vector<MatrixRef> & diag,
                                    const std::vector<MatrixRef> & side,
                                    bool up,
                                    MatrixRef v,
-                                   int start = 0);
+                                   int start = 0,
+                                   int end = -1);
 JRLQP_DLLAPI void blockArrowLTransposeSolve(const std::vector<MatrixRef> & diag,
                                             const std::vector<MatrixRef> & side,
                                             bool up,
                                             MatrixRef v,
+                                            int start = 0,
                                             int end = -1);
 } // namespace jrl::qp::decomposition

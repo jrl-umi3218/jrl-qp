@@ -6,109 +6,149 @@
 
 #include <numeric>
 
+namespace
+{
+using namespace jrl::qp;
+
+/** An helper struct that helps seeing a couple (diag, side as the representaion
+ * of a matrix with block diagonal + last block row
+ */
+template<bool Up>
+struct get
+{
+};
+
+template<>
+struct get<false>
+{
+  static auto D(const std::vector<MatrixRef> & diag, int i)
+  {
+    return diag[i];
+  }
+
+  static auto B(const std::vector<MatrixRef> & side, int i)
+  {
+    return side[i];
+  }
+};
+
+template<>
+struct get<true>
+{
+  static auto D(const std::vector<MatrixRef> & diag, int i)
+  {
+    return diag[(i+1)%diag.size()];
+  }
+
+  static auto B(const std::vector<MatrixRef> & side, int i)
+  {
+    return side[i].transpose();
+  }
+};
+}
+
 namespace jrl::qp::decomposition
 {
-bool blockArrowLLT(const std::vector<MatrixRef> & diag, const std::vector<MatrixRef> & side, bool up)
+template<bool Up>
+bool blockArrowLLT_(const std::vector<MatrixRef> & diag, const std::vector<MatrixRef> & side)
 {
   assert(diag.size() == side.size() + 1);
 
   int b = static_cast<int>(diag.size());
-  int start, end, last;
-  if(up)
-  {
-    start = 1;
-    end = b;
-    last = 0;
-  }
-  else
-  {
-    start = 0;
-    end = b - 1;
-    last = b - 1;
-  }
+  auto Db = get<Up>::D(diag, b - 1);
 
-  for(int i = start; i < end; ++i)
+  for(int i = 0; i < b - 1; ++i)
   {
     // Li = chol(Di)
-    auto Di = diag[i];
+    auto Di = get<Up>::D(diag, i);
     auto ret = Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(Di);
     if(ret > 0) return false;
 
-    // Si = Si*Li^-T
-    // D[b-1] -= Si Si^T
+    // Bi = Bi*Li^-T
     auto Li = Di.template triangularView<Eigen::Lower>();
-    auto Db = diag[last];
-    if(up)
-    {
-      Li.solveInPlace<Eigen::OnTheLeft>(side[i - 1]);
-      Db.template selfadjointView<Eigen::Lower>().rankUpdate(side[i - 1].transpose(), -1.);
-    }
+    if constexpr(Up)
+      Li.solveInPlace<Eigen::OnTheLeft>(side[i]);
     else
-    {
       Li.transpose().solveInPlace<Eigen::OnTheRight>(side[i]);
-      Db.template selfadjointView<Eigen::Lower>().rankUpdate(side[i], -1.);
-    }
+
+    // Db -= Bi Bi^T
+    Db.template selfadjointView<Eigen::Lower>().rankUpdate(get<Up>::B(side, i), -1.);
   }
   // Lb = chol(Db)
-  auto Db = diag[last];
   auto ret = Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(Db);
-  if(ret > 0) return false;
 
-  return true;
+  return ret<=0;
+}
+
+bool blockArrowLLT(const std::vector<MatrixRef> & diag, const std::vector<MatrixRef> & side, bool up)
+{
+  if(up) 
+    return blockArrowLLT_<true>(diag, side);
+  else
+    return blockArrowLLT_<false>(diag, side);
+}
+
+template<bool Up>
+void blockArrowLSolve_(const std::vector<MatrixRef> & diag,
+                       const std::vector<MatrixRef> & side,
+                       MatrixRef v,
+                       int start,
+                       int end)
+{
+  assert(diag.size() == side.size() + 1);
+
+  int b = static_cast<int>(diag.size());
+  int n = 0;
+
+  for(int i=0; i<b - 1; ++i)
+  {
+    auto Di = get<Up>::D(diag, i);
+    assert(Di.rows() == Di.cols());
+    int ni = static_cast<int>(Di.rows());
+
+    int s = std::max(start - n, 0);
+    if((ni < s || end <= n))
+    {
+      assert(v.middleRows(n, ni).isZero());
+      n += ni;
+      continue;
+    }
+
+    auto Li = Di.bottomRightCorner(ni - s, ni - s).template triangularView<Eigen::Lower>();
+    auto vi = v.middleRows(n + s, ni - s);
+    Li.solveInPlace(vi);
+    v.bottomRows(diag.back().rows()).noalias() -= get<Up>::B(side, i).middleCols(s, ni -s) * vi;
+    n += ni;
+  }
+  auto Db = get<Up>::D(diag, b - 1);
+  assert(Db.rows() == Db.cols());
+  int nb = static_cast<int>(Db.rows());
+  auto Lb = Db.template triangularView<Eigen::Lower>();
+  auto vb = v.middleRows(n, nb);
+  Lb.solveInPlace(vb);
 }
 
 void blockArrowLSolve(const std::vector<MatrixRef> & diag,
                       const std::vector<MatrixRef> & side,
                       bool up,
                       MatrixRef v,
-                      int start)
+                      int start,
+                      int end)
 {
-  assert(diag.size() == side.size() + 1);
+  if(end < 0) end = static_cast<int>(v.rows());
 
-  int b = static_cast<int>(diag.size());
-  int n = 0;
-  int shift = up ? 1 : 0;
-  bool zero = true;
-
-  for(size_t i = 0; i <b; ++i)
+  if(up)
   {
-    auto Di = diag[(i+shift)%b];
-    assert(Di.rows() == Di.cols());
-    int ni = static_cast<int>(Di.rows());
-
-    if(n + ni >= start)
-    {
-      if(zero)
-      {
-        int r = n + ni - start;
-        auto Li = Di.bottomRightCorner(r, r).template triangularView<Eigen::Lower>();
-        auto vi = v.middleRows(start, r);
-        Li.solveInPlace(vi);
-        if(i < b - 1)
-        {
-          if(up)
-            v.bottomRows(diag.back().rows()).noalias() -= side[i].bottomRows(r).transpose() * vi;
-          else
-            v.bottomRows(diag.back().rows()).noalias() -= side[i].rightCols(r) * vi;
-        }
-        zero = false;
-      }
-      else
-      {
-        auto Li = Di.template triangularView<Eigen::Lower>();
-        auto vi = v.middleRows(n, ni);
-        Li.solveInPlace(vi);
-        if(i < b - 1)
-        {
-          if(up)
-            v.bottomRows(diag.back().rows()).noalias() -= side[i].transpose() * vi;
-          else
-            v.bottomRows(diag.back().rows()).noalias() -= side[i] * vi;
-        }
-      }
-    }
-
-    n += ni;
+    Eigen::MatrixXd tmp = v;
+    int n0 = static_cast<int>(diag.front().rows());
+    auto s = v.rows() - n0;
+    v.topRows(s) = tmp.bottomRows(s);
+    v.bottomRows(n0) = tmp.topRows(n0);
+    blockArrowLSolve_<true>(diag, side, v, std::max(0, start - n0), std::max(0, end - n0));
+  }
+  else
+  {
+    blockArrowLSolve_<false>(diag, side, v, start, end);
   }
 }
 
@@ -116,6 +156,7 @@ void blockArrowLTransposeSolve(const std::vector<MatrixRef> & diag,
                                const std::vector<MatrixRef> & side,
                                bool up,
                                MatrixRef v,
+                               int start,
                                int end)
 {
   int b = static_cast<int>(diag.size());
