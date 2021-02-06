@@ -1,5 +1,6 @@
 #include <jrl-qp/structured/StructuredG.h>
 
+#include <jrl-qp/decomposition/blockArrowLLT.h>
 #include <jrl-qp/decomposition/triBlockDiagLLT.h>
 
 jrl::qp::structured::StructuredG::StructuredG(Type t,
@@ -26,13 +27,11 @@ bool jrl::qp::structured::StructuredG::lltInPlace()
     case Type::TriBlockDiagonal:
       done = decomposition::triBlockDiagLLT(diag_, offDiag_);
       break;
-    case Type::BlockArrow:
-      assert(false);
-      done = false;
+    case Type::BlockArrowUp:
+      done = decomposition::blockArrowLLT(diag_, offDiag_, true);
       break;
-    case Type::BlockArrowWithDiagOffBlocks:
-      assert(false);
-      done =  false;
+    case Type::BlockArrowDown:
+      done = decomposition::blockArrowLLT(diag_, offDiag_, false);
       break;
     default:
       assert(false);
@@ -45,18 +44,19 @@ bool jrl::qp::structured::StructuredG::lltInPlace()
 
 void jrl::qp::structured::StructuredG::solveInPlaceLTranspose(VectorRef v) const
 {
+  assert(decomposed_);
   assert(v.size() == nbVar_);
 
   switch(type_)
   {
     case Type::TriBlockDiagonal:
-      return decomposition::triBlockDiagLTransposeSolve(diag_, offDiag_, v);
+      decomposition::triBlockDiagLTransposeSolve(diag_, offDiag_, v);
       break;
-    case Type::BlockArrow:
-      assert(false);
+    case Type::BlockArrowUp:
+      decomposition::blockArrowLTransposeSolve(diag_, offDiag_, true, v);
       break;
-    case Type::BlockArrowWithDiagOffBlocks:
-      assert(false);
+    case Type::BlockArrowDown:
+      decomposition::blockArrowLTransposeSolve(diag_, offDiag_, false, v);
       break;
     default:
       assert(false);
@@ -66,6 +66,7 @@ void jrl::qp::structured::StructuredG::solveInPlaceLTranspose(VectorRef v) const
 
 void jrl::qp::structured::StructuredG::solveL(VectorRef out, const VectorConstRef & in) const
 {
+  assert(decomposed_);
   assert(in.size() == nbVar_);
   assert(out.size() == nbVar_);
   out = in;
@@ -73,13 +74,13 @@ void jrl::qp::structured::StructuredG::solveL(VectorRef out, const VectorConstRe
   switch(type_)
   {
     case Type::TriBlockDiagonal:
-      return decomposition::triBlockDiagLSolve(diag_, offDiag_, out);
+      decomposition::triBlockDiagLSolve(diag_, offDiag_, out);
       break;
-    case Type::BlockArrow:
-      assert(false);
+    case Type::BlockArrowUp:
+      decomposition::blockArrowLSolve(diag_, offDiag_, true, out);
       break;
-    case Type::BlockArrowWithDiagOffBlocks:
-      assert(false);
+    case Type::BlockArrowDown:
+      decomposition::blockArrowLSolve(diag_, offDiag_, false, out);
       break;
     default:
       assert(false);
@@ -89,6 +90,7 @@ void jrl::qp::structured::StructuredG::solveL(VectorRef out, const VectorConstRe
 
 void jrl::qp::structured::StructuredG::solveL(VectorRef out, const internal::SingleNZSegmentVector & in) const
 {
+  assert(decomposed_);
   assert(in.size() == nbVar_);
   assert(out.size() == nbVar_);
   in.toFullVector(out);
@@ -96,13 +98,13 @@ void jrl::qp::structured::StructuredG::solveL(VectorRef out, const internal::Sin
   switch(type_)
   {
     case Type::TriBlockDiagonal:
-      return decomposition::triBlockDiagLSolve(diag_, offDiag_, out, in.start());
+      decomposition::triBlockDiagLSolve(diag_, offDiag_, out, in.start());
       break;
-    case Type::BlockArrow:
-      assert(false);
+    case Type::BlockArrowUp:
+      decomposition::blockArrowLSolve(diag_, offDiag_, true, out, in.start(), in.end());
       break;
-    case Type::BlockArrowWithDiagOffBlocks:
-      assert(false);
+    case Type::BlockArrowDown:
+      decomposition::blockArrowLSolve(diag_, offDiag_, false, out, in.start(), in.end());
       break;
     default:
       assert(false);
