@@ -8,7 +8,7 @@ StructuredC::StructuredC() {}
 
 StructuredC::StructuredC(std::vector<MatrixConstRef> C) : type_(Type::Diagonal), nbVar_(0), nbCstr_(0)
 {
-  for(const auto& Ci: C)
+  for(const auto & Ci : C)
   {
     int ni = static_cast<int>(Ci.rows());
     int mi = static_cast<int>(Ci.cols());
@@ -71,7 +71,8 @@ void StructuredC::transposeMult(VectorRef out, const VectorConstRef & in) const
 
   for(size_t i = 0; i < diag_.size(); ++i)
   {
-    out.segment(cumulNbCstr_[i], diag_[i].cols()).noalias() = diag_[i].transpose() * in.segment(cumulNbVar_[i], diag_[i].rows());
+    out.segment(cumulNbCstr_[i], diag_[i].cols()).noalias() =
+        diag_[i].transpose() * in.segment(cumulNbVar_[i], diag_[i].rows());
   }
 }
 } // namespace jrl::qp::structured

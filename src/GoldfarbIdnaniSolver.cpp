@@ -1,9 +1,9 @@
 /* Copyright 2020 CNRS-AIST JRL */
 
-#include <jrl-qp/experimental/GoldfarbIdnaniSolver.h>
 #include <Eigen/Cholesky>
 #include <Eigen/QR>
 #include <jrl-qp/GoldfarbIdnaniSolver.h>
+#include <jrl-qp/experimental/GoldfarbIdnaniSolver.h>
 #include <jrl-qp/internal/ConstraintNormal.h>
 
 namespace jrl::qp

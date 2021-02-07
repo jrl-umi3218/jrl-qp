@@ -122,7 +122,7 @@ internal::SelectedConstraint BlockGISolver::selectViolatedConstraint_(const Vect
   {
     if(!A_.isActive(i))
     {
-      //double cx = pb_.C.col(i).dot(x); // possible [OPTIM]: should we compute C^T x at once ?
+      // double cx = pb_.C.col(i).dot(x); // possible [OPTIM]: should we compute C^T x at once ?
       if(double sl = cx[i] - pb_.bl[i]; sl < smin)
       {
         smin = sl;
@@ -168,7 +168,7 @@ void BlockGISolver::computeStep_(VectorRef z, VectorRef r, const internal::Selec
   JR_.premultByJt(d, pb_.C, sc);
   JR_.premultByJ2(z, d.tail(nbVar_ - q));
   JR_.RSolve(r, d.head(q));
-  //DBG(log_, LogFlags::ITERATION_ADVANCE_DETAILS, J, R, d);
+  // DBG(log_, LogFlags::ITERATION_ADVANCE_DETAILS, J, R, d);
 }
 
 DualSolver::StepLength BlockGISolver::computeStepLength_(const internal::SelectedConstraint & sc,
@@ -368,12 +368,12 @@ internal::TerminationType BlockGISolver::processInitialActiveSet()
 
 internal::TerminationType BlockGISolver::initializeComputationData()
 {
-  //auto L = pb_.G.template triangularView<Eigen::Lower>();
+  // auto L = pb_.G.template triangularView<Eigen::Lower>();
 
-  //int q = A_.nbActiveCstr();
-  //auto N = work_R_.asMatrix(nbVar_, q, nbVar_);
-  //auto b_act = work_bact_.asVector(q);
-  //for(int i = 0; i < q; ++i)
+  // int q = A_.nbActiveCstr();
+  // auto N = work_R_.asMatrix(nbVar_, q, nbVar_);
+  // auto b_act = work_bact_.asVector(q);
+  // for(int i = 0; i < q; ++i)
   //{
   //  int cstrIdx = A_[i];
   //  switch(A_.activationStatus(cstrIdx))
@@ -404,36 +404,38 @@ internal::TerminationType BlockGISolver::initializeComputationData()
   //}
 
   //// J = L^-t
-  //auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
-  //J.setIdentity();
-  //L.transpose().solveInPlace(J);
+  // auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
+  // J.setIdentity();
+  // L.transpose().solveInPlace(J);
 
   //// B = L^-1 N
-  //L.solveInPlace(N); // [OPTIM] There are other possible ways to do this:
+  // L.solveInPlace(N); // [OPTIM] There are other possible ways to do this:
   //                   //  - use solveInPlace while filling N
-  //                   //  - multiply N by J^T = L^-t (this would require that multiplication by triangular matrix can be
+  //                   //  - multiply N by J^T = L^-t (this would require that multiplication by triangular matrix can
+  //                   be
   //                   //  done in place with Eigen)
 
   //// QR in place
-  //Eigen::Map<Eigen::VectorXd> hCoeffs(work_hCoeffs_.asVector(q).data(),
-  //                                    q); // Should be simply hCoeffs = work_hCoeffs_.asVector(q), but his does compile
+  // Eigen::Map<Eigen::VectorXd> hCoeffs(work_hCoeffs_.asVector(q).data(),
+  //                                    q); // Should be simply hCoeffs = work_hCoeffs_.asVector(q), but his does
+  //                                    compile
   //                                        // with householder_qr_inplace_blocked
-  //WVector tmp = work_tmp_.asVector(nbVar_);
-  //bool b = Eigen::internal::is_malloc_allowed();
-  //Eigen::internal::set_is_malloc_allowed(true);
-  //Eigen::internal::householder_qr_inplace_blocked<decltype(N), decltype(hCoeffs)>::run(N, hCoeffs, 48, tmp.data());
+  // WVector tmp = work_tmp_.asVector(nbVar_);
+  // bool b = Eigen::internal::is_malloc_allowed();
+  // Eigen::internal::set_is_malloc_allowed(true);
+  // Eigen::internal::householder_qr_inplace_blocked<decltype(N), decltype(hCoeffs)>::run(N, hCoeffs, 48, tmp.data());
 
   //// J = J*Q
-  //Eigen::HouseholderSequence Q(N, hCoeffs);
-  //Q.applyThisOnTheRight(J, tmp);
-  //Eigen::internal::set_is_malloc_allowed(b);
+  // Eigen::HouseholderSequence Q(N, hCoeffs);
+  // Q.applyThisOnTheRight(J, tmp);
+  // Eigen::internal::set_is_malloc_allowed(b);
 
   //// Set lower part of R to 0
-  //DEBUG_ONLY(for(int i = 0; i < q; ++i) N.col(i).tail(nbVar_ - i - 1).setZero(););
+  // DEBUG_ONLY(for(int i = 0; i < q; ++i) N.col(i).tail(nbVar_ - i - 1).setZero(););
 
-  //LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, N, J, b_act);
+  // LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, N, J, b_act);
 
-  //temp
+  // temp
   JR_.reset();
   JR_.setL(pb_.G);
 
@@ -442,26 +444,26 @@ internal::TerminationType BlockGISolver::initializeComputationData()
 
 internal::TerminationType BlockGISolver::initializePrimalDualPoints()
 {
-  //int q = A_.nbActiveCstr();
-  //WVector b_act = work_bact_.asVector(q);
-  //WVector alpha = work_tmp_.asVector(nbVar_);
-  //WVector beta = work_r_.asVector(q);
-  //WVector x = work_x_.asVector(nbVar_);
-  //WVector u = work_u_.asVector(q);
-  //auto alpha1 = alpha.head(q);
-  //auto alpha2 = alpha.tail(nbVar_ - q);
+  // int q = A_.nbActiveCstr();
+  // WVector b_act = work_bact_.asVector(q);
+  // WVector alpha = work_tmp_.asVector(nbVar_);
+  // WVector beta = work_r_.asVector(q);
+  // WVector x = work_x_.asVector(nbVar_);
+  // WVector u = work_u_.asVector(q);
+  // auto alpha1 = alpha.head(q);
+  // auto alpha2 = alpha.tail(nbVar_ - q);
 
-  //alpha.noalias() = J.transpose() * pb_.a;
-  //beta = R.transpose().solve(b_act);
-  //x.noalias() = J.leftCols(q) * beta - J.rightCols(nbVar_ - q) * alpha2;
-  //u = alpha1 + beta;
-  //R.solveInPlace(u);
+  // alpha.noalias() = J.transpose() * pb_.a;
+  // beta = R.transpose().solve(b_act);
+  // x.noalias() = J.leftCols(q) * beta - J.rightCols(nbVar_ - q) * alpha2;
+  // u = alpha1 + beta;
+  // R.solveInPlace(u);
 
-  //f_ = beta.dot(0.5 * beta + alpha1) - 0.5 * alpha2.squaredNorm();
+  // f_ = beta.dot(0.5 * beta + alpha1) - 0.5 * alpha2.squaredNorm();
 
-  //LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, alpha, beta, x, u, f_);
+  // LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, alpha, beta, x, u, f_);
 
-  //temp computation
+  // temp computation
   assert(A_.nbActiveCstr() == 0);
   // x = -G^-1 * a
   auto x = work_x_.asVector(nbVar_);

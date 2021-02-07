@@ -68,14 +68,14 @@ TEST_CASE("Block down arrow LLT")
 
         MatrixXd B1 = B;
         decomposition::blockArrowLSolve(D, S, false, B1);
-        //std::cout << "B0 =\n" << B0 << std::endl;
-        //std::cout << "B1 =\n" << B1 << std::endl;
+        // std::cout << "B0 =\n" << B0 << std::endl;
+        // std::cout << "B1 =\n" << B1 << std::endl;
         FAST_CHECK_UNARY(B1.isApprox(B0, 1e-8));
 
         MatrixXd B2 = B;
         decomposition::blockArrowLSolve(D, S, false, B2, i, j);
-        //std::cout << "B0 =\n" << B0 << std::endl;
-        //std::cout << "B2 =\n" << B2 << std::endl;
+        // std::cout << "B0 =\n" << B0 << std::endl;
+        // std::cout << "B2 =\n" << B2 << std::endl;
         FAST_CHECK_UNARY(B2.isApprox(B0, 1e-8));
       }
 
@@ -132,7 +132,7 @@ TEST_CASE("Block up arrow LLT")
 
       // Solve
       {
-        MatrixXd B0 = P.transpose()*B;
+        MatrixXd B0 = P.transpose() * B;
         auto L2 = H2.template triangularView<Eigen::Lower>();
         L2.solveInPlace(B0);
 

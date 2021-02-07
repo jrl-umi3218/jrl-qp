@@ -57,7 +57,7 @@ void triBlockDiagLSolve(const std::vector<MatrixRef> & diag,
     auto Di = diag[i];
     assert(Di.rows() == Di.cols());
     int ni = static_cast<int>(Di.rows());
-    
+
     if(n + ni >= start)
     {
       if(zero)

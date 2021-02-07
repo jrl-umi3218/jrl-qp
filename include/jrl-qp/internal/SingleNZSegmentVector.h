@@ -18,7 +18,7 @@ public:
   {
     assert(start >= 0);
     assert(start + v.size() <= size);
-  } 
+  }
 
   int start() const
   {
@@ -59,4 +59,4 @@ private:
   int size_;
   VectorConstRef v_;
 };
-}
+} // namespace jrl::qp::internal

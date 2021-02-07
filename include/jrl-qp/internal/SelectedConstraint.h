@@ -1,6 +1,5 @@
 /* Copyright 2020 CNRS-AIST JRL */
 
-
 #pragma once
 
 #include <jrl-qp/enums.h>
@@ -8,9 +7,9 @@
 namespace jrl::qp::internal
 {
 /** Helper class to represent the selection of a violated constraint
-  *
-  * This is simply an (index, status) pair.
-  */
+ *
+ * This is simply an (index, status) pair.
+ */
 class SelectedConstraint
 {
 public:
@@ -36,7 +35,7 @@ public:
 
   friend std::ostream & operator<<(std::ostream & os, const SelectedConstraint & sc)
   {
-    os << "{" << sc.p_ << ", " << static_cast<int>(sc.status_) <<  "}";
+    os << "{" << sc.p_ << ", " << static_cast<int>(sc.status_) << "}";
     return os;
   }
 
@@ -44,4 +43,4 @@ private:
   int p_;
   ActivationStatus status_;
 };
-}
+} // namespace jrl::qp::internal

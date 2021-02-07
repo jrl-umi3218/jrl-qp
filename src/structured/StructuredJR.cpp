@@ -55,7 +55,7 @@ void StructuredJR::resize(int nbVar)
   work_tmp_.resize(nbVar);
   work_essential_.resize(nbVar);
   nbVar_ = nbVar;
-  ldR_ = std::min(10, static_cast<int>(std::sqrt(nbVar))); //TODO Ability to change this heuristics.
+  ldR_ = std::min(10, static_cast<int>(std::sqrt(nbVar))); // TODO Ability to change this heuristics.
 }
 
 void StructuredJR::premultByJ2(VectorRef out, const VectorConstRef & in) const
@@ -74,7 +74,7 @@ void StructuredJR::premultByJt(VectorRef out, const StructuredC & C, const inter
   if(sc.status() <= ActivationStatus::EQUALITY)
   {
     L_->solveL(out, C.col(sc.index()));
-    if(sc.status() == ActivationStatus::UPPER) out *=-1;
+    if(sc.status() == ActivationStatus::UPPER) out *= -1;
   }
   else
   {
@@ -102,7 +102,7 @@ bool StructuredJR::add(const VectorConstRef & d)
   double beta, tau;
   WVector e = work_essential_.asVector(nbVar_ - q_ - 1);
   d.tail(nbVar_ - q_).makeHouseholder(e, tau, beta);
-  auto R = getR(q_+1);
+  auto R = getR(q_ + 1);
   R.rightCols<1>().head(q_) = d.head(q_);
   R(q_, q_) = beta;
   Q_.prepare(internal::OSeqType::Householder, nbVar_ - q_, 1);

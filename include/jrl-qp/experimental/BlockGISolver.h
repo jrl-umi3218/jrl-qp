@@ -17,7 +17,6 @@ namespace jrl::qp::experimental
 class JRLQP_DLLAPI BlockGISolver : public DualSolver
 {
 public:
-
   BlockGISolver();
   /** Pre-allocate the data for a problem with \p nbVar variables, \p nbCstr
    * (general) constraints, and bounds if \p useBounds is \a true.*/
@@ -45,8 +44,8 @@ protected:
   {
   public:
     Problem()
-    : G(), a(Eigen::VectorXd(0)), C(),
-      bl(Eigen::VectorXd(0)), bu(Eigen::VectorXd(0)), xl(Eigen::VectorXd(0)), xu(Eigen::VectorXd(0))
+    : G(), a(Eigen::VectorXd(0)), C(), bl(Eigen::VectorXd(0)), bu(Eigen::VectorXd(0)), xl(Eigen::VectorXd(0)),
+      xu(Eigen::VectorXd(0))
     {
     }
 
@@ -84,8 +83,8 @@ protected:
 
   mutable internal::Workspace<> work_d_;
   structured::StructuredJR JR_;
-  //internal::Workspace<> work_tmp_; // for multiplication by Householder transform
-  //internal::Workspace<> work_hCoeffs_; // for initial QR decomposition
+  // internal::Workspace<> work_tmp_; // for multiplication by Householder transform
+  // internal::Workspace<> work_hCoeffs_; // for initial QR decomposition
   mutable internal::Workspace<> work_cx_;
   internal::Workspace<> work_bact_;
   Problem pb_;

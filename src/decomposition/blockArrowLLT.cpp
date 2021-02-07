@@ -186,16 +186,16 @@ void blockArrowLTransposeSolve_(const std::vector<MatrixRef> & diag,
     auto vi = v.middleRows(n, ni);
     if(zero) // vb is zero
     {
-      if(start >= n + ni) //vi is zero
+      if(start >= n + ni) // vi is zero
       {
         n += ni;
-        continue;  // rhs is zero, no need to perform the inversion
+        continue; // rhs is zero, no need to perform the inversion
       }
     }
     else
       vi.noalias() -= get<Up>::B(side, i).transpose() * vb;
 
-    if(end >= n) //if not, we know that both vb and vi are zero
+    if(end >= n) // if not, we know that both vb and vi are zero
     {
       if(end >= n + ni)
       {

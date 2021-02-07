@@ -38,7 +38,7 @@ private:
   auto getR(int q) const;
   auto getUpperTriangularR(int q) const;
 
-  int q_ = 0; //size of R (that is the number of active constraints)
+  int q_ = 0; // size of R (that is the number of active constraints)
   int nbVar_ = 0;
   mutable int ldR_ = 1; // Leading dimension used for R
   const StructuredG * L_ = nullptr;
@@ -47,4 +47,4 @@ private:
   internal::OrthonormalSequence Q_;
   mutable internal::Workspace<> work_tmp_;
 };
-}
+} // namespace jrl::qp::structured

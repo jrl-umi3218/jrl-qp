@@ -8,7 +8,7 @@ jrl::qp::structured::StructuredG::StructuredG(Type t,
                                               const std::vector<MatrixRef> & offDiag)
 : type_(t), nbVar_(0)
 {
-  for(const auto& D : diag)
+  for(const auto & D : diag)
   {
     assert(D.cols() == D.rows());
     diag_.push_back(D);

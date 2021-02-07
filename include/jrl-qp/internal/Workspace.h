@@ -55,25 +55,25 @@ public:
   }
 
   /** Change the leading dimension used to organize data in memory.
-    *
-    * this->asMatrix(rows, cols, oldLd) before call to this function and
-    * this->asMatrix(rows, cols, newLd) after will give the same matrix.
-    */
-  void changeLd(int rows, int cols, int oldLd, int newLd) 
+   *
+   * this->asMatrix(rows, cols, oldLd) before call to this function and
+   * this->asMatrix(rows, cols, newLd) after will give the same matrix.
+   */
+  void changeLd(int rows, int cols, int oldLd, int newLd)
   {
     if(oldLd < newLd)
     {
       assert(cols * newLd < buffer_.size());
-      for(int i=cols-1; i>0; --i)
+      for(int i = cols - 1; i > 0; --i)
       {
-        void * src = reinterpret_cast<void*>(&buffer_[i * oldLd]);
-        void * dst = reinterpret_cast<void*>(&buffer_[i * newLd]);
+        void * src = reinterpret_cast<void *>(&buffer_[i * oldLd]);
+        void * dst = reinterpret_cast<void *>(&buffer_[i * newLd]);
         memmove(dst, src, rows * sizeof(double));
       }
     }
     else if(oldLd > newLd)
     {
-      for(int i=1; i<cols; ++i)
+      for(int i = 1; i < cols; ++i)
       {
         void * src = reinterpret_cast<void *>(&buffer_[i * oldLd]);
         void * dst = reinterpret_cast<void *>(&buffer_[i * newLd]);
