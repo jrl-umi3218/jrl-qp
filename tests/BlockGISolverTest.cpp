@@ -23,7 +23,8 @@ using namespace jrl::qp::experimental;
 using namespace jrl::qp::structured;
 using namespace jrl::qp::test;
 
-#define WITH_BENCH 0
+#define WITH_BENCH1 0
+#define WITH_BENCH2 1
 
 MatrixXd biBlockDiagRandom(const std::vector<int> & n)
 {
@@ -100,17 +101,17 @@ TEST_CASE("Small problem tridiag obj, ineq only")
   StructuredC C(Cs);
 
   GoldfarbIdnaniSolver solverD(13, 12, false);
-  //SolverOptions optD;
-  //optD.logFlags(LogFlags::INPUT | LogFlags::ITERATION_BASIC_DETAILS | LogFlags::ACTIVE_SET
+  // SolverOptions optD;
+  // optD.logFlags(LogFlags::INPUT | LogFlags::ITERATION_BASIC_DETAILS | LogFlags::ACTIVE_SET
   //              | LogFlags::ACTIVE_SET_DETAILS);
-  //solverD.options(optD);
+  // solverD.options(optD);
   auto retD = solverD.solve(G0, a, C0, l, u, xl, xu);
 
   BlockGISolver solverB(13, 12, false);
-  //SolverOptions optB;
-  //optB.logFlags(LogFlags::INPUT | LogFlags::ITERATION_BASIC_DETAILS | LogFlags::ACTIVE_SET
+  // SolverOptions optB;
+  // optB.logFlags(LogFlags::INPUT | LogFlags::ITERATION_BASIC_DETAILS | LogFlags::ACTIVE_SET
   //              | LogFlags::ACTIVE_SET_DETAILS);
-  //solverB.options(optB);
+  // solverB.options(optB);
   auto retB = solverB.solve(G, a, C, l, u, xl, xu);
 
   FAST_CHECK_EQ(retB, retD);
@@ -151,26 +152,23 @@ TEST_CASE("Small problem arrow up obj, ineq only")
   StructuredC C(Cs);
 
   GoldfarbIdnaniSolver solverD(13, 12, false);
-   SolverOptions optD;
-   optD.logFlags(LogFlags::INPUT | LogFlags::ITERATION_BASIC_DETAILS | LogFlags::ACTIVE_SET
-                | LogFlags::ACTIVE_SET_DETAILS);
-   solverD.options(optD);
+  // SolverOptions optD;
+  // optD.logFlags(LogFlags::INPUT | LogFlags::ITERATION_BASIC_DETAILS | LogFlags::ACTIVE_SET
+  //            | LogFlags::ACTIVE_SET_DETAILS);
+  // solverD.options(optD);
   auto retD = solverD.solve(G0, a, C0, l, u, xl, xu);
 
   BlockGISolver solverB(13, 12, false);
-   SolverOptions optB;
-   optB.logFlags(LogFlags::INPUT | LogFlags::ITERATION_BASIC_DETAILS | LogFlags::ACTIVE_SET
-                | LogFlags::ACTIVE_SET_DETAILS);
-   solverB.options(optB);
+  // SolverOptions optB;
+  // optB.logFlags(LogFlags::INPUT | LogFlags::ITERATION_BASIC_DETAILS | LogFlags::ACTIVE_SET
+  //            | LogFlags::ACTIVE_SET_DETAILS);
+  // solverB.options(optB);
   auto retB = solverB.solve(G, a, C, l, u, xl, xu);
 
   FAST_CHECK_EQ(retB, retD);
-  std::cout << "xd = " << solverD.solution().transpose() << std::endl;
-  std::cout << "xb = " << solverB.solution().transpose() << std::endl;
   FAST_CHECK_UNARY(solverB.solution().isApprox(solverD.solution(), 1e-8));
 }
 
-#if WITH_BENCH
 TEST_CASE("Sequential IK")
 {
   const std::string dir = "C:/Work/code/optim/jrl-qp/tests/problems/";
@@ -183,12 +181,11 @@ TEST_CASE("Sequential IK")
 
   MatrixXd GD = G0;
   GoldfarbIdnaniSolver solverD(G0.rows(), C.cols(), false);
-  auto retD = 0;
+  auto retD = solverD.solve(GD, a, C, l, u, VectorXd(0), VectorXd(0));
   VectorXd xd0 = solverD.solution();
 
-  std::cout << (xd0 - x).lpNorm<Infinity>() << std::endl;
-  std::cout << static_cast<int>(retD) << std::endl;
-  std::cout << solverD.iterations() << std::endl;
+  FAST_CHECK_EQ(retD, TerminationStatus::SUCCESS);
+  FAST_CHECK_LE((x - xd0).lpNorm<Infinity>(), 1e-4); // small precision because files do'n't have high precision
 
   // scan C
   const int nDofs = 43;
@@ -226,10 +223,10 @@ TEST_CASE("Sequential IK")
   BlockGISolver solverB(9 * nDofs, k, false);
   auto retB = solverB.solve(GB, a, CB, l, u, VectorXd(0), VectorXd(0));
   VectorXd xb0 = solverB.solution();
-  std::cout << (xb0 - xd0).lpNorm<Infinity>() << std::endl;
-  std::cout << static_cast<int>(retB) << std::endl;
-  std::cout << solverB.iterations() << std::endl;
+  FAST_CHECK_EQ(retB, TerminationStatus::SUCCESS);
+  FAST_CHECK_UNARY(xb0.isApprox(xd0, 1e-8));
 
+#if WITH_BENCH1
   const int nTestD = 100;
   std::vector<MatrixXd> GDs;
   std::fill_n(std::back_inserter(GDs), nTestD, G0);
@@ -252,7 +249,7 @@ TEST_CASE("Sequential IK")
 
   int dummy = 0;
   auto t0 = std::chrono::steady_clock::now();
-  for(int i=0; i<nTestD; ++i)
+  for(int i = 0; i < nTestD; ++i)
   {
     auto retDi = solverD.solve(GDs[i], a, C, l, u, VectorXd(0), VectorXd(0));
     dummy += static_cast<int>(retDi);
@@ -268,5 +265,82 @@ TEST_CASE("Sequential IK")
   std::cout << dummy << std::endl;
   std::cout << "Vanilla   : " << std::chrono::duration<double>(t1 - t0).count() / nTestD * 1000 << "ms" << std::endl;
   std::cout << "Structured: " << std::chrono::duration<double>(t2 - t1).count() / nTestB * 1000 << "ms" << std::endl;
-}
 #endif
+}
+
+TEST_CASE("Simultaneous IK")
+{
+  const std::string dir = "C:/Work/code/optim/jrl-qp/tests/problems/";
+  auto [G0, a, E, f, C0, u, xl, xu] = readIKPbFile(dir + "MultiIK/arrowAllData.txt");
+  MatrixXd C = C0.transpose();
+  VectorXd l = VectorXd::Constant(u.size(), -std::numeric_limits<double>::infinity());
+
+  MatrixXd GD = G0;
+  GoldfarbIdnaniSolver solverD(G0.rows(), C.cols(), true);
+  auto retD = solverD.solve(GD, a, C, l, u, xl, xu);
+  VectorXd xd0 = solverD.solution();
+
+  MatrixXd GBD = G0;
+  std::vector<MatrixRef> D;
+  std::vector<MatrixRef> S;
+  std::vector<MatrixConstRef> Ci;
+  const int nDofs = 42;
+  int nbCstr[] = {5, 5, 5, 5, 5};
+  int k = 0;
+  for(int i = 0; i < 5; ++i)
+  {
+    D.push_back(GBD.block(i * nDofs, i * nDofs, nDofs, nDofs));
+    if(i > 0) S.push_back(GBD.block(i * nDofs, 0, nDofs, nDofs));
+    Ci.push_back(C.block(i * nDofs, k, nDofs, nbCstr[i]));
+    k += nbCstr[i];
+  }
+
+  StructuredG GB(StructuredG::Type::BlockArrowUp, D, S);
+  StructuredC CB(Ci);
+  BlockGISolver solverB(5 * nDofs, k, true);
+  auto retB = solverB.solve(GB, a, CB, l, u, xl, xu);
+  VectorXd xb0 = solverB.solution();
+  FAST_CHECK_EQ(retB, TerminationStatus::SUCCESS);
+  FAST_CHECK_UNARY(xb0.isApprox(xd0, 1e-8));
+
+#if WITH_BENCH2
+  const int nTestD = 100;
+  std::vector<MatrixXd> GDs;
+  std::fill_n(std::back_inserter(GDs), nTestD, G0);
+
+  const int nTestB = 1000;
+  std::vector<MatrixXd> GBDs;
+  std::fill_n(std::back_inserter(GBDs), nTestB, G0);
+  std::vector<StructuredG> GBs;
+  for(int j = 0; j < nTestB; ++j)
+  {
+    std::vector<MatrixRef> D;
+    std::vector<MatrixRef> S;
+    for(int i = 0; i < 5; ++i)
+    {
+      D.push_back(GBDs[j].block(i * nDofs, i * nDofs, nDofs, nDofs));
+      if(i > 0) S.push_back(GBDs[j].block(i * nDofs, 0, nDofs, nDofs));
+    }
+    GBs.emplace_back(StructuredG::Type::BlockArrowUp, D, S);
+  }
+
+  int dummy = 0;
+  auto t0 = std::chrono::steady_clock::now();
+  for(int i = 0; i < nTestD; ++i)
+  {
+    auto retDi = solverD.solve(GDs[i], a, C, l, u, xl, xu);
+    dummy += static_cast<int>(retDi);
+  }
+
+  auto t1 = std::chrono::steady_clock::now();
+  for(int i = 0; i < nTestB; ++i)
+  {
+    auto retBi = solverB.solve(GBs[i], a, CB, l, u, xl, xu);
+    dummy += static_cast<int>(retBi);
+  }
+  auto t2 = std::chrono::steady_clock::now();
+  std::cout << dummy << std::endl;
+  std::cout << "Vanilla   : " << std::chrono::duration<double>(t1 - t0).count() / nTestD * 1000 << "ms" << std::endl;
+  std::cout << "Structured: " << std::chrono::duration<double>(t2 - t1).count() / nTestB * 1000 << "ms" << std::endl;
+#endif
+}
