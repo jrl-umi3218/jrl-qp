@@ -7,3 +7,12 @@
 #include <Eigen/Core>
 
 Eigen::MatrixXd readMat(const std::string & filename);
+std::tuple<Eigen::MatrixXd,
+           Eigen::VectorXd,
+           Eigen::MatrixXd,
+           Eigen::VectorXd,
+           Eigen::MatrixXd,
+           Eigen::VectorXd,
+           Eigen::VectorXd,
+           Eigen::VectorXd>
+    readIKPbFile(const std::string & filename);
