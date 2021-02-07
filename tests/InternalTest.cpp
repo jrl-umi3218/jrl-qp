@@ -174,7 +174,7 @@ TEST_CASE("ElemOrthonormalSequence Givens")
   H.add(G4);
   H.add(G5);
 
-  //apply to full vector
+  // apply to full vector
   {
     VectorXd u = VectorXd::Random(8);
     VectorXd v = u;
@@ -219,7 +219,7 @@ TEST_CASE("ElemOrthonormalSequence Givens")
       }
     }
   }
-  }
+}
 
 TEST_CASE("OrthonormalSequence")
 {
@@ -304,7 +304,7 @@ TEST_CASE("OrthonormalSequence")
   // Test on partial vector
   {
     VectorXd r = VectorXd::Random(4);
-    for(int i=0; i<=12; ++i)
+    for(int i = 0; i <= 12; ++i)
     {
       SingleNZSegmentVector u(r, i, 16);
       VectorXd v(16);

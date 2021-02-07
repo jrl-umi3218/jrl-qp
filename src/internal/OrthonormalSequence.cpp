@@ -73,7 +73,7 @@ void ElemOrthonormalSequence::applyToTheLeft(VectorRef v, int start, int size) c
     {
       auto c = work1_.asVector(size_);
       auto s = work2_.asVector(size_);
-      int b = std::min(size_-1, start + size - 1);
+      int b = std::min(size_ - 1, start + size - 1);
       for(int i = b; i >= 0; --i) v.applyOnTheLeft(i, i + 1, Givens(c[i], s[i]));
     }
     break;
@@ -126,7 +126,7 @@ void ElemOrthonormalSequence::applyTransposeToTheLeft(VectorRef v, int start, in
 Eigen::MatrixXd ElemOrthonormalSequence::toDense() const
 {
   Eigen::MatrixXd ret = Eigen::MatrixXd::Identity(n_, n_);
-  for(int i=0; i<n_; ++i)
+  for(int i = 0; i < n_; ++i)
   {
     applyToTheLeft(ret.col(i), 0, n_);
   }
@@ -139,7 +139,7 @@ void OrthonormalSequence::add(int start, const Givens & Q)
 {
   auto & last = seq_.back();
   assert(last.H.type() == OSeqType::Givens);
-  if(last.H.size() ==0)
+  if(last.H.size() == 0)
   {
     last.start = start;
   }

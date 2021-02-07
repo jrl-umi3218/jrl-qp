@@ -4,13 +4,13 @@
 
 #include <vector>
 
-#include <Eigen/Jacobi>
 #include <Eigen/Householder>
+#include <Eigen/Jacobi>
 
-#include<jrl-qp/api.h>
-#include<jrl-qp/defs.h>
-#include<jrl-qp/internal/SingleNZSegmentVector.h>
-#include<jrl-qp/internal/Workspace.h>
+#include <jrl-qp/api.h>
+#include <jrl-qp/defs.h>
+#include <jrl-qp/internal/SingleNZSegmentVector.h>
+#include <jrl-qp/internal/Workspace.h>
 
 namespace jrl::qp::internal
 {
@@ -22,8 +22,8 @@ enum class OSeqType
 };
 
 /** Represents a matrix diag(I, Q, I) where Q is an orthonormal matrix
-  * described as a sequence of elementary orthonormal matrices.
-  */
+ * described as a sequence of elementary orthonormal matrices.
+ */
 class JRLQP_DLLAPI ElemOrthonormalSequence
 {
 public:
@@ -62,8 +62,8 @@ public:
 
 private:
   OSeqType type_;
-  int n_;     //Size of the matrix represented by the sequence
-  int size_;  //Number of elementary transformation
+  int n_; // Size of the matrix represented by the sequence
+  int size_; // Number of elementary transformation
   Workspace<> work1_;
   Workspace<> work2_;
 };
@@ -100,4 +100,4 @@ private:
   int n_; // Size of the matrix represented by the sequence.
   std::vector<EmbeddedSeq> seq_;
 };
-}
+} // namespace jrl::qp::internal

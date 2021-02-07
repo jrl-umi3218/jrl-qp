@@ -42,7 +42,10 @@ public:
   }
 
   /** Same as the usual construtor, but with (p, status) given by a SelectedConstraint class.*/
-  ConstraintNormal(const MatrixConstRef & C, const SelectedConstraint& sc) : ConstraintNormal(C, sc.index(), sc.status()) {}
+  ConstraintNormal(const MatrixConstRef & C, const SelectedConstraint & sc)
+  : ConstraintNormal(C, sc.index(), sc.status())
+  {
+  }
 
   ConstraintNormal(const ConstraintNormal & other) : p_(other.p_), status_(other.status_), C_(other.C_) {}
   ConstraintNormal(ConstraintNormal && other) noexcept

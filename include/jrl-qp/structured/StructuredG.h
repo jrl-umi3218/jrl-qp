@@ -60,7 +60,7 @@ public:
   void solveL(VectorRef out, const internal::SingleNZSegmentVector & in) const;
 
   friend std::ostream & operator<<(std::ostream & os, const StructuredG & G)
-  { 
+  {
     // TODO
     return os;
   }
@@ -72,6 +72,6 @@ private:
   std::vector<int> start_;
   int nbVar_ = 0;
 
-  bool decomposed_ = false; //Whether this contains the original matrix or its llt decomposition
+  bool decomposed_ = false; // Whether this contains the original matrix or its llt decomposition
 };
-}
+} // namespace jrl::qp::structured
