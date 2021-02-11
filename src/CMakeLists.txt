@@ -12,7 +12,8 @@ set(JRLQP_SOURCES
   internal/OrthonormalSequence.cpp
   structured/StructuredC.cpp
   structured/StructuredG.cpp
-  structured/StructuredJR.cpp
+  structured/StructuredJ.cpp
+  structured/StructuredQR.cpp
   test/kkt.cpp
   test/problems.cpp
   test/randomProblems.cpp
@@ -43,7 +44,8 @@ set(JRLQP_HEADERS
   ${JRLQP_INCLUDE_DIR}/internal/Workspace.h
   ${JRLQP_INCLUDE_DIR}/structured/StructuredC.h
   ${JRLQP_INCLUDE_DIR}/structured/StructuredG.h
-  ${JRLQP_INCLUDE_DIR}/structured/StructuredJR.h
+  ${JRLQP_INCLUDE_DIR}/structured/StructuredJ.h
+  ${JRLQP_INCLUDE_DIR}/structured/StructuredQR.h
   ${JRLQP_INCLUDE_DIR}/test/kkt.h
   ${JRLQP_INCLUDE_DIR}/test/problems.h
   ${JRLQP_INCLUDE_DIR}/test/randomMatrices.h
