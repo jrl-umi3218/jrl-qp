@@ -1,13 +1,13 @@
 /* Copyright 2020-2021 CNRS-AIST JRL */
 
-#include <jrl-qp/structured/StructuredJR.h>
+#include <jrl-qp/structured/StructuredQR.h>
 #include <jrl-qp/utils/debug.h>
 
 namespace jrl::qp::structured
 {
-StructuredJR::StructuredJR() {}
+StructuredQR::StructuredQR() {}
 
-void StructuredJR::adjustLdR(int q) const
+void StructuredQR::adjustLdR(int q) const
 {
   assert(q <= nbVar_);
   if(q > ldR_)
@@ -18,37 +18,30 @@ void StructuredJR::adjustLdR(int q) const
   }
 }
 
-auto StructuredJR::getR(int q)
+auto StructuredQR::getR(int q)
 {
   adjustLdR(q);
   return work_R_.asMatrix(q, q, ldR_, {});
 }
 
-auto StructuredJR::getR(int q) const
+auto StructuredQR::getR(int q) const
 {
   adjustLdR(q);
   return work_R_.asMatrix(q, q, ldR_);
 }
 
-auto StructuredJR::getUpperTriangularR(int q) const
+auto StructuredQR::getUpperTriangularR(int q) const
 {
   return getR(q).template triangularView<Eigen::Upper>();
 }
 
-void StructuredJR::setL(const StructuredG & decomposedG)
-{
-  assert(decomposedG.decomposed());
-  L_ = &decomposedG;
-}
-
-void StructuredJR::reset()
+void StructuredQR::reset()
 {
   q_ = 0;
   Q_.clear();
-  L_ = nullptr;
 }
 
-void StructuredJR::resize(int nbVar)
+void StructuredQR::resize(int nbVar)
 {
   Q_.resize(nbVar);
   work_R_.resize(nbVar, nbVar);
@@ -58,45 +51,23 @@ void StructuredJR::resize(int nbVar)
   ldR_ = std::min(10, static_cast<int>(std::sqrt(nbVar))); // TODO Ability to change this heuristics.
 }
 
-void StructuredJR::premultByJ2(VectorRef out, const VectorConstRef & in) const
+internal::PartitionnedQ StructuredQR::getPartitionnedQ() const
 {
-  assert(out.size() == nbVar_);
-  assert(in.size() == nbVar_ - q_);
-  // [OPTIM] The 3 next line are emulating out = Q2 * in by performing out = Q * [0;in]. This can be optimized.
-  out.tail(nbVar_ - q_) = in;
-  out.head(q_).setZero();
-  Q_.applyToTheLeft(out);
-  L_->solveInPlaceLTranspose(out);
+  return {Q_, q_};
 }
 
-void StructuredJR::premultByJt(VectorRef out, const StructuredC & C, const internal::SelectedConstraint & sc) const
-{
-  if(sc.status() <= ActivationStatus::EQUALITY)
-  {
-    L_->solveL(out, C.col(sc.index()));
-    if(sc.status() == ActivationStatus::UPPER) out *= -1;
-  }
-  else
-  {
-    Eigen::Matrix<double, 1, 1> e;
-    e[0] = sc.status() == ActivationStatus::UPPER_BOUND ? -1 : 1;
-    L_->solveL(out, internal::SingleNZSegmentVector(e, sc.index() - C.nbCstr(), nbVar_));
-  }
-  Q_.applyTransposeToTheLeft(out);
-}
-
-void StructuredJR::setRToZero()
+void StructuredQR::setRToZero()
 {
   work_R_.setZero();
 }
 
-void StructuredJR::RSolve(VectorRef out, const VectorConstRef & in) const
+void StructuredQR::RSolve(VectorRef out, const VectorConstRef & in) const
 {
   assert(in.size() == q_);
   assert(out.size() == q_);
   out = getUpperTriangularR(q_).solve(in);
 }
-bool StructuredJR::add(const VectorConstRef & d)
+bool StructuredQR::add(const VectorConstRef & d)
 {
   assert(d.size() == nbVar_);
   double beta, tau;
@@ -112,7 +83,7 @@ bool StructuredJR::add(const VectorConstRef & d)
   return true; //[NUMERIC]: add test on dependency
 }
 
-bool StructuredJR::remove(int l)
+bool StructuredQR::remove(int l)
 {
   --q_;
   auto R = getR(q_ + 1);

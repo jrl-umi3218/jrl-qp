@@ -9,7 +9,8 @@
 #include <jrl-qp/DualSolver.h>
 #include <jrl-qp/structured/StructuredC.h>
 #include <jrl-qp/structured/StructuredG.h>
-#include <jrl-qp/structured/StructuredJR.h>
+#include <jrl-qp/structured/StructuredJ.h>
+#include <jrl-qp/structured/StructuredQR.h>
 
 namespace jrl::qp::experimental
 {
@@ -82,7 +83,8 @@ protected:
   virtual internal::TerminationType initializePrimalDualPoints();
 
   mutable internal::Workspace<> work_d_;
-  structured::StructuredJR JR_;
+  structured::StructuredJ J_;
+  structured::StructuredQR QR_;
   // internal::Workspace<> work_tmp_; // for multiplication by Householder transform
   // internal::Workspace<> work_hCoeffs_; // for initial QR decomposition
   mutable internal::Workspace<> work_cx_;

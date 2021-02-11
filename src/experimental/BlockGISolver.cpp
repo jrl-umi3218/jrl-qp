@@ -61,7 +61,7 @@ TerminationStatus BlockGISolver::solve(const structured::StructuredG & G,
 
 internal::InitTermination BlockGISolver::init_()
 {
-  DEBUG_ONLY(JR_.setRToZero());
+  DEBUG_ONLY(QR_.setRToZero());
 
   // Decide the initial active set given the data and the options
   auto retAS = processInitialActiveSet();
@@ -165,9 +165,9 @@ void BlockGISolver::computeStep_(VectorRef z, VectorRef r, const internal::Selec
 {
   int q = A_.nbActiveCstr();
   auto d = work_d_.asVector(nbVar_, {});
-  JR_.premultByJt(d, pb_.C, sc);
-  JR_.premultByJ2(z, d.tail(nbVar_ - q));
-  JR_.RSolve(r, d.head(q));
+  J_.premultByJt(d, pb_.C, sc);
+  J_.premultByJ2(z, d.tail(nbVar_ - q));
+  QR_.RSolve(r, d.head(q));
   // DBG(log_, LogFlags::ITERATION_ADVANCE_DETAILS, J, R, d);
 }
 
@@ -242,12 +242,12 @@ DualSolver::StepLength BlockGISolver::computeStepLength_(const internal::Selecte
 bool BlockGISolver::addConstraint_(const internal::SelectedConstraint & sc)
 {
   auto d = work_d_.asVector(nbVar_);
-  return JR_.add(d);
+  return QR_.add(d);
 }
 
 bool BlockGISolver::removeConstraint_(int l)
 {
-  return JR_.remove(l);
+  return QR_.remove(l);
 }
 
 double BlockGISolver::dot_(const internal::SelectedConstraint & sc, const VectorConstRef & z)
@@ -275,7 +275,8 @@ void BlockGISolver::resize_(int nbVar, int nbCstr, bool useBounds)
   if(nbVar != nbVar_)
   {
     work_d_.resize(nbVar);
-    JR_.resize(nbVar);
+    J_.resize(nbVar);
+    QR_.resize(nbVar);
     work_bact_.resize(nbVar);
   }
   if(nbCstr != A_.nbCstr())
@@ -436,9 +437,10 @@ internal::TerminationType BlockGISolver::initializeComputationData()
   // LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, N, J, b_act);
 
   // temp
-  JR_.reset();
-  JR_.setL(pb_.G);
-
+  J_.reset();
+  QR_.reset();
+  J_.setL(pb_.G);
+  J_.setQ(QR_.getPartitionnedQ());
   return TerminationStatus::SUCCESS;
 }
 

@@ -13,12 +13,13 @@
 
 namespace jrl::qp::structured
 {
-class JRLQP_DLLAPI StructuredJR
+class JRLQP_DLLAPI StructuredJ
 {
 public:
-  StructuredJR();
+  StructuredJ();
 
   void setL(const StructuredG & decomposedG);
+  void setQ(const internal::PartitionnedQ & Q);
 
   void reset();
   void resize(int nbVar);
@@ -26,25 +27,9 @@ public:
   void premultByJ2(VectorRef out, const VectorConstRef & in) const;
   void premultByJt(VectorRef out, const StructuredC & C, const internal::SelectedConstraint & sc) const;
 
-  void setRToZero();
-  void RSolve(VectorRef out, const VectorConstRef & in) const;
-
-  bool add(const VectorConstRef & d);
-  bool remove(int l);
-
 private:
-  void adjustLdR(int q) const;
-  auto getR(int q);
-  auto getR(int q) const;
-  auto getUpperTriangularR(int q) const;
-
-  int q_ = 0; // size of R (that is the number of active constraints)
   int nbVar_ = 0;
-  mutable int ldR_ = 1; // Leading dimension used for R
   const StructuredG * L_ = nullptr;
-  mutable internal::Workspace<> work_R_;
-  internal::Workspace<> work_essential_;
-  internal::OrthonormalSequence Q_;
-  mutable internal::Workspace<> work_tmp_;
+  internal::PartitionnedQ Q_;
 };
 } // namespace jrl::qp::structured
