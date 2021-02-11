@@ -10,7 +10,7 @@ namespace
 {
 using namespace jrl::qp;
 
-/** An helper struct that helps seeing a couple (diag, side as the representaion
+/** An helper struct that helps seeing a couple (diag, side) as the representaion
  * of a matrix with block diagonal + last block row
  */
 template<bool Up>
@@ -67,9 +67,9 @@ bool blockArrowLLT_(const std::vector<MatrixRef> & diag, const std::vector<Matri
     // Bi = Bi*Li^-T
     auto Li = Di.template triangularView<Eigen::Lower>();
     if constexpr(Up)
-      Li.solveInPlace<Eigen::OnTheLeft>(side[i]);
+      Li.template solveInPlace<Eigen::OnTheLeft>(side[i]);
     else
-      Li.transpose().solveInPlace<Eigen::OnTheRight>(side[i]);
+      Li.transpose().template solveInPlace<Eigen::OnTheRight>(side[i]);
 
     // Db -= Bi Bi^T
     Db.template selfadjointView<Eigen::Lower>().rankUpdate(get<Up>::B(side, i), -1.);
@@ -91,41 +91,64 @@ bool blockArrowLLT(const std::vector<MatrixRef> & diag, const std::vector<Matrix
 template<bool Up>
 void blockArrowLSolve_(const std::vector<MatrixRef> & diag,
                        const std::vector<MatrixRef> & side,
-                       MatrixRef v,
+                       MatrixRef M,
                        int start,
                        int end)
 {
+  // | L1   0  ...  0 | | X1 |   | M1 |
+  // |  0  L2  ...  0 | | X2 | = | M2 |
+  // |...      ... ...| |... |   |... |
+  // | B1  B2  ... Lb | | Xb |   | Mb |
+  //
+  // We have L1 X1 = M1
+  //         L2 X2 = M2
+  //         ...
+  // and     Lb Xb = Mb - B1 X1 - B2 X2 - ...
+  //
+  // Whenever Mi, i<b, is zero, Xi is zero and we can skip this block.
+  //
+  // The helper struct get<Up> allows to abstract the way the matrix L is represented
+  // by diag and side, so that we can write the same code for Up = true or Up = false.
+
   assert(diag.size() == side.size() + 1);
 
   int b = static_cast<int>(diag.size());
   int n = 0;
 
+  //[OPTIM] All solveInplace can be parallelized. Aggregation into Mb cannot be directly
+  //parallelized in the loop, but something akin to prefix sum could be used. 
   for(int i = 0; i < b - 1; ++i)
   {
     auto Di = get<Up>::D(diag, i);
     assert(Di.rows() == Di.cols());
     int ni = static_cast<int>(Di.rows());
 
-    int s = std::max(start - n, 0);
+    int s = std::max(start - n, 0); //first non-zero row in Mi
     if((ni < s || end <= n))
     {
-      assert(v.middleRows(n, ni).isZero());
+      // If Mi is zero we don't have to perform any operations.
+      assert(M.middleRows(n, ni).isZero());
       n += ni;
       continue;
     }
 
+    //We ignore the first rows of Mi that are 0, if any.
     auto Li = Di.bottomRightCorner(ni - s, ni - s).template triangularView<Eigen::Lower>();
-    auto vi = v.middleRows(n + s, ni - s);
-    Li.solveInPlace(vi);
-    v.bottomRows(diag.back().rows()).noalias() -= get<Up>::B(side, i).middleCols(s, ni - s) * vi;
+    auto Mi = M.middleRows(n + s, ni - s);
+    // Mi = Li^-1 Mi
+    Li.solveInPlace(Mi);
+    // Mb = Mb - Bi * Mi
+    M.bottomRows(diag.back().rows()).noalias() -= get<Up>::B(side, i).middleCols(s, ni - s) * Mi;
     n += ni;
   }
   auto Db = get<Up>::D(diag, b - 1);
   assert(Db.rows() == Db.cols());
   int nb = static_cast<int>(Db.rows());
+  // It could be possible to be more refined here, by tracking the first and last non-zero row in Mb.
   auto Lb = Db.template triangularView<Eigen::Lower>();
-  auto vb = v.middleRows(n, nb);
-  Lb.solveInPlace(vb);
+  auto Mb = M.middleRows(n, nb);
+  // Mb = Lb^-1 Mb
+  Lb.solveInPlace(Mb);
 }
 
 void blockArrowLSolve(const std::vector<MatrixRef> & diag,
@@ -155,22 +178,37 @@ void blockArrowLSolve(const std::vector<MatrixRef> & diag,
 template<bool Up>
 void blockArrowLTransposeSolve_(const std::vector<MatrixRef> & diag,
                                 const std::vector<MatrixRef> & side,
-                                MatrixRef v,
+                                MatrixRef M,
                                 int start,
                                 int end)
 {
+  // | L1^T   0     ...     B1^T  | |   X1   |   |   M1   |
+  // |   0   ...             ...  | |  ...   | = |   ...  |
+  // | ...       L[b-1]^T B[b-1]^T| | X[b-1] |   | M[b-1] |
+  // |   0   ...    ...     Lb^T  | |   Xb   |   |   Mb   |
+  //
+  // We have Lb^T Xb = Mb
+  //         L1^T X1 = M1 - B1^T Xb
+  //         L2^T X2 = M2 - B2^T Xb
+  //         ...
+  //
+  // Whenever Mi, i<b, is zero, Xi is zero and we can skip this block.
+  //
+  // The helper struct get<Up> allows to abstract the way the matrix L is represented
+  // by diag and side, so that we can write the same code for Up = true or Up = false.
+
   int b = static_cast<int>(diag.size());
-  int s = static_cast<int>(v.rows());
-  bool zero = false;
+  int s = static_cast<int>(M.rows());
+  bool zero = false; // Mb is zero
 
   auto Db = get<Up>::D(diag, b - 1);
   int nb = static_cast<int>(Db.rows());
-  auto vb = v.bottomRows(nb);
+  auto Mb = M.bottomRows(nb);
   if(end > s - nb)
   {
     int r = end - s + nb;
     auto Lb = Db.topLeftCorner(r, r).template triangularView<Eigen::Lower>();
-    Lb.transpose().solveInPlace(vb.topRows(r));
+    Lb.transpose().solveInPlace(Mb.topRows(r));
   }
   else
     zero = true;
@@ -183,31 +221,31 @@ void blockArrowLTransposeSolve_(const std::vector<MatrixRef> & diag,
     assert(Di.rows() == Di.cols());
     int ni = static_cast<int>(Di.rows());
 
-    auto vi = v.middleRows(n, ni);
-    if(zero) // vb is zero
+    auto Mi = M.middleRows(n, ni);
+    if(zero) // Mb is zero
     {
-      if(start >= n + ni) // vi is zero
+      if(start >= n + ni) // Mi is zero
       {
         n += ni;
         continue; // rhs is zero, no need to perform the inversion
       }
     }
     else
-      vi.noalias() -= get<Up>::B(side, i).transpose() * vb;
+      Mi.noalias() -= get<Up>::B(side, i).transpose() * Mb;
 
-    if(end >= n) // if not, we know that both vb and vi are zero
+    if(end >= n) // if not, we know that both Mb and Mi are zero
     {
       if(end >= n + ni)
       {
         auto Li = Di.template triangularView<Eigen::Lower>();
-        Li.transpose().solveInPlace(vi);
+        Li.transpose().solveInPlace(Mi);
       }
       else
       {
         assert(zero);
         int r = end - n;
         auto Li = Di.topLeftCorner(r, r).template triangularView<Eigen::Lower>();
-        Li.transpose().solveInPlace(vi.topRows(r));
+        Li.transpose().solveInPlace(Mi.topRows(r));
       }
     }
     n += ni;
