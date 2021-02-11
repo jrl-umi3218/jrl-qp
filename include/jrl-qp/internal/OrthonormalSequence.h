@@ -83,6 +83,8 @@ public:
   void clear();
   void resize(int n);
 
+  int size() const;
+
   void applyToTheLeft(VectorRef v) const;
   void applyTransposeToTheLeft(VectorRef v) const;
 
@@ -99,5 +101,38 @@ private:
 
   int n_; // Size of the matrix represented by the sequence.
   std::vector<EmbeddedSeq> seq_;
+};
+
+/** Wrapper class representing an orthonormal matrix Q partionned as Q = [Q1 Q2].*/
+class JRLQP_DLLAPI PartitionnedQ
+{
+public:
+  PartitionnedQ() = default;
+  PartitionnedQ(const OrthonormalSequence & Q, const int & m1) : Q_(&Q), m1_(&m1) {}
+
+  const OrthonormalSequence & Q() const
+  {
+    return *Q_;
+  }
+
+  int m1() const
+  {
+    return *m1_;
+  }
+
+  int m2() const
+  {
+    return Q_->size() - *m1_;
+  }
+
+  void reset()
+  {
+    Q_ = nullptr;
+    m1_ = nullptr;
+  }
+
+private:
+  const OrthonormalSequence * Q_ = nullptr;
+  const int * m1_ = nullptr;
 };
 } // namespace jrl::qp::internal

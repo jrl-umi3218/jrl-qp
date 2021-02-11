@@ -180,6 +180,11 @@ void OrthonormalSequence::resize(int n)
   n_ = n;
 }
 
+int OrthonormalSequence::size() const
+{
+  return n_;
+}
+
 void OrthonormalSequence::applyToTheLeft(VectorRef v) const
 {
   assert(v.size() == n_);
