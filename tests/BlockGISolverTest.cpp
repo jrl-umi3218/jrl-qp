@@ -226,7 +226,8 @@ TEST_CASE("Sequential IK")
   FAST_CHECK_EQ(retB, TerminationStatus::SUCCESS);
   FAST_CHECK_UNARY(xb0.isApprox(xd0, 1e-8));
 
-#if WITH_BENCH1
+#ifdef NDEBUG
+#  if WITH_BENCH1
   const int nTestD = 100;
   std::vector<MatrixXd> GDs;
   std::fill_n(std::back_inserter(GDs), nTestD, G0);
@@ -265,6 +266,7 @@ TEST_CASE("Sequential IK")
   std::cout << dummy << std::endl;
   std::cout << "Vanilla   : " << std::chrono::duration<double>(t1 - t0).count() / nTestD * 1000 << "ms" << std::endl;
   std::cout << "Structured: " << std::chrono::duration<double>(t2 - t1).count() / nTestB * 1000 << "ms" << std::endl;
+#  endif
 #endif
 }
 
@@ -303,7 +305,8 @@ TEST_CASE("Simultaneous IK")
   FAST_CHECK_EQ(retB, TerminationStatus::SUCCESS);
   FAST_CHECK_UNARY(xb0.isApprox(xd0, 1e-8));
 
-#if WITH_BENCH2
+#ifdef NDEBUG
+#  if WITH_BENCH2
   const int nTestD = 100;
   std::vector<MatrixXd> GDs;
   std::fill_n(std::back_inserter(GDs), nTestD, G0);
@@ -342,5 +345,6 @@ TEST_CASE("Simultaneous IK")
   std::cout << dummy << std::endl;
   std::cout << "Vanilla   : " << std::chrono::duration<double>(t1 - t0).count() / nTestD * 1000 << "ms" << std::endl;
   std::cout << "Structured: " << std::chrono::duration<double>(t2 - t1).count() / nTestB * 1000 << "ms" << std::endl;
+#  endif
 #endif
 }
