@@ -87,7 +87,6 @@ struct ProblemCollection
   {
     assert(p1.size() == p2.size());
     assert((p1.norm() - p2.norm() < 1e-14));
-    int n = p1.size();
 
     double c = p1.dot(p2) / p1.squaredNorm();
 
@@ -222,7 +221,7 @@ const double f = 1. / STEPS;
 #define BENCH_OVERHEAD(fixture, otherArgs)                                     \
   BENCHMARK_DEFINE_F(fixture, Overhead)(benchmark::State & st)                 \
   {                                                                            \
-    int n = st.range(0);                                                       \
+    int n = static_cast<int>(st.range(0));                                     \
     for(auto _ : st)                                                           \
     {                                                                          \
       benchmark::DoNotOptimize(getGIPb(n));                                    \
@@ -236,7 +235,7 @@ const double f = 1. / STEPS;
   BENCHMARK_DEFINE_F(fixture, GI)(benchmark::State & st)           \
   {                                                                \
     int it = 0;                                                    \
-    int n = st.range(0);                                           \
+    int n = static_cast<int>(st.range(0));                         \
     GoldfarbIdnaniSolver solver(nVar(n), nCstr(n), true);          \
     for(auto _ : st)                                               \
     {                                                              \
@@ -255,7 +254,7 @@ const double f = 1. / STEPS;
 #define BENCH_GI_EX(fixture, otherArgs)                                 \
   BENCHMARK_DEFINE_F(fixture, GI_EX)(benchmark::State & st)             \
   {                                                                     \
-    int n = st.range(0);                                                \
+    int n = static_cast<int>(st.range(0));                              \
     experimental::GoldfarbIdnaniSolver solver(nVar(n), nCstr(n), true); \
     SolverOptions opt;                                                  \
     opt.warmStart_ = true;                                              \
@@ -314,7 +313,7 @@ const double f = 1. / STEPS;
 #  define BENCH_LSSOL(fixture, otherArgs)                            \
     BENCHMARK_DEFINE_F(fixture, Lssol)(benchmark::State & st)        \
     {                                                                \
-      int n = st.range(0);                                           \
+      int n = static_cast<int>(st.range(0));                         \
       Eigen::LSSOL_QP solver(nVar(n), nCstr(n), Eigen::lssol::QP2);  \
       solver.optimalityMaxIter(5000);                                \
       solver.feasibilityMaxIter(5000);                               \
@@ -372,6 +371,6 @@ auto maxl = [](const std::vector<double> & v) { return *(std::max_element(std::b
 
 // Varying size, fixed 40% equality
 using test1 = ProblemFixture<1000, true>;
-BENCH_ALL(test1, ->DenseRange(10, 100, 10)->ComputeStatistics("min", minl)->ComputeStatistics("max", maxl));
+BENCH_ALL(test1, ->DenseRange(10, 100, 10)->ComputeStatistics("min", minl)->ComputeStatistics("max", maxl))
 
 BENCHMARK_MAIN();
