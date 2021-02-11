@@ -9,9 +9,15 @@
 namespace jrl::qp::utils
 {
 /** Accept any class That convert to Eigen::Ref<const Eigen::MatrixXd>.*/
-static std::true_type isConvertibleToRef_(const Eigen::Ref<const Eigen::MatrixXd> &);
+static std::true_type isConvertibleToRef_(const Eigen::Ref<const Eigen::MatrixXd> &)
+{
+  return {};
+}
 /** Fallback function that will be used for type not convertible to Eigen::Ref<const Eigen::MatrixXd>. */
-static std::false_type isConvertibleToRef_(...);
+static std::false_type isConvertibleToRef_(...)
+{
+  return {};
+}
 
 /** Check if class \t T can be converted to Eigen::Ref<const Eigen::MatrixXd>.
  * Adapted from https://stackoverflow.com/a/5998303/11611648

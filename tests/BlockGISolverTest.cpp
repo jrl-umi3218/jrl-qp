@@ -185,7 +185,7 @@ TEST_CASE("Sequential IK")
   VectorXd xd0 = solverD.solution();
 
   FAST_CHECK_EQ(retD, TerminationStatus::SUCCESS);
-  FAST_CHECK_LE((x - xd0).lpNorm<Infinity>(), 1e-4); // small precision because files do'n't have high precision
+  FAST_CHECK_LE((x - xd0).lpNorm<Infinity>(), 1e-4); // small precision because files don't have high precision
 
   // scan C
   const int nDofs = 43;

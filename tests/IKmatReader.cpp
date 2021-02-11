@@ -1,6 +1,7 @@
 /* Copyright 2020-2021 CNRS-AIST JRL */
 
 #include <fstream>
+#include <iterator>
 #include <vector>
 
 #include "IKmatReader.h"

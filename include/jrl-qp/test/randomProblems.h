@@ -19,7 +19,7 @@ struct JRLQP_DLLAPI ProblemCharacteristics
   int nObj_; // Row size of A
   int nEq_ = 0; // Row size of E
   int nIneq_ = 0; // Row size of C
-  int rankObj_; // Rank of A
+  int rankObj_ = 0; // Rank of A
   int nSharedRank_ =
       0; // rk(A)+nAct - rk([A;C_act]) where C_act is the matrix of active constraints and nAct its row size
   int nStrongActIneq_ = 0; // Number of strongly active general inequality constraints
