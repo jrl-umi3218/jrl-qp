@@ -10,7 +10,7 @@ namespace
 {
 using namespace jrl::qp;
 
-/** An helper struct that helps seeing a couple (diag, side) as the representaion
+/** An helper struct that helps seeing a couple (diag, side) as the representation
  * of a matrix with block diagonal + last block row
  */
 template<bool Up>
