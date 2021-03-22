@@ -29,6 +29,9 @@ class JRLQP_DLLAPI ElemOrthonormalSequence
 public:
   ElemOrthonormalSequence(OSeqType type, int n, int size);
 
+  /** Adding a sequence of Householder rotations*/
+  template<typename VectorType, typename CoeffType>
+  void add(const Eigen::HouseholderSequence<VectorType, CoeffType>  & Q);
   /** Adding a Givens rotation.*/
   void add(const Givens & Q);
   /** Adding a Householder reflector.*/
@@ -66,6 +69,7 @@ private:
   int size_; // Number of elementary transformation
   Workspace<> work1_;
   Workspace<> work2_;
+  Workspace<> tmp_;
 };
 
 class JRLQP_DLLAPI OrthonormalSequence
@@ -103,7 +107,7 @@ private:
   std::vector<EmbeddedSeq> seq_;
 };
 
-/** Wrapper class representing an orthonormal matrix Q partionned as Q = [Q1 Q2].*/
+/** Wrapper class representing an orthonormal matrix Q partitioned as Q = [Q1 Q2].*/
 class JRLQP_DLLAPI PartitionnedQ
 {
 public:
@@ -135,4 +139,9 @@ private:
   const OrthonormalSequence * Q_ = nullptr;
   const int * m1_ = nullptr;
 };
+
+template<typename VectorType, typename CoeffType>
+inline void ElemOrthonormalSequence::add(const Eigen::HouseholderSequence<VectorType, CoeffType> & Q)
+{
+}
 } // namespace jrl::qp::internal

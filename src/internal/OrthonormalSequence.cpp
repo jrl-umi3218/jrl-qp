@@ -20,6 +20,7 @@ ElemOrthonormalSequence::ElemOrthonormalSequence(OSeqType type, int n, int size)
       assert(false && "Not implemented yet");
       break;
     default:
+      assert(false);
       break;
   }
 }
