@@ -27,8 +27,8 @@ TerminationStatus GoldfarbIdnaniSolver::solve(MatrixRef G,
   int nbCstr = static_cast<int>(C.cols());
   bool useBnd = xl.size() > 0;
 
-  LOG_RESET(log_);
-  LOG(log_, LogFlags::INPUT | LogFlags::NO_ITER, G, a, C, bl, bu, xl, xu);
+  JRLQP_LOG_RESET(log_);
+  JRLQP_LOG(log_, LogFlags::INPUT | LogFlags::NO_ITER, G, a, C, bl, bu, xl, xu);
 
   assert(G.cols() == nbVar);
   assert(a.size() == nbVar);
@@ -73,7 +73,7 @@ internal::InitTermination GoldfarbIdnaniSolver::init_()
   f_ = 0.5 * pb_.a.dot(x);
 
   A_.reset();
-  DEBUG_ONLY(work_R_.setZero());
+  JRLQP_DEBUG_ONLY(work_R_.setZero());
 
   // Adding equality constraints
   initActiveSet();
@@ -144,7 +144,7 @@ void GoldfarbIdnaniSolver::computeStep_(VectorRef z, VectorRef r, const internal
   np.preMultiplyByMt(d, J);
   z.noalias() = J.rightCols(nbVar_ - q) * d.tail(nbVar_ - q);
   r = R.solve(d.head(q));
-  DBG(log_, LogFlags::ITERATION_ADVANCE_DETAILS, J, R, d);
+  JRLQP_DBG(log_, LogFlags::ITERATION_ADVANCE_DETAILS, J, R, d);
 }
 
 DualSolver::StepLength GoldfarbIdnaniSolver::computeStepLength_(const internal::SelectedConstraint & sc,
@@ -225,7 +225,7 @@ bool GoldfarbIdnaniSolver::addConstraint_(const internal::SelectedConstraint & s
   {
     Givens Qi;
     Qi.makeGivens(d[i], d[i + 1], &d[i]);
-    DEBUG_ONLY(d[i + 1] = 0);
+    JRLQP_DEBUG_ONLY(d[i + 1] = 0);
     J.applyOnTheRight(i, i + 1, Qi);
   }
   auto R = work_R_.asMatrix(q, q, nbVar_);
@@ -246,7 +246,7 @@ bool GoldfarbIdnaniSolver::removeConstraint_(int l)
     Givens Qi;
     R.col(i).head(i) = R.col(i + 1).head(i);
     Qi.makeGivens(R(i, i + 1), R(i + 1, i + 1), &R(i, i));
-    DEBUG_ONLY(R(i + 1, i + 1) = 0);
+    JRLQP_DEBUG_ONLY(R(i + 1, i + 1) = 0);
     R.rightCols(q - i - 1).applyOnTheLeft(i, i + 1, Qi.transpose());
     J.applyOnTheRight(i, i + 1, Qi);
   }
@@ -331,7 +331,7 @@ void GoldfarbIdnaniSolver::addInitialConstraint(const internal::SelectedConstrai
   u[q] += t;
   if(!addConstraint(sc))
   {
-    LOG_COMMENT(log_, LogFlags::TERMINATION, "Attempting to add a linearly dependent constraint.");
+    JRLQP_LOG_COMMENT(log_, LogFlags::TERMINATION, "Attempting to add a linearly dependent constraint.");
     // return TerminationStatus::LINEAR_DEPENDENCY_DETECTED;
   }
 }

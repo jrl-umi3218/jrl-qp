@@ -24,7 +24,7 @@ int main()
   l.log(0x00000010, "test2", 4);
   l.log(0x00000001, "A", A);
 
-  LOG_NEW_ITER(l, 1);
+  JRLQP_LOG_NEW_ITER(l, 1);
   l.log(1, "n", 5, "A", A, "r", 3.14);
 
   auto s = l.subLog("choice");
@@ -34,9 +34,9 @@ int main()
   int c = 2;
   double d;
 
-  LOG(l, 1, A, c);
-  LOG_COMMENT(l, 1, "This is a comment");
-  DBG_COMMENT(l, 1, "This is another comment");
+  JRLQP_LOG(l, 1, A, c);
+  JRLQP_LOG_COMMENT(l, 1, "This is a comment");
+  JRLQP_DBG_COMMENT(l, 1, "This is another comment");
 
   std::uint32_t u = 1;
   std::cout << ~u << std::endl;

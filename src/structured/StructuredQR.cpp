@@ -94,7 +94,7 @@ bool StructuredQR::remove(int l)
     Givens Qi;
     R.col(i).head(i) = R.col(i + 1).head(i);
     Qi.makeGivens(R(i, i + 1), R(i + 1, i + 1), &R(i, i));
-    DEBUG_ONLY(R(i + 1, i + 1) = 0);
+    JRLQP_DEBUG_ONLY(R(i + 1, i + 1) = 0);
     R.rightCols(q_ - i - 1).applyOnTheLeft(i, i + 1, Qi.transpose());
     Q_.add(i, Qi);
   }

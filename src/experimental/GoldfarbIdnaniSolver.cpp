@@ -30,8 +30,8 @@ TerminationStatus GoldfarbIdnaniSolver::solve(MatrixRef G,
   int nbCstr = static_cast<int>(C.cols());
   bool useBnd = xl.size() > 0;
 
-  LOG_RESET(log_);
-  LOG(log_, LogFlags::INPUT | LogFlags::NO_ITER, G, a, C, bl, bu, xl, xu, as);
+  JRLQP_LOG_RESET(log_);
+  JRLQP_LOG(log_, LogFlags::INPUT | LogFlags::NO_ITER, G, a, C, bl, bu, xl, xu, as);
 
   // Check coherence of the input sizes
   assert(G.cols() == nbVar);
@@ -65,7 +65,7 @@ TerminationStatus GoldfarbIdnaniSolver::solve(MatrixRef G,
 
 internal::InitTermination GoldfarbIdnaniSolver::init_()
 {
-  DEBUG_ONLY(work_R_.setZero());
+  JRLQP_DEBUG_ONLY(work_R_.setZero());
 
   // Decide the initial active set given the data and the options
   auto retAS = processInitialActiveSet();
@@ -101,7 +101,7 @@ internal::InitTermination GoldfarbIdnaniSolver::init_()
 
     ++it_;
     b_act.segment(lmin, q - 1 - lmin) = b_act.tail(q - 1 - lmin);
-    DEBUG_ONLY(u[q - 1] = 0);
+    JRLQP_DEBUG_ONLY(u[q - 1] = 0);
     A_.deactivate(lmin);
     removeConstraint_(lmin);
     initializePrimalDualPoints();
@@ -173,7 +173,7 @@ void GoldfarbIdnaniSolver::computeStep_(VectorRef z, VectorRef r, const internal
   np.preMultiplyByMt(d, J);
   z.noalias() = J.rightCols(nbVar_ - q) * d.tail(nbVar_ - q);
   r = R.solve(d.head(q));
-  DBG(log_, LogFlags::ITERATION_ADVANCE_DETAILS, J, R, d);
+  JRLQP_DBG(log_, LogFlags::ITERATION_ADVANCE_DETAILS, J, R, d);
 }
 
 DualSolver::StepLength GoldfarbIdnaniSolver::computeStepLength_(const internal::SelectedConstraint & sc,
@@ -254,7 +254,7 @@ bool GoldfarbIdnaniSolver::addConstraint_(const internal::SelectedConstraint & s
   {
     Givens Qi;
     Qi.makeGivens(d[i], d[i + 1], &d[i]);
-    DEBUG_ONLY(d[i + 1] = 0);
+    JRLQP_DEBUG_ONLY(d[i + 1] = 0);
     J.applyOnTheRight(i, i + 1, Qi);
   }
   auto R = work_R_.asMatrix(q, q, nbVar_);
@@ -275,7 +275,7 @@ bool GoldfarbIdnaniSolver::removeConstraint_(int l)
     Givens Qi;
     R.col(i).head(i) = R.col(i + 1).head(i);
     Qi.makeGivens(R(i, i + 1), R(i + 1, i + 1), &R(i, i));
-    DEBUG_ONLY(R(i + 1, i + 1) = 0);
+    JRLQP_DEBUG_ONLY(R(i + 1, i + 1) = 0);
     R.rightCols(q - i - 1).applyOnTheLeft(i, i + 1, Qi.transpose());
     J.applyOnTheRight(i, i + 1, Qi);
   }
@@ -324,13 +324,13 @@ internal::TerminationType GoldfarbIdnaniSolver::processInitialActiveSet()
       assert(s > ActivationStatus::EQUALITY);
       if(s == ActivationStatus::FIXED)
       {
-        LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for bound ", i, " (bounds not equal)");
+        JRLQP_LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for bound ", i, " (bounds not equal)");
       }
       else
       {
         if((s == ActivationStatus::LOWER_BOUND && pb_.xl[i] < -options_.bigBnd_)
            || (s == ActivationStatus::UPPER_BOUND && pb_.xu[i] > +options_.bigBnd_))
-          LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for bound ", i, " (infinite bound)");
+          JRLQP_LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for bound ", i, " (infinite bound)");
         else
           A_.activate(bi, s);
       }
@@ -348,13 +348,13 @@ internal::TerminationType GoldfarbIdnaniSolver::processInitialActiveSet()
       assert(s <= ActivationStatus::EQUALITY);
       if(s == ActivationStatus::FIXED)
       {
-        LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for constraint ", i);
+        JRLQP_LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for constraint ", i);
       }
       else
       {
         if((s == ActivationStatus::LOWER && pb_.bl[i] < -options_.bigBnd_)
            || (s == ActivationStatus::UPPER && pb_.bu[i] > +options_.bigBnd_))
-          LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for constraint ", i, " (infinite bound)");
+          JRLQP_LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for constraint ", i, " (infinite bound)");
         else
           A_.activate(i, s);
       }
@@ -447,9 +447,9 @@ internal::TerminationType GoldfarbIdnaniSolver::initializeComputationData()
   Eigen::internal::set_is_malloc_allowed(b);
 
   // Set lower part of R to 0
-  DEBUG_ONLY(for(int i = 0; i < q; ++i) N.col(i).tail(nbVar_ - i - 1).setZero(););
+  JRLQP_DEBUG_ONLY(for(int i = 0; i < q; ++i) N.col(i).tail(nbVar_ - i - 1).setZero(););
 
-  LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, N, J, b_act);
+  JRLQP_LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, N, J, b_act);
 
   return TerminationStatus::SUCCESS;
 }
@@ -475,7 +475,7 @@ internal::TerminationType GoldfarbIdnaniSolver::initializePrimalDualPoints()
 
   f_ = beta.dot(0.5 * beta + alpha1) - 0.5 * alpha2.squaredNorm();
 
-  LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, alpha, beta, x, u, f_);
+  JRLQP_LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, alpha, beta, x, u, f_);
 
   return TerminationStatus::SUCCESS;
 }

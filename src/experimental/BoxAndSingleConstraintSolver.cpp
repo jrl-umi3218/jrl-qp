@@ -18,8 +18,8 @@ TerminationStatus BoxAndSingleConstraintSolver::solve(const VectorConstRef & x0,
   int nbCstr = static_cast<int>(c.cols());
   bool useBnd = xl.size() > 0;
 
-  LOG_RESET(log_);
-  LOG(log_, LogFlags::INPUT | LogFlags::NO_ITER, x0, c, bl, xl, xu);
+  JRLQP_LOG_RESET(log_);
+  JRLQP_LOG(log_, LogFlags::INPUT | LogFlags::NO_ITER, x0, c, bl, xl, xu);
 
   assert(c.rows() == nbVar);
   assert(c.cols() == 1);
@@ -46,7 +46,7 @@ TerminationStatus BoxAndSingleConstraintSolver::solve(const VectorConstRef & x0,
 internal::InitTermination BoxAndSingleConstraintSolver::init_()
 {
   A_.reset();
-  DEBUG_ONLY(work_R_.setZero());
+  JRLQP_DEBUG_ONLY(work_R_.setZero());
 
   auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
   auto R = work_R_.asMatrix(nbVar_, nbVar_, nbVar_);
@@ -88,7 +88,7 @@ internal::InitTermination BoxAndSingleConstraintSolver::init_()
       J(i, nbVar_ - i + q - 1) = 1;
     }
   }
-  LOG(log_, LogFlags::ACTIVE_SET_DETAILS, x, u, J, R);
+  JRLQP_LOG(log_, LogFlags::ACTIVE_SET_DETAILS, x, u, J, R);
 
   return TerminationStatus::SUCCESS;
 }
