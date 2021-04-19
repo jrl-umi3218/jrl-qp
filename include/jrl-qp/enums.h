@@ -33,6 +33,7 @@ enum class TerminationStatus
   LINEAR_DEPENDENCY_DETECTED, // Some active constraints are linearly dependent and the solver doesn't know how to
                               // handle this case.
   OVERCONSTRAINED_PROBLEM, // Too many equality constraints and fixed variables
+  UNKNOWN, // Unknown status
 };
 
 /** Flags for the log and debug outputs.*/
