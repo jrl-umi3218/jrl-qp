@@ -17,6 +17,7 @@ set(JRLQP_SOURCES
   test/kkt.cpp
   test/problems.cpp
   test/randomProblems.cpp
+  utils/enumsIO.cpp
   utils/Logger.cpp
 )
 
@@ -51,6 +52,7 @@ set(JRLQP_HEADERS
   ${JRLQP_INCLUDE_DIR}/test/randomMatrices.h
   ${JRLQP_INCLUDE_DIR}/test/randomProblems.h
   ${JRLQP_INCLUDE_DIR}/utils/debug.h
+  ${JRLQP_INCLUDE_DIR}/utils/enumsIO.h
   ${JRLQP_INCLUDE_DIR}/utils/Logger.h
   ${JRLQP_INCLUDE_DIR}/utils/toMatlab.h
 )
