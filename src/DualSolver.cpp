@@ -102,10 +102,10 @@ TerminationStatus DualSolver::solve()
 
   for(; it_ < options_.maxIter_; ++it_)
   {
-    LOG_NEW_ITER(log_, it_);
-    LOG(log_, LogFlags::ACTIVE_SET_DETAILS, A_);
+    JRLQP_LOG_NEW_ITER(log_, it_);
+    JRLQP_LOG(log_, LogFlags::ACTIVE_SET_DETAILS, A_);
     int q = A_.nbActiveCstr();
-    LOG(log_, LogFlags::ITERATION_BASIC_DETAILS, x, u, f_);
+    JRLQP_LOG(log_, LogFlags::ITERATION_BASIC_DETAILS, x, u, f_);
 
     // Step 1
     if(!skipStep1)
@@ -113,8 +113,8 @@ TerminationStatus DualSolver::solve()
       sc = selectViolatedConstraint(x);
       if(sc.status() == ActivationStatus::INACTIVE) return terminate(TerminationStatus::SUCCESS);
 
-      LOG(log_, LogFlags::ACTIVE_SET, sc);
-      // LOG_AS(log_, LogFlags::ACTIVE_SET, "selectedConstraint", sc.index(), "status", static_cast<int>(sc.status()));
+      JRLQP_LOG(log_, LogFlags::ACTIVE_SET, sc);
+      // JRLQP_LOG_AS(log_, LogFlags::ACTIVE_SET, "selectedConstraint", sc.index(), "status", static_cast<int>(sc.status()));
       new(&r) WVector(work_r_.asVector(q));
       new(&u) WVector(work_u_.asVector(q + 1));
       u[q] = 0;
@@ -124,8 +124,8 @@ TerminationStatus DualSolver::solve()
     computeStep(z, r, sc);
     auto [t1, t2, l] = computeStepLength(sc, x, u, z, r);
     double t = std::min(t1, t2);
-    LOG_COMMENT(log_, LogFlags::ITERATION_BASIC_DETAILS, "Step computation");
-    LOG(log_, LogFlags::ITERATION_BASIC_DETAILS, z, r, t);
+    JRLQP_LOG_COMMENT(log_, LogFlags::ITERATION_BASIC_DETAILS, "Step computation");
+    JRLQP_LOG(log_, LogFlags::ITERATION_BASIC_DETAILS, z, r, t);
 
     if(t >= options_.bigBnd_) return terminate(TerminationStatus::INFEASIBLE);
 
@@ -134,7 +134,7 @@ TerminationStatus DualSolver::solve()
       // u = u + t*[-r;1]
       u.head(q) -= t * r;
       u[q] += t;
-      LOG_AS(log_, LogFlags::ACTIVE_SET, "Activate", false, "l", l);
+      JRLQP_LOG_AS(log_, LogFlags::ACTIVE_SET, "Activate", false, "l", l);
       removeConstraint(l, u);
       new(&r) WVector(work_r_.asVector(q - 1));
       new(&u) WVector(work_u_.asVector(q));
@@ -149,13 +149,13 @@ TerminationStatus DualSolver::solve()
       u[q] += t;
       if(t == t2)
       {
-        LOG_AS(log_, LogFlags::ACTIVE_SET, "Activate", true, "l", l);
+        JRLQP_LOG_AS(log_, LogFlags::ACTIVE_SET, "Activate", true, "l", l);
         if(!addConstraint(sc)) return terminate(TerminationStatus::LINEAR_DEPENDENCY_DETECTED);
         skipStep1 = false;
       }
       else
       {
-        LOG_AS(log_, LogFlags::ACTIVE_SET, "Activate", false, "l", l);
+        JRLQP_LOG_AS(log_, LogFlags::ACTIVE_SET, "Activate", false, "l", l);
         removeConstraint(l, u);
         new(&r) WVector(work_r_.asVector(q - 1));
         new(&u) WVector(work_u_.asVector(q));
@@ -171,24 +171,24 @@ TerminationStatus DualSolver::terminate(TerminationStatus status)
   switch(status)
   {
     case TerminationStatus::SUCCESS:
-      LOG_COMMENT(log_, LogFlags::TERMINATION, "Optimum reached.");
+      JRLQP_LOG_COMMENT(log_, LogFlags::TERMINATION, "Optimum reached.");
       break;
     case TerminationStatus::INCONSISTENT_INPUT:
-      LOG_COMMENT(log_, LogFlags::TERMINATION, "Inconsistent inputs.");
+      JRLQP_LOG_COMMENT(log_, LogFlags::TERMINATION, "Inconsistent inputs.");
       break;
     case TerminationStatus::NON_POS_HESSIAN:
-      LOG_COMMENT(log_, LogFlags::TERMINATION,
+      JRLQP_LOG_COMMENT(log_, LogFlags::TERMINATION,
                   "This version of the solver requires the quadratic matrix to be positive definite."
                   "The input matrix is not (at least numerically)");
       break;
     case TerminationStatus::INFEASIBLE:
-      LOG_COMMENT(log_, LogFlags::TERMINATION, "Infeasible problem.");
+      JRLQP_LOG_COMMENT(log_, LogFlags::TERMINATION, "Infeasible problem.");
       break;
     case TerminationStatus::MAX_ITER_REACHED:
-      LOG_COMMENT(log_, LogFlags::TERMINATION, "Maximum number of iteration reached.");
+      JRLQP_LOG_COMMENT(log_, LogFlags::TERMINATION, "Maximum number of iteration reached.");
       break;
     case TerminationStatus::LINEAR_DEPENDENCY_DETECTED:
-      LOG_COMMENT(log_, LogFlags::TERMINATION, "Attempting to add a linearly dependent constraint.");
+      JRLQP_LOG_COMMENT(log_, LogFlags::TERMINATION, "Attempting to add a linearly dependent constraint.");
       break;
     default:
       assert(false);
@@ -198,8 +198,8 @@ TerminationStatus DualSolver::terminate(TerminationStatus status)
 
 internal::InitTermination DualSolver::init()
 {
-  DEBUG_ONLY(work_u_.setZero());
-  DEBUG_ONLY(work_r_.setZero());
+  JRLQP_DEBUG_ONLY(work_u_.setZero());
+  JRLQP_DEBUG_ONLY(work_r_.setZero());
 
   needToExpandMultipliers_ = true;
   if(!options_.warmStart_) A_.reset();
@@ -237,7 +237,7 @@ bool DualSolver::removeConstraint(int l, VectorRef u)
 {
   int q = A_.nbActiveCstr();
   u.segment(l, q - l) = u.tail(q - l);
-  DEBUG_ONLY(u[q] = 0);
+  JRLQP_DEBUG_ONLY(u[q] = 0);
   A_.deactivate(l);
   return removeConstraint_(l);
 }

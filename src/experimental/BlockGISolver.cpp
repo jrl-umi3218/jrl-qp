@@ -27,8 +27,8 @@ TerminationStatus BlockGISolver::solve(const structured::StructuredG & G,
   int nbCstr = static_cast<int>(C.nbCstr());
   bool useBnd = xl.size() > 0;
 
-  LOG_RESET(log_);
-  LOG(log_, LogFlags::INPUT | LogFlags::NO_ITER, G, a, C, bl, bu, xl, xu, as);
+  JRLQP_LOG_RESET(log_);
+  JRLQP_LOG(log_, LogFlags::INPUT | LogFlags::NO_ITER, G, a, C, bl, bu, xl, xu, as);
 
   // Check coherence of the input sizes
   assert(a.size() == nbVar);
@@ -61,7 +61,7 @@ TerminationStatus BlockGISolver::solve(const structured::StructuredG & G,
 
 internal::InitTermination BlockGISolver::init_()
 {
-  DEBUG_ONLY(QR_.setRToZero());
+  JRLQP_DEBUG_ONLY(QR_.setRToZero());
 
   // Decide the initial active set given the data and the options
   auto retAS = processInitialActiveSet();
@@ -97,7 +97,7 @@ internal::InitTermination BlockGISolver::init_()
 
     ++it_;
     b_act.segment(lmin, q - 1 - lmin) = b_act.tail(q - 1 - lmin);
-    DEBUG_ONLY(u[q - 1] = 0);
+    JRLQP_DEBUG_ONLY(u[q - 1] = 0);
     A_.deactivate(lmin);
     removeConstraint_(lmin);
     initializePrimalDualPoints();
@@ -307,13 +307,13 @@ internal::TerminationType BlockGISolver::processInitialActiveSet()
       assert(s > ActivationStatus::EQUALITY);
       if(s == ActivationStatus::FIXED)
       {
-        LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for bound ", i, " (bounds not equal)");
+        JRLQP_LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for bound ", i, " (bounds not equal)");
       }
       else
       {
         if((s == ActivationStatus::LOWER_BOUND && pb_.xl[i] < -options_.bigBnd_)
            || (s == ActivationStatus::UPPER_BOUND && pb_.xu[i] > +options_.bigBnd_))
-          LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for bound ", i, " (infinite bound)");
+          JRLQP_LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for bound ", i, " (infinite bound)");
         else
           A_.activate(bi, s);
       }
@@ -331,13 +331,13 @@ internal::TerminationType BlockGISolver::processInitialActiveSet()
       assert(s <= ActivationStatus::EQUALITY);
       if(s == ActivationStatus::FIXED)
       {
-        LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for constraint ", i);
+        JRLQP_LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for constraint ", i);
       }
       else
       {
         if((s == ActivationStatus::LOWER && pb_.bl[i] < -options_.bigBnd_)
            || (s == ActivationStatus::UPPER && pb_.bu[i] > +options_.bigBnd_))
-          LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for constraint ", i, " (infinite bound)");
+          JRLQP_LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for constraint ", i, " (infinite bound)");
         else
           A_.activate(i, s);
       }
@@ -432,9 +432,9 @@ internal::TerminationType BlockGISolver::initializeComputationData()
   // Eigen::internal::set_is_malloc_allowed(b);
 
   //// Set lower part of R to 0
-  // DEBUG_ONLY(for(int i = 0; i < q; ++i) N.col(i).tail(nbVar_ - i - 1).setZero(););
+  // JRLQP_DEBUG_ONLY(for(int i = 0; i < q; ++i) N.col(i).tail(nbVar_ - i - 1).setZero(););
 
-  // LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, N, J, b_act);
+  // JRLQP_LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, N, J, b_act);
 
   // temp
   J_.reset();
@@ -463,7 +463,7 @@ internal::TerminationType BlockGISolver::initializePrimalDualPoints()
 
   // f_ = beta.dot(0.5 * beta + alpha1) - 0.5 * alpha2.squaredNorm();
 
-  // LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, alpha, beta, x, u, f_);
+  // JRLQP_LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, alpha, beta, x, u, f_);
 
   // temp computation
   assert(A_.nbActiveCstr() == 0);
