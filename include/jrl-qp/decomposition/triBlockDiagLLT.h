@@ -25,18 +25,18 @@ namespace jrl::qp::decomposition
  * \param subDiag blocks \f$ S_i \f$ under the diagonal.
  *
  * The decomposition is done in place: the Cholesky factor is
- * 
+ *
  * \f$ \begin{bmatrix}
  *    L_1  &       &       &       \\
  *    B_1  &  L_2  &       &       \\
  *         &  B_2  &  L_3  &       \\
  *         &       &\ddots &\ddots \\
  * \end{bmatrix}\f$
- * 
+ *
  * and upon return \f$ D_i \f$ contains \f$ L_i \f$ and \f$ S_i \f$ contains
  * \f$ B_i \f$.
  * Only the lower triangular part of \f$ D_i \f$ is used to store \f$ L_i \f$.
- * Its upper part remains whatever was there originally. 
+ * Its upper part remains whatever was there originally.
  */
 JRLQP_DLLAPI bool triBlockDiagLLT(const std::vector<MatrixRef> & diag, const std::vector<MatrixRef> & subDiag);
 

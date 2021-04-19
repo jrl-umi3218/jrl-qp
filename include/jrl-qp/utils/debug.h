@@ -40,7 +40,7 @@ inline constexpr bool DEBUG_OUTPUT = 1;
 #define JRLQP_AUTO_NAME_ARG9(x, ...) #x, x, JRLQP_PP_ID(JRLQP_AUTO_NAME_ARG8(__VA_ARGS__))
 #define JRLQP_AUTO_NAME_ARG10(x, ...) #x, x, JRLQP_PP_ID(JRLQP_AUTO_NAME_ARG9(__VA_ARGS__))
 
-#define JRLQP_ENABLE_LOG_(macro, ...)        \
+#define JRLQP_ENABLE_LOG_(macro, ...)  \
   do                                   \
   {                                    \
     if(!NO_LOG_)                       \
@@ -48,13 +48,13 @@ inline constexpr bool DEBUG_OUTPUT = 1;
       JRLQP_PP_ID(macro(__VA_ARGS__)); \
     }                                  \
   } while(0)
-#define JRLQP_ENABLE_DEBUG_(macro, ...)      \
-  do                                   \
-  {                                    \
-    if(DEBUG_OUTPUT)                   \
-    {                                  \
-      JRLQP_PP_ID(macro(__VA_ARGS__)); \
-    }                                  \
+#define JRLQP_ENABLE_DEBUG_(macro, ...) \
+  do                                    \
+  {                                     \
+    if(DEBUG_OUTPUT)                    \
+    {                                   \
+      JRLQP_PP_ID(macro(__VA_ARGS__));  \
+    }                                   \
   } while(0)
 
 #define JRLQP_LOG_(logger, flags, ...) \

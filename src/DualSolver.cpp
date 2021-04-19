@@ -114,7 +114,8 @@ TerminationStatus DualSolver::solve()
       if(sc.status() == ActivationStatus::INACTIVE) return terminate(TerminationStatus::SUCCESS);
 
       JRLQP_LOG(log_, LogFlags::ACTIVE_SET, sc);
-      // JRLQP_LOG_AS(log_, LogFlags::ACTIVE_SET, "selectedConstraint", sc.index(), "status", static_cast<int>(sc.status()));
+      // JRLQP_LOG_AS(log_, LogFlags::ACTIVE_SET, "selectedConstraint", sc.index(), "status",
+      // static_cast<int>(sc.status()));
       new(&r) WVector(work_r_.asVector(q));
       new(&u) WVector(work_u_.asVector(q + 1));
       u[q] = 0;
@@ -178,8 +179,8 @@ TerminationStatus DualSolver::terminate(TerminationStatus status)
       break;
     case TerminationStatus::NON_POS_HESSIAN:
       JRLQP_LOG_COMMENT(log_, LogFlags::TERMINATION,
-                  "This version of the solver requires the quadratic matrix to be positive definite."
-                  "The input matrix is not (at least numerically)");
+                        "This version of the solver requires the quadratic matrix to be positive definite."
+                        "The input matrix is not (at least numerically)");
       break;
     case TerminationStatus::INFEASIBLE:
       JRLQP_LOG_COMMENT(log_, LogFlags::TERMINATION, "Infeasible problem.");
