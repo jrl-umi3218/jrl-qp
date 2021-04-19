@@ -116,14 +116,14 @@ void blockArrowLSolve_(const std::vector<MatrixRef> & diag,
   int n = 0;
 
   //[OPTIM] All solveInplace can be parallelized. Aggregation into Mb cannot be directly
-  //parallelized in the loop, but something akin to prefix sum could be used. 
+  // parallelized in the loop, but something akin to prefix sum could be used.
   for(int i = 0; i < b - 1; ++i)
   {
     auto Di = get<Up>::D(diag, i);
     assert(Di.rows() == Di.cols());
     int ni = static_cast<int>(Di.rows());
 
-    int s = std::max(start - n, 0); //first non-zero row in Mi
+    int s = std::max(start - n, 0); // first non-zero row in Mi
     if((ni < s || end <= n))
     {
       // If Mi is zero we don't have to perform any operations.
@@ -132,7 +132,7 @@ void blockArrowLSolve_(const std::vector<MatrixRef> & diag,
       continue;
     }
 
-    //We ignore the first rows of Mi that are 0, if any.
+    // We ignore the first rows of Mi that are 0, if any.
     auto Li = Di.bottomRightCorner(ni - s, ni - s).template triangularView<Eigen::Lower>();
     auto Mi = M.middleRows(n + s, ni - s);
     // Mi = Li^-1 Mi

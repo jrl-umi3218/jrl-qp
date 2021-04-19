@@ -118,7 +118,7 @@ void triBlockDiagLTransposeSolve(const std::vector<MatrixRef> & diag,
   int ni = 0;
   int l = 0;
   int li = 0;
-  bool zero = true; //Mi - B[i] X[i+1] is zero
+  bool zero = true; // Mi - B[i] X[i+1] is zero
 
   if(end < 0) end = n;
 

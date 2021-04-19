@@ -18,8 +18,8 @@ namespace jrl::qp::decomposition
  *    S_1  &  D_2  &       &        \\
  *    S_2  &       &  D_3  &        \\
  *  \vdots &       &       & \ddots \\
- * \end{bmatrix}\f$ (up = \c true) or 
-  *\f$ \begin{bmatrix}
+ * \end{bmatrix}\f$ (up = \c true) or
+ *\f$ \begin{bmatrix}
  *    D_1  &       &         &   S_1^T   \\
  *         &\ddots &         &   \vdots  \\
  *         &       & D_{b-1} & S_{b-1}^T \\
@@ -33,7 +33,7 @@ namespace jrl::qp::decomposition
  *
  * If up = \c false, the decomposition \f$ M = L L^T\f$ is performed.
  * If up = \c true, the decomposition \f$ P^T M P = L L^T \f$ is performed, where
- * 
+ *
  * \f$ \begin{bmatrix}
  *    0 &\cdots & 0 & I \\
  *    I &       &   & 0 \\
@@ -46,7 +46,7 @@ namespace jrl::qp::decomposition
  *          &       &    D_b    &  S_{b-1} \\
  *   S_1^T  &\cdots & S_{b-1}^T &    D1    \\
  * \end{bmatrix} \f$
- * 
+ *
  * Then, \f$ L \f$ is such that
  *
  * \f$ L = \begin{bmatrix}
@@ -54,7 +54,7 @@ namespace jrl::qp::decomposition
  *         &  L_2  &       &       \\
  *         &       &\ddots &       \\
  *    B_1  &  B_2  &\cdots &  L_b  \\
- * \end{bmatrix}\f$ (up = \c false) or 
+ * \end{bmatrix}\f$ (up = \c false) or
  * \f$ L = \begin{bmatrix}
  *    L_2  &       &         &       \\
  *         &\ddots &         &       \\

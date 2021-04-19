@@ -31,7 +31,7 @@ public:
 
   /** Adding a sequence of Householder rotations*/
   template<typename VectorType, typename CoeffType>
-  void add(const Eigen::HouseholderSequence<VectorType, CoeffType>  & Q);
+  void add(const Eigen::HouseholderSequence<VectorType, CoeffType> & Q);
   /** Adding a Givens rotation.*/
   void add(const Givens & Q);
   /** Adding a Householder reflector.*/

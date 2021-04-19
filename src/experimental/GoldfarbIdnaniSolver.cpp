@@ -324,13 +324,15 @@ internal::TerminationType GoldfarbIdnaniSolver::processInitialActiveSet()
       assert(s > ActivationStatus::EQUALITY);
       if(s == ActivationStatus::FIXED)
       {
-        JRLQP_LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for bound ", i, " (bounds not equal)");
+        JRLQP_LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for bound ", i,
+                          " (bounds not equal)");
       }
       else
       {
         if((s == ActivationStatus::LOWER_BOUND && pb_.xl[i] < -options_.bigBnd_)
            || (s == ActivationStatus::UPPER_BOUND && pb_.xu[i] > +options_.bigBnd_))
-          JRLQP_LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for bound ", i, " (infinite bound)");
+          JRLQP_LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for bound ", i,
+                            " (infinite bound)");
         else
           A_.activate(bi, s);
       }
@@ -354,7 +356,8 @@ internal::TerminationType GoldfarbIdnaniSolver::processInitialActiveSet()
       {
         if((s == ActivationStatus::LOWER && pb_.bl[i] < -options_.bigBnd_)
            || (s == ActivationStatus::UPPER && pb_.bu[i] > +options_.bigBnd_))
-          JRLQP_LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for constraint ", i, " (infinite bound)");
+          JRLQP_LOG_COMMENT(log_, LogFlags::ACTIVE_SET, "Ignoring activation status for constraint ", i,
+                            " (infinite bound)");
         else
           A_.activate(i, s);
       }
