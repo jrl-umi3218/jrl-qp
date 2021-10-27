@@ -42,7 +42,7 @@ Follow the standard CMake build procedure:
 
 ```sh
 git clone --recursive https://github.com/jrl-umi3218/jrl-qp
-cd tvm
+cd jrl-qp
 mkdir build && cd build
 cmake [options] ..
 make && sudo make install
