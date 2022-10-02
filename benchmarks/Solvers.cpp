@@ -297,7 +297,7 @@ struct ProblemCollection
 
   bool checkSolution(const VectorConstRef & x, int k)
   {
-    double err = (x - original[k].x).lpNorm<Eigen::Infinity>();
+    double err = (x - original[k].x).template lpNorm<Eigen::Infinity>();
     if(err <= 5e-6)
     {
       return true;
