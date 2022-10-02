@@ -141,6 +141,48 @@ LssolPb::LssolPb(const QPProblem<true> & pb)
   u.tail(nIneq) = pb.u;
 }
 
+ProxSuitePb::ProxSuitePb(const QPProblem<true> & pb)
+{
+  assert(pb.wellFormed());
+  H = pb.G;
+  g = pb.a;
+  if(pb.transposedMat) 
+    A = pb.E.transpose();
+  else
+    A = pb.E;
+  b = pb.f;
+
+  int nVar = static_cast<int>(g.size());
+  int nEq = me(pb);
+  int nIneq = mi(pb);
+
+  bool hasBounds = (pb.xl.size() > 0);
+  if(hasBounds)
+  {
+    C.resize(nIneq + nVar, nVar);
+    l.resize(nIneq + nVar);
+    u.resize(nIneq + nVar);
+    if(pb.transposedMat) 
+      C.topRows(nIneq) = pb.C.transpose();
+    else
+      C.topRows(nIneq) = pb.C;
+    C.bottomRows(nVar).setIdentity();
+    l.head(nIneq) = pb.l;
+    l.tail(nVar) = pb.xl;
+    u.head(nIneq) = pb.u;
+    u.tail(nVar) = pb.xu;
+  }
+  else
+  {
+    if(pb.transposedMat)
+      C = pb.C.transpose();
+    else
+      C = pb.C;
+    l = pb.l;
+    u = pb.u;
+  }
+}
+
 QLDPb::QLDPb(const QPProblem<true> & pb)
 {
   assert(pb.wellFormed());

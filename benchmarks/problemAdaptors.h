@@ -51,6 +51,20 @@ struct LssolPb
   Eigen::VectorXd u;
 };
 
+struct ProxSuitePb
+{
+  ProxSuitePb() = default;
+  ProxSuitePb(const QPProblem<true> & pb);
+
+  Eigen::MatrixXd H;
+  Eigen::VectorXd g;
+  Eigen::MatrixXd A;
+  Eigen::VectorXd b;
+  Eigen::MatrixXd C;
+  Eigen::VectorXd l;
+  Eigen::VectorXd u;
+};
+
 struct QLDPb
 {
   QLDPb() = default;

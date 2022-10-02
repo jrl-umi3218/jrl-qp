@@ -16,6 +16,9 @@
 #ifdef JRLQP_USE_QLD
 #  include <eigen-qld/QLDDirect.h>
 #endif
+#ifdef JRLQP_USE_PROXSUITE
+#  include <proxsuite/proxqp/dense/dense.hpp>
+#endif
 
 #include <jrl-qp/GoldfarbIdnaniSolver.h>
 #include <jrl-qp/test/problems.h>
@@ -160,6 +163,7 @@ struct ProblemCollection
     nVar = n;
     nEq = me;
     nIneq = mi;
+    nIneqAndBnd = mi + (bounds ? nVar : 0);
     nSSIneq = doubleSided ? (2 * mi) : mi;
     nSSIneqAndBnd = (bounds ? 2 * nVar : nVar) + nSSIneq;
     nCstr = me + mi;
@@ -180,11 +184,17 @@ struct ProblemCollection
     Eigen::QLDDirect solverQLD(nVar, nEq, nSSIneq);
 #endif
 
+#ifdef JRLQP_USE_PROXSUITE
+    proxsuite::proxqp::dense::QP<double> solverProxSuite(nVar, nEq, nIneqAndBnd);
+    solverProxSuite.settings.eps_abs = 1e-8;
+#endif
+
     int failGI = 0;
     int failEigenQuadprog = 0;
     int failEiQuadprog = 0;
     int failLssol = 0;
     int failQLD = 0;
+    int failProxSuite = 0;
 
     for(int k = 0; k < NbPb; ++k)
     {
@@ -226,24 +236,38 @@ struct ProblemCollection
         if(!check(solverQLD.result(), k, failQLD, skipQLD, "qld")) continue;
       }
 #endif
+#ifdef JRLQP_USE_PROXSUITE
+      if(!skipProxSuite)
+      {
+        auto & qp = proxsuitePb[k];
+        solverProxSuite.init(qp.H, qp.g, qp.A, qp.b, qp.C, qp.u, qp.l);
+        solverProxSuite.solve();
+        if(!check(solverProxSuite.results.x, k, failProxSuite, skipProxSuite, "ProxSuite"))
+        {
+          //std::cout << (int)solverProxSuite.results.info.status << std::endl;
+          continue;
+        }
+      }
+#endif
     }
   }
 
   bool check(const VectorConstRef & x, int & k, int & failCount, bool & skip, const std::string & name)
   {
-    const int maxFail = 10;
+    const int maxFail = 20;
     if(!checkSolution(x, k))
     {
       ++failCount;
       if(failCount >= maxFail)
       {
         skip = true;
+        std::cout << "Too many errors, skip " << name << "." << std::endl;
         return true;
       }
       else
       {
         --k;
-        std::cout << "Error with " << name << ". Retry" << std::endl;
+        //std::cout << "Error with " << name << ". Retry" << std::endl;
         return false;
       }
     }
@@ -268,17 +292,27 @@ struct ProblemCollection
     quadprogPb[k] = qp;
     eiquadprogPb[k] = qp;
     qldPb[k] = qp;
+    proxsuitePb[k] = qp;
   }
 
   bool checkSolution(const VectorConstRef & x, int k)
   {
-    double err = (x - original[k].x).norm();
-    return (err <= 1e-6);
+    double err = (x - original[k].x).lpNorm<Eigen::Infinity>();
+    if(err <= 5e-6)
+    {
+      return true;
+    }
+    else
+    {
+      //std::cout << err << "  -  ";
+      return false;
+    }
   }
 
   int nVar;
   int nEq;
   int nIneq;
+  int nIneqAndBnd;
   int nSSIneq;
   int nSSIneqAndBnd;
   int nCstr;
@@ -291,11 +325,13 @@ struct ProblemCollection
   std::array<EigenQuadprogPb, NbPb> quadprogPb;
   std::array<EiQuadprogPb, NbPb> eiquadprogPb;
   std::array<QLDPb, NbPb> qldPb;
+  std::array<ProxSuitePb, NbPb> proxsuitePb;
   bool skipGI = false;
   bool skipLssol = false;
   bool skipEigenQuadprog = false;
   bool skipEiQuadprog = false;
   bool skipQLD = false;
+  bool skipProxSuite = false;
 };
 
 /** A fixture containing and managing collections of problems for all the sizes
@@ -399,6 +435,10 @@ public:
   {
     return problems[sig].nIneq;
   }
+  int nIneqAndBnd(const Signature & sig) const
+  {
+    return problems[sig].nIneqAndBnd;
+  }
   // Number of single-sided constraints
   int nSSIneq(const Signature & sig) const
   {
@@ -437,6 +477,10 @@ public:
   bool skipQLD(const Signature & sig) const
   {
     return problems[sig].skipQLD;
+  }
+  bool skipProxSuite(const Signature & sig) const
+  {
+    return problems[sig].skipProxSuite;
   }
 
   RandomLeastSquare & getOriginal()
@@ -482,6 +526,14 @@ public:
     auto & pb = problems[sig];
     pb.qldPb[i].Q = pb.G[i];
     return pb.qldPb[i];
+  }
+
+  ProxSuitePb & getProxsuitePb(const Signature & sig)
+  {
+    int i = idx();
+    auto & pb = problems[sig];
+    pb.proxsuitePb[i].H = pb.G[i];
+    return pb.proxsuitePb[i];
   }
 
 private:
@@ -590,6 +642,26 @@ private:
 #  define BENCH_QLD(fixture, otherArgs) NOP
 #endif
 
+#ifdef JRLQP_USE_PROXSUITE
+#  define BENCH_PROXSUITE(fixture, otherArgs)                            \
+    BENCHMARK_DEFINE_F(fixture, ProxSuite)(benchmark::State & st)        \
+    {                                                                    \
+      auto sig = signature(st);                                          \
+      if(skipProxSuite(sig)) st.SkipWithError("Skipping Proxsuite");     \
+      proxsuite::proxqp::dense::QP<double> solverProxSuite(nVar(sig), nEq(sig), nIneqAndBnd(sig)); \
+      solverProxSuite.settings.eps_abs = 1e-8;                           \
+      for(auto _ : st)                                                   \
+      {                                                                  \
+        auto & qp = getProxsuitePb(sig);                                 \
+        solverProxSuite.init(qp.H, qp.g, qp.A, qp.b, qp.C, qp.u, qp.l);  \
+        solverProxSuite.solve();                                         \
+      }                                                                  \
+    }                                                                    \
+    BENCHMARK_REGISTER_F(fixture, ProxSuite)->Unit(benchmark::kMicrosecond) otherArgs
+#else
+#  define BENCH_PROXSUITE(fixture, otherArgs) NOP
+#endif
+
 #define BENCH_CLEAR(fixture)                                            \
   BENCHMARK_DEFINE_F(fixture, Clear)(benchmark::State & st)             \
   {                                                                     \
@@ -605,6 +677,7 @@ private:
   BENCH_QUADPROG(fixture, otherArgs); \
   BENCH_LSSOL(fixture, otherArgs);    \
   BENCH_QLD(fixture, otherArgs);      \
+  BENCH_PROXSUITE(fixture, otherArgs);\
   BENCH_CLEAR(fixture)->DenseRange(1, 1, 1);
 
 auto minl = [](const std::vector<double> & v) { return *(std::min_element(std::begin(v), std::end(v))); };

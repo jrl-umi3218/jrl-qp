@@ -102,6 +102,7 @@ struct ProblemCollection
   std::array<EigenQuadprogPb, NbPb> quadprogPb;
   std::array<EiQuadprogPb, NbPb> eiquadprogPb;
   std::array<QLDPb, NbPb> qldPb;
+  std::array<ProxSuitePb, NbPb> proxsuitePb;
   std::array<VectorXd, NbPb> p1;
   std::array<VectorXd, NbPb> p2;
   std::array<VectorXd, NbPb> v;
@@ -157,6 +158,12 @@ public:
   {
     int k = idx();
     return problems[n].qldPb[k];
+  }
+
+  ProxSuitePb & getProxsuiteb(int n)
+  {
+    int k = idx();
+    return problems[n].proxsuitePb[k];
   }
 
   const VectorXd & geta(int n, double t)

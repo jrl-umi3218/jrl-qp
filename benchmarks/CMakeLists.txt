@@ -28,6 +28,15 @@ if(eigen-quadprog_FOUND)
   list(APPEND SOLVER_LIBS eigen-quadprog::eigen-quadprog)
 endif()
 
+###################
+#-   proxsuite   -#
+###################
+add_project_dependency(proxsuite QUIET)
+if(proxsuite_FOUND)
+  list(APPEND SOLVER_FLAGS "-DJRLQP_USE_PROXSUITE")
+  list(APPEND SOLVER_LIBS proxsuite::proxsuite)
+endif()
+
 
 add_custom_target(jrlqp_benchmarks)
 
