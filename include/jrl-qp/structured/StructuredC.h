@@ -3,6 +3,7 @@
 #pragma once
 
 #include <iosfwd>
+#include <vector>
 
 #include <jrl-qp/api.h>
 #include <jrl-qp/defs.h>
