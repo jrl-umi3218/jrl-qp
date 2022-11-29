@@ -32,9 +32,28 @@ macro(addUnitTest name)
   set_target_properties(${name} PROPERTIES FOLDER "Tests")
 endmacro(addUnitTest)
 
+set(MultiIK_FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/MultiIK/arrowAllData.txt
+  ${CMAKE_CURRENT_BINARY_DIR}/MultiIK/triBlockDiag_a.txt
+  ${CMAKE_CURRENT_BINARY_DIR}/MultiIK/triBlockDiag_C.txt
+  ${CMAKE_CURRENT_BINARY_DIR}/MultiIK/triBlockDiag_G.txt
+  ${CMAKE_CURRENT_BINARY_DIR}/MultiIK/triBlockDiag_sol.txt
+  ${CMAKE_CURRENT_BINARY_DIR}/MultiIK/triBlockDiag_u.txt
+)
+
+add_custom_command(
+  OUTPUT ${MultiIK_FILES}
+  COMMAND ${CMAKE_COMMAND} -E tar xf ${CMAKE_CURRENT_SOURCE_DIR}/MultiIK.zip
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/MultiIK.zip
+  COMMENT "Extract MultiIK archive"
+)
+add_custom_target(extra-multiik-archive DEPENDS ${MultiIK_FILES})
+
 addUnitTest(ActiveSetTest)
 addUnitTest(blockArrowLLTTest)
 addUnitTest(BlockGISolverTest IKmatReader.cpp)
+add_dependencies(BlockGISolverTest extra-multiik-archive)
 addUnitTest(BoxAndSingleConstraintSolverTest)
 addUnitTest(GoldfarbIdnaniSolverTest QPSReader.cpp)
 addUnitTest(InternalTest)

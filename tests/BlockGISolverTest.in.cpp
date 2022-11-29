@@ -171,13 +171,13 @@ TEST_CASE("Small problem arrow up obj, ineq only")
 
 TEST_CASE("Sequential IK")
 {
-  const std::string dir = "C:/Work/code/optim/jrl-qp/tests/problems/";
-  MatrixXd G0 = readMat(dir + "MultiIK/triBlockDiag_G.txt");
-  MatrixXd C = readMat(dir + "MultiIK/triBlockDiag_C.txt").transpose();
-  VectorXd a = readMat(dir + "MultiIK/triBlockDiag_a.txt");
-  VectorXd u = readMat(dir + "MultiIK/triBlockDiag_u.txt");
+  const std::string dir = "@CMAKE_CURRENT_BINARY_DIR@";
+  MatrixXd G0 = readMat(dir + "/MultiIK/triBlockDiag_G.txt");
+  MatrixXd C = readMat(dir + "/MultiIK/triBlockDiag_C.txt").transpose();
+  VectorXd a = readMat(dir + "/MultiIK/triBlockDiag_a.txt");
+  VectorXd u = readMat(dir + "/MultiIK/triBlockDiag_u.txt");
   VectorXd l = VectorXd::Constant(u.size(), -std::numeric_limits<double>::infinity());
-  VectorXd x = readMat(dir + "MultiIK/triBlockDiag_sol.txt");
+  VectorXd x = readMat(dir + "/MultiIK/triBlockDiag_sol.txt");
 
   MatrixXd GD = G0;
   GoldfarbIdnaniSolver solverD(G0.rows(), C.cols(), false);
@@ -272,8 +272,8 @@ TEST_CASE("Sequential IK")
 
 TEST_CASE("Simultaneous IK")
 {
-  const std::string dir = "C:/Work/code/optim/jrl-qp/tests/problems/";
-  auto [G0, a, E, f, C0, u, xl, xu] = readIKPbFile(dir + "MultiIK/arrowAllData.txt");
+  const std::string dir = "@CMAKE_CURRENT_BINARY_DIR@";
+  auto [G0, a, E, f, C0, u, xl, xu] = readIKPbFile(dir + "/MultiIK/arrowAllData.txt");
   MatrixXd C = C0.transpose();
   VectorXd l = VectorXd::Constant(u.size(), -std::numeric_limits<double>::infinity());
 
