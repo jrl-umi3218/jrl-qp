@@ -14,7 +14,16 @@ The implementation is done with [Eigen](http://eigen.tuxfamily.org/index.php?tit
 
 Installation
 -------------
-Compilation has been tested on Linux (gcc/clang) and Windows (Visual Studio).
+
+Compilation is tested on Linux (gcc/clang), macOS and Windows (Visual Studio).
+
+### Install APT packages (Ubuntu LTS)
+
+```bash
+# For head version replace stable with head
+curl -1sLf 'https://dl.cloudsmith.io/public/mc-rtc/stable/setup.deb.sh' | sudo -E bash
+sudo apt install libjrl-qp-dev
+```
 
 ### Dependencies
 
