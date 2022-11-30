@@ -55,7 +55,6 @@ void triBlockDiagLSolve(const std::vector<MatrixRef> & diag,
   assert(diag.size() == subDiag.size() + 1);
 
   int n = 0;
-  int ni = 0;
   int l = 0;
   int li = 0;
   bool zero = true; //  Mi - B[i-1] X[i-1] is zero
@@ -115,7 +114,6 @@ void triBlockDiagLTransposeSolve(const std::vector<MatrixRef> & diag,
   // If it is not the case for i0, then it is not the case for any i<i0.
 
   int n = static_cast<int>(M.rows());
-  int ni = 0;
   int l = 0;
   int li = 0;
   bool zero = true; // Mi - B[i] X[i+1] is zero

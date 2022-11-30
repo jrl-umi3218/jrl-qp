@@ -161,8 +161,6 @@ bool testKKTFeasibility(const VectorConstRef & x,
                         double tau_d)
 {
   checkDimensions(x, u, C, bl, bu, xl, xu, transposedC);
-  int n = static_cast<int>(x.size());
-  int m = static_cast<int>(bl.size());
 
   double tau_x = tau_p * (1 + x.template lpNorm<Infinity>());
   double tau_u = tau_d * (1 + u.template lpNorm<Infinity>());
@@ -173,7 +171,7 @@ bool testKKTFeasibility(const VectorConstRef & x,
     cx = C.transpose() * x;
   else
     cx = C * x;
-  for(int i = 0; i < m; ++i)
+  for(int i = 0; i < bl.size(); ++i)
   {
     if(!checkKKTConstraint(cx[i], bl[i], bu[i], u[i], tau_x, tau_u)) return false;
   }
@@ -181,7 +179,7 @@ bool testKKTFeasibility(const VectorConstRef & x,
   // Check the bounds, if any
   for(int i = 0; i < xl.size(); ++i)
   {
-    if(!checkKKTConstraint(x[i], xl[i], xu[i], u[m + i], tau_x, tau_u)) return false;
+    if(!checkKKTConstraint(x[i], xl[i], xu[i], u[bl.size() + i], tau_x, tau_u)) return false;
   }
 
   return true;

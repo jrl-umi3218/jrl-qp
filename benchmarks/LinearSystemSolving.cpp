@@ -10,7 +10,7 @@
 
 using namespace Eigen;
 
-static void BM_TriangularSolve_NoInversePrecompute(benchmark::State & state)
+[[maybe_unused]] static void BM_TriangularSolve_NoInversePrecompute(benchmark::State & state)
 {
   MatrixXd R = MatrixXd::Random(50, 50);
   MatrixXd A = R.transpose() * R;
@@ -26,7 +26,7 @@ static void BM_TriangularSolve_NoInversePrecompute(benchmark::State & state)
 }
 // BENCHMARK(BM_TriangularSolve_NoInversePrecompute)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
 
-static void BM_TriangularSolve_InversePrecompute(benchmark::State & state)
+[[maybe_unused]] static void BM_TriangularSolve_InversePrecompute(benchmark::State & state)
 {
   MatrixXd R = MatrixXd::Random(50, 50);
   MatrixXd A = R.transpose() * R;
@@ -46,7 +46,7 @@ static void BM_TriangularSolve_InversePrecompute(benchmark::State & state)
 }
 // BENCHMARK(BM_TriangularSolve_InversePrecompute)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
 
-static void BM_TriangularInverse_AtOnce(benchmark::State & state)
+[[maybe_unused]] static void BM_TriangularInverse_AtOnce(benchmark::State & state)
 {
   const int n = static_cast<int>(state.range(0));
   MatrixXd A = MatrixXd::Random(n, n);
@@ -59,7 +59,7 @@ static void BM_TriangularInverse_AtOnce(benchmark::State & state)
 }
 // BENCHMARK(BM_TriangularInverse_AtOnce)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
 
-static void BM_TriangularInverse_Transpose(benchmark::State & state)
+[[maybe_unused]] static void BM_TriangularInverse_Transpose(benchmark::State & state)
 {
   const int n = static_cast<int>(state.range(0));
   MatrixXd A = MatrixXd::Random(n, n);
@@ -72,7 +72,7 @@ static void BM_TriangularInverse_Transpose(benchmark::State & state)
 }
 BENCHMARK(BM_TriangularInverse_Transpose)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
 
-static void BM_TriangularInverse_Transpose_ByHand(benchmark::State & state)
+[[maybe_unused]] static void BM_TriangularInverse_Transpose_ByHand(benchmark::State & state)
 {
   const int n = static_cast<int>(state.range(0));
   MatrixXd A = MatrixXd::Random(n, n);
@@ -98,7 +98,7 @@ static void BM_TriangularInverse_Transpose_ByHand(benchmark::State & state)
 }
 BENCHMARK(BM_TriangularInverse_Transpose_ByHand)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
 
-static void BM_TriangularInverse_ByCol(benchmark::State & state)
+[[maybe_unused]] static void BM_TriangularInverse_ByCol(benchmark::State & state)
 {
   const int n = static_cast<int>(state.range(0));
   MatrixXd A = MatrixXd::Random(n, n);
@@ -117,18 +117,18 @@ static void BM_TriangularInverse_ByCol(benchmark::State & state)
 }
 // BENCHMARK(BM_TriangularInverse_ByCol)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
 
-static void BM_PSD_Solve_Overhead(benchmark::State & state)
+[[maybe_unused]] static void BM_PSD_Solve_Overhead(benchmark::State & state)
 {
   Matrix<double, 6, 6> R;
   R.setRandom();
   for(auto _ : state)
   {
-    Matrix<double, 6, 6> A = R.transpose() * R;
+    [[maybe_unused]] Matrix<double, 6, 6> A = R.transpose() * R;
   }
 }
 // BENCHMARK(BM_PSD_Solve_Overhead);
 
-static void BM_PSD_Solve(benchmark::State & state)
+[[maybe_unused]] static void BM_PSD_Solve(benchmark::State & state)
 {
   Matrix<double, 6, 6> R;
   R.setRandom();
@@ -143,7 +143,7 @@ static void BM_PSD_Solve(benchmark::State & state)
 }
 // BENCHMARK(BM_PSD_Solve);
 
-static void BM_PSD_SolveInPlace(benchmark::State & state)
+[[maybe_unused]] static void BM_PSD_SolveInPlace(benchmark::State & state)
 {
   Matrix<double, 6, 6> R;
   R.setRandom();
@@ -158,7 +158,7 @@ static void BM_PSD_SolveInPlace(benchmark::State & state)
 }
 // BENCHMARK(BM_PSD_SolveInPlace);
 
-static void BM_PSD_AllInPlace(benchmark::State & state)
+[[maybe_unused]] static void BM_PSD_AllInPlace(benchmark::State & state)
 {
   Matrix<double, 6, 6> R;
   R.setRandom();
@@ -174,7 +174,7 @@ static void BM_PSD_AllInPlace(benchmark::State & state)
 }
 // BENCHMARK(BM_PSD_AllInPlace);
 
-static void BM_PSD_AllInPlaceByHand(benchmark::State & state)
+[[maybe_unused]] static void BM_PSD_AllInPlaceByHand(benchmark::State & state)
 {
   Matrix<double, 6, 6> R;
   R.setRandom();

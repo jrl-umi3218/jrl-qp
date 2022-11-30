@@ -33,7 +33,7 @@ struct JRLQP_DLLAPI ProblemCharacteristics
 
   ProblemCharacteristics(int nVar, int nObj) : nVar_(nVar), nObj_(nObj), rankObj_(nObj) {}
   ProblemCharacteristics(int nVar, int nObj, int nEq, int nIneq)
-  : nVar_(nVar), nObj_(nObj), rankObj_(nObj), nEq_(nEq), nIneq_(nIneq)
+  : nVar_(nVar), nObj_(nObj), nEq_(nEq), nIneq_(nIneq), rankObj_(nObj)
   {
   }
   ProblemCharacteristics(int nVar,

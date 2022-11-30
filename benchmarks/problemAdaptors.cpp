@@ -14,11 +14,6 @@ bool hasFiniteElements(const Eigen::VectorXd & x)
   return x.size() == 0 || ((x.array() > -Inf).any() && (x.array() < Inf).any());
 }
 
-bool doubleSided(const QPProblem<true> & pb)
-{
-  return hasFiniteElements(pb.l) && hasFiniteElements(pb.u);
-}
-
 // number of equality in the problem
 int me(const QPProblem<true> & pb)
 {

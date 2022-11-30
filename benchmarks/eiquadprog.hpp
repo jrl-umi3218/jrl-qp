@@ -1,3 +1,5 @@
+#pragma GCC system_header
+
 #ifndef _EIGEN_QUADSOLVE_HPP_
 #define _EIGEN_QUADSOLVE_HPP_
 

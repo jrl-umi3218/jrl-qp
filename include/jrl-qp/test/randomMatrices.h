@@ -159,7 +159,7 @@ inline Eigen::MatrixXd randn(Eigen::Index rows, Eigen::Index cols, Eigen::Index 
   Eigen::VectorXd s = Eigen::VectorXd::Zero(p);
   s.head(rank).setRandom();
   // set the correct variance
-  s.head(rank) *= std::sqrt((3. * rows * cols) / rank);
+  s.head(rank) *= std::sqrt((3. * static_cast<double>(rows) * static_cast<double>(cols)) / static_cast<double>(rank));
 
   Eigen::MatrixXd M(rows, cols);
 

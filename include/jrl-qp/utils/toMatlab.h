@@ -8,22 +8,9 @@
 
 namespace jrl::qp::utils
 {
-/** Accept any class That convert to Eigen::Ref<const Eigen::MatrixXd>.*/
-static std::true_type isConvertibleToRef_(const Eigen::Ref<const Eigen::MatrixXd> &)
-{
-  return {};
-}
-/** Fallback function that will be used for type not convertible to Eigen::Ref<const Eigen::MatrixXd>. */
-static std::false_type isConvertibleToRef_(...)
-{
-  return {};
-}
-
-/** Check if class \t T can be converted to Eigen::Ref<const Eigen::MatrixXd>.
- * Adapted from https://stackoverflow.com/a/5998303/11611648
- */
+/** Check if class \t T can be converted to Eigen::Ref<const Eigen::MatrixXd> */
 template<typename T>
-inline constexpr bool is_convertible_to_eigen_ref_v = decltype(isConvertibleToRef_(std::declval<const T &>()))::value;
+inline constexpr bool is_convertible_to_eigen_ref_v = std::is_convertible_v<T, Eigen::Ref<const Eigen::MatrixXd>>;
 
 /** A small utility class to write Eigen matrices in a stream with a matlab-readable format.
  *

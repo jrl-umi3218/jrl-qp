@@ -118,7 +118,7 @@ class ProblemFixture : public ::benchmark::Fixture
 public:
   void SetUp(const ::benchmark::State & st)
   {
-    int n = st.range(0);
+    int n = static_cast<int>(st.range(0));
     if(problems.find(n) == problems.end())
     {
       i = -1;
@@ -231,129 +231,135 @@ const double f = 1. / STEPS;
   }                                                                            \
   BENCHMARK_REGISTER_F(fixture, Overhead)->Unit(benchmark::kMicrosecond) otherArgs
 
-#define BENCH_GI(fixture, otherArgs)                               \
-  BENCHMARK_DEFINE_F(fixture, GI)(benchmark::State & st)           \
-  {                                                                \
-    int it = 0;                                                    \
-    int n = static_cast<int>(st.range(0));                         \
-    GoldfarbIdnaniSolver solver(nVar(n), nCstr(n), true);          \
-    for(auto _ : st)                                               \
-    {                                                              \
-      auto & qp = getGIPb(n);                                      \
-      for(int i = 0; i < STEPS; ++i)                               \
-      {                                                            \
-        const auto & a = geta(n, i * f);                           \
-        solver.solve(qp.G, a, qp.C, qp.l, qp.u, qp.xl, qp.xu);     \
-        it += solver.iterations();                                 \
-      }                                                            \
-    }                                                              \
-    st.counters["it"] = static_cast<double>(it) / st.iterations(); \
-  }                                                                \
+#define BENCH_GI(fixture, otherArgs)                                                    \
+  BENCHMARK_DEFINE_F(fixture, GI)(benchmark::State & st)                                \
+  {                                                                                     \
+    int it = 0;                                                                         \
+    int n = static_cast<int>(st.range(0));                                              \
+    GoldfarbIdnaniSolver solver(nVar(n), nCstr(n), true);                               \
+    for(auto _ : st)                                                                    \
+    {                                                                                   \
+      auto & qp = getGIPb(n);                                                           \
+      for(int i = 0; i < STEPS; ++i)                                                    \
+      {                                                                                 \
+        const auto & a = geta(n, i * f);                                                \
+        solver.solve(qp.G, a, qp.C, qp.l, qp.u, qp.xl, qp.xu);                          \
+        it += solver.iterations();                                                      \
+      }                                                                                 \
+    }                                                                                   \
+    st.counters["it"] = static_cast<double>(it) / static_cast<double>(st.iterations()); \
+  }                                                                                     \
   BENCHMARK_REGISTER_F(fixture, GI)->Unit(benchmark::kMicrosecond) otherArgs
 
-#define BENCH_GI_EX(fixture, otherArgs)                                 \
-  BENCHMARK_DEFINE_F(fixture, GI_EX)(benchmark::State & st)             \
-  {                                                                     \
-    int n = static_cast<int>(st.range(0));                              \
-    experimental::GoldfarbIdnaniSolver solver(nVar(n), nCstr(n), true); \
-    SolverOptions opt;                                                  \
-    opt.warmStart_ = true;                                              \
-    solver.options(opt);                                                \
-    int it = 0;                                                         \
-    for(auto _ : st)                                                    \
-    {                                                                   \
-      solver.resetActiveSet();                                          \
-      auto & qp = getGIPb(n);                                           \
-      for(int i = 0; i < STEPS; ++i)                                    \
-      {                                                                 \
-        const auto & a = geta(n, i * f);                                \
-        solver.solve(qp.G, a, qp.C, qp.l, qp.u, qp.xl, qp.xu);          \
-        it += solver.iterations();                                      \
-      }                                                                 \
-    }                                                                   \
-    st.counters["it"] = static_cast<double>(it) / st.iterations();      \
-  }                                                                     \
+#define BENCH_GI_EX(fixture, otherArgs)                                                 \
+  BENCHMARK_DEFINE_F(fixture, GI_EX)(benchmark::State & st)                             \
+  {                                                                                     \
+    int n = static_cast<int>(st.range(0));                                              \
+    experimental::GoldfarbIdnaniSolver solver(nVar(n), nCstr(n), true);                 \
+    SolverOptions opt;                                                                  \
+    opt.warmStart_ = true;                                                              \
+    solver.options(opt);                                                                \
+    int it = 0;                                                                         \
+    for(auto _ : st)                                                                    \
+    {                                                                                   \
+      solver.resetActiveSet();                                                          \
+      auto & qp = getGIPb(n);                                                           \
+      for(int i = 0; i < STEPS; ++i)                                                    \
+      {                                                                                 \
+        const auto & a = geta(n, i * f);                                                \
+        solver.solve(qp.G, a, qp.C, qp.l, qp.u, qp.xl, qp.xu);                          \
+        it += solver.iterations();                                                      \
+      }                                                                                 \
+    }                                                                                   \
+    st.counters["it"] = static_cast<double>(it) / static_cast<double>(st.iterations()); \
+  }                                                                                     \
   BENCHMARK_REGISTER_F(fixture, GI_EX)->Unit(benchmark::kMicrosecond) otherArgs
 
-//#define BENCH_EIQP(fixture, otherArgs)                                     \
-//  BENCHMARK_DEFINE_F(fixture, EIQP)(benchmark::State & st)                 \
-//  {                                                                        \
-//    auto sig = signature(st);                                              \
-//    if(skipEiQuadprog(sig)) st.SkipWithError("Skipping EiQuadprog");       \
-//    Eigen::VectorXd x(nVar(sig));                                          \
-//    for(auto _ : st)                                                       \
-//    {                                                                      \
-//      auto & qp = getEiQuadprogPb(sig);                                    \
-//      Eigen::solve_quadprog(qp.G, qp.g0, qp.CE, qp.ce0, qp.CI, qp.ci0, x); \
-//    }                                                                      \
-//  }                                                                        \
-//  BENCHMARK_REGISTER_F(fixture, EIQP)->Unit(benchmark::kMicrosecond) otherArgs
+/*
+#define BENCH_EIQP(fixture, otherArgs)                                     \
+BENCHMARK_DEFINE_F(fixture, EIQP)(benchmark::State & st)                 \
+{                                                                        \
+  auto sig = signature(st);                                              \
+  if(skipEiQuadprog(sig)) st.SkipWithError("Skipping EiQuadprog");       \
+  Eigen::VectorXd x(nVar(sig));                                          \
+  for(auto _ : st)                                                       \
+  {                                                                      \
+    auto & qp = getEiQuadprogPb(sig);                                    \
+    Eigen::solve_quadprog(qp.G, qp.g0, qp.CE, qp.ce0, qp.CI, qp.ci0, x); \
+  }                                                                      \
+}                                                                        \
+BENCHMARK_REGISTER_F(fixture, EIQP)->Unit(benchmark::kMicrosecond) otherArgs
+*/
 #define BENCH_EIQP(fixture, otherArgs) NOP
-//
-//#ifdef JRLQP_USE_QUADPROG
-//#  define BENCH_QUADPROG(fixture, otherArgs)                                \
-//    BENCHMARK_DEFINE_F(fixture, QuadProg)(benchmark::State & st)            \
-//    {                                                                       \
-//      auto sig = signature(st);                                             \
-//      if(skipQuadprog(sig)) st.SkipWithError("Skipping Quadprog");          \
-//      Eigen::QuadProgDense solver(nVar(sig), nEq(sig), nSSIneqAndBnd(sig)); \
-//                                                                            \
-//      for(auto _ : st)                                                      \
-//      {                                                                     \
-//        auto & qp = getQuadprogPb(sig);                                     \
-//        solver.solve(qp.Q, qp.c, qp.Aeq, qp.beq, qp.Aineq, qp.bineq);       \
-//      }                                                                     \
-//    }                                                                       \
-//    BENCHMARK_REGISTER_F(fixture, QuadProg)->Unit(benchmark::kMicrosecond) otherArgs
-//#else
+
+/*
+#ifdef JRLQP_USE_QUADPROG
+#  define BENCH_QUADPROG(fixture, otherArgs)                                \
+    BENCHMARK_DEFINE_F(fixture, QuadProg)(benchmark::State & st)            \
+    {                                                                       \
+      auto sig = signature(st);                                             \
+      if(skipQuadprog(sig)) st.SkipWithError("Skipping Quadprog");          \
+      Eigen::QuadProgDense solver(nVar(sig), nEq(sig), nSSIneqAndBnd(sig)); \
+                                                                            \
+      for(auto _ : st)                                                      \
+      {                                                                     \
+        auto & qp = getQuadprogPb(sig);                                     \
+        solver.solve(qp.Q, qp.c, qp.Aeq, qp.beq, qp.Aineq, qp.bineq);       \
+      }                                                                     \
+    }                                                                       \
+    BENCHMARK_REGISTER_F(fixture, QuadProg)->Unit(benchmark::kMicrosecond) otherArgs
+#else
+*/
 #define BENCH_QUADPROG(fixture, otherArgs) NOP
 //#endif
 
 #ifdef JRLQP_USE_LSSOL
-#  define BENCH_LSSOL(fixture, otherArgs)                            \
-    BENCHMARK_DEFINE_F(fixture, Lssol)(benchmark::State & st)        \
-    {                                                                \
-      int n = static_cast<int>(st.range(0));                         \
-      Eigen::LSSOL_QP solver(nVar(n), nCstr(n), Eigen::lssol::QP2);  \
-      solver.optimalityMaxIter(5000);                                \
-      solver.feasibilityMaxIter(5000);                               \
-      solver.warm(true);                                             \
-      solver.persistence(true);                                      \
-      int it = 0;                                                    \
-      for(auto _ : st)                                               \
-      {                                                              \
-        auto & qp = getLssolPb(n);                                   \
-        solver.reset();                                              \
-        for(int i = 0; i < STEPS; ++i)                               \
-        {                                                            \
-          const auto & a = geta(n, i * f);                           \
-          qp.Q.setIdentity();                                        \
-          solver.solve(qp.Q, a, qp.C, qp.l, qp.u);                   \
-          it += solver.iter();                                       \
-        }                                                            \
-      }                                                              \
-      st.counters["it"] = static_cast<double>(it) / st.iterations(); \
-    }                                                                \
+#  define BENCH_LSSOL(fixture, otherArgs)                                                 \
+    BENCHMARK_DEFINE_F(fixture, Lssol)(benchmark::State & st)                             \
+    {                                                                                     \
+      int n = static_cast<int>(st.range(0));                                              \
+      Eigen::LSSOL_QP solver(nVar(n), nCstr(n), Eigen::lssol::QP2);                       \
+      solver.optimalityMaxIter(5000);                                                     \
+      solver.feasibilityMaxIter(5000);                                                    \
+      solver.warm(true);                                                                  \
+      solver.persistence(true);                                                           \
+      int it = 0;                                                                         \
+      for(auto _ : st)                                                                    \
+      {                                                                                   \
+        auto & qp = getLssolPb(n);                                                        \
+        solver.reset();                                                                   \
+        for(int i = 0; i < STEPS; ++i)                                                    \
+        {                                                                                 \
+          const auto & a = geta(n, i * f);                                                \
+          qp.Q.setIdentity();                                                             \
+          solver.solve(qp.Q, a, qp.C, qp.l, qp.u);                                        \
+          it += solver.iter();                                                            \
+        }                                                                                 \
+      }                                                                                   \
+      st.counters["it"] = static_cast<double>(it) / static_cast<double>(st.iterations()); \
+    }                                                                                     \
     BENCHMARK_REGISTER_F(fixture, Lssol)->Unit(benchmark::kMicrosecond) otherArgs
 #else
 #  define BENCH_LSSOL(fixture, otherArgs) NOP
 #endif
-//
-//#ifdef JRLQP_USE_QLD
-//#  define BENCH_QLD(fixture, otherArgs)                                  \
-//    BENCHMARK_DEFINE_F(fixture, QLD)(benchmark::State & st)              \
-//    {                                                                    \
-//      auto sig = signature(st);                                          \
-//      if(skipQLD(sig)) st.SkipWithError("Skipping QLD");                 \
-//      Eigen::QLDDirect solverQLD(nVar(sig), nEq(sig), nSSIneq(sig));     \
-//      for(auto _ : st)                                                   \
-//      {                                                                  \
-//        auto & qp = getQLDPb(sig);                                       \
-//        solverQLD.solve(qp.Q, qp.c, qp.A, qp.b, qp.xl, qp.xu, nEq(sig)); \
-//      }                                                                  \
-//    }                                                                    \
-//    BENCHMARK_REGISTER_F(fixture, QLD)->Unit(benchmark::kMicrosecond) otherArgs
-//#else
+
+/*
+#ifdef JRLQP_USE_QLD
+#  define BENCH_QLD(fixture, otherArgs)                                  \
+    BENCHMARK_DEFINE_F(fixture, QLD)(benchmark::State & st)              \
+    {                                                                    \
+      auto sig = signature(st);                                          \
+      if(skipQLD(sig)) st.SkipWithError("Skipping QLD");                 \
+      Eigen::QLDDirect solverQLD(nVar(sig), nEq(sig), nSSIneq(sig));     \
+      for(auto _ : st)                                                   \
+      {                                                                  \
+        auto & qp = getQLDPb(sig);                                       \
+        solverQLD.solve(qp.Q, qp.c, qp.A, qp.b, qp.xl, qp.xu, nEq(sig)); \
+      }                                                                  \
+    }                                                                    \
+    BENCHMARK_REGISTER_F(fixture, QLD)->Unit(benchmark::kMicrosecond) otherArgs
+#else
+*/
 #define BENCH_QLD(fixture, otherArgs) NOP
 //#endif
 
@@ -361,10 +367,10 @@ const double f = 1. / STEPS;
   BENCH_OVERHEAD(fixture, otherArgs); \
   BENCH_GI(fixture, otherArgs);       \
   BENCH_GI_EX(fixture, otherArgs);    \
-  BENCH_EIQP(fixture, otherArgs);     \
-  BENCH_QUADPROG(fixture, otherArgs); \
+  BENCH_EIQP(fixture, otherArgs)      \
+  BENCH_QUADPROG(fixture, otherArgs)  \
   BENCH_LSSOL(fixture, otherArgs);    \
-  BENCH_QLD(fixture, otherArgs);
+  BENCH_QLD(fixture, otherArgs)
 
 auto minl = [](const std::vector<double> & v) { return *(std::min_element(std::begin(v), std::end(v))); };
 auto maxl = [](const std::vector<double> & v) { return *(std::max_element(std::begin(v), std::end(v))); };

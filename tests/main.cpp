@@ -32,7 +32,6 @@ int main()
   s.log(1, "b", Vector3d(3, -1, 2));
 
   int c = 2;
-  double d;
 
   JRLQP_LOG(l, 1, A, c);
   JRLQP_LOG_COMMENT(l, 1, "This is a comment");

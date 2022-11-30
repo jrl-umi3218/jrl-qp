@@ -180,7 +180,7 @@ TEST_CASE("Sequential IK")
   VectorXd x = readMat(dir + "/MultiIK/triBlockDiag_sol.txt");
 
   MatrixXd GD = G0;
-  GoldfarbIdnaniSolver solverD(G0.rows(), C.cols(), false);
+  GoldfarbIdnaniSolver solverD(static_cast<int>(G0.rows()), static_cast<int>(C.cols()), false);
   auto retD = solverD.solve(GD, a, C, l, u, VectorXd(0), VectorXd(0));
   VectorXd xd0 = solverD.solution();
 
@@ -195,7 +195,7 @@ TEST_CASE("Sequential IK")
     int j = 0;
     while(C(j, i) == 0) ++j;
 
-    if(j >= nbCstr.size() * nDofs)
+    if(j >= static_cast<int>(nbCstr.size()) * nDofs)
     {
       nbCstr.push_back(1);
     }
@@ -278,8 +278,9 @@ TEST_CASE("Simultaneous IK")
   VectorXd l = VectorXd::Constant(u.size(), -std::numeric_limits<double>::infinity());
 
   MatrixXd GD = G0;
-  GoldfarbIdnaniSolver solverD(G0.rows(), C.cols(), true);
+  GoldfarbIdnaniSolver solverD(static_cast<int>(G0.rows()), static_cast<int>(C.cols()), true);
   auto retD = solverD.solve(GD, a, C, l, u, xl, xu);
+  FAST_CHECK_EQ(retD, TerminationStatus::SUCCESS);
   VectorXd xd0 = solverD.solution();
 
   MatrixXd GBD = G0;

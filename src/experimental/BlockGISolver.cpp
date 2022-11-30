@@ -212,9 +212,6 @@ DualSolver::StepLength BlockGISolver::computeStepLength_(const internal::Selecte
         cx = pb_.C.col(p).dot(x);
         cz = pb_.C.col(p).dot(z);
         break;
-      case ActivationStatus::EQUALITY:
-        assert(false);
-        break;
       case ActivationStatus::LOWER_BOUND:
         pb = sc.index() - pb_.C.nbCstr();
         b = pb_.xl[pb];
@@ -227,11 +224,16 @@ DualSolver::StepLength BlockGISolver::computeStepLength_(const internal::Selecte
         cx = x[pb];
         cz = z[pb];
         break;
+      case ActivationStatus::EQUALITY:
       case ActivationStatus::FIXED:
-        assert(false);
-        break;
       default:
+#ifdef __GNUC__
+        __builtin_unreachable();
+#elif defined _MSC_VER
+        __assume(false);
+#else
         assert(false);
+#endif
     }
     t2 = (b - cx) / cz;
   }
@@ -239,7 +241,7 @@ DualSolver::StepLength BlockGISolver::computeStepLength_(const internal::Selecte
   return {t1, t2, l};
 }
 
-bool BlockGISolver::addConstraint_(const internal::SelectedConstraint & sc)
+bool BlockGISolver::addConstraint_(const internal::SelectedConstraint & /*sc*/)
 {
   auto d = work_d_.asVector(nbVar_);
   return QR_.add(d);
@@ -270,7 +272,7 @@ double BlockGISolver::dot_(const internal::SelectedConstraint & sc, const Vector
   }
 }
 
-void BlockGISolver::resize_(int nbVar, int nbCstr, bool useBounds)
+void BlockGISolver::resize_(int nbVar, int nbCstr, bool /*useBounds*/)
 {
   if(nbVar != nbVar_)
   {

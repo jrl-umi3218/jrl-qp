@@ -314,7 +314,7 @@ std::pair<QPProblem<>, ProblemProperties> QPSReader::read(const std::string & fi
   return {qp, properties};
 }
 
-void QPSReader::processLine(const std::string & line, LineType type)
+void QPSReader::processLine(const std::string & line, LineType /*type*/)
 {
   switch(context.section)
   {

@@ -9,7 +9,7 @@
 using namespace Eigen;
 
 // A = B
-static void BM_Copy_MatrixXd(benchmark::State & state)
+[[maybe_unused]] static void BM_Copy_MatrixXd(benchmark::State & state)
 {
   MatrixXd source = MatrixXd::Random(state.range(0), state.range(0));
   MatrixXd target(state.range(0), state.range(0));
@@ -18,7 +18,7 @@ static void BM_Copy_MatrixXd(benchmark::State & state)
 }
 
 // A = B^T
-static void BM_Copy_MatrixXd_Source_Transpose(benchmark::State & state)
+[[maybe_unused]] static void BM_Copy_MatrixXd_Source_Transpose(benchmark::State & state)
 {
   MatrixXd source = MatrixXd::Random(state.range(0), state.range(0));
   MatrixXd target(state.range(0), state.range(0));
@@ -27,7 +27,7 @@ static void BM_Copy_MatrixXd_Source_Transpose(benchmark::State & state)
 }
 
 // A^T = B
-static void BM_Copy_MatrixXd_Target_Transpose(benchmark::State & state)
+[[maybe_unused]] static void BM_Copy_MatrixXd_Target_Transpose(benchmark::State & state)
 {
   MatrixXd source = MatrixXd::Random(state.range(0), state.range(0));
   MatrixXd target(state.range(0), state.range(0));
@@ -36,7 +36,7 @@ static void BM_Copy_MatrixXd_Target_Transpose(benchmark::State & state)
 }
 
 // A += B
-static void BM_Add_MatrixXd(benchmark::State & state)
+[[maybe_unused]] static void BM_Add_MatrixXd(benchmark::State & state)
 {
   MatrixXd source = MatrixXd::Random(state.range(0), state.range(0));
   MatrixXd target(state.range(0), state.range(0));
@@ -45,7 +45,7 @@ static void BM_Add_MatrixXd(benchmark::State & state)
 }
 
 // A += B^T
-static void BM_Add_MatrixXd_Source_Transpose(benchmark::State & state)
+[[maybe_unused]] static void BM_Add_MatrixXd_Source_Transpose(benchmark::State & state)
 {
   MatrixXd source = MatrixXd::Random(state.range(0), state.range(0));
   MatrixXd target(state.range(0), state.range(0));
@@ -54,7 +54,7 @@ static void BM_Add_MatrixXd_Source_Transpose(benchmark::State & state)
 }
 
 // A += B^T
-static void BM_Add_MatrixXd_Target_Transpose(benchmark::State & state)
+[[maybe_unused]] static void BM_Add_MatrixXd_Target_Transpose(benchmark::State & state)
 {
   MatrixXd source = MatrixXd::Random(state.range(0), state.range(0));
   MatrixXd target(state.range(0), state.range(0));
@@ -63,7 +63,7 @@ static void BM_Add_MatrixXd_Target_Transpose(benchmark::State & state)
 }
 
 // y = A*x
-static void BM_Mult_VectorXd(benchmark::State & state)
+[[maybe_unused]] static void BM_Mult_VectorXd(benchmark::State & state)
 {
   MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
   VectorXd x = VectorXd::Random(state.range(0));
@@ -73,7 +73,7 @@ static void BM_Mult_VectorXd(benchmark::State & state)
 }
 
 // row = (A*x)^T
-static void BM_Mult_VectorXd_Source_Transpose(benchmark::State & state)
+[[maybe_unused]] static void BM_Mult_VectorXd_Source_Transpose(benchmark::State & state)
 {
   MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
   VectorXd x = VectorXd::Random(state.range(0));
@@ -83,7 +83,7 @@ static void BM_Mult_VectorXd_Source_Transpose(benchmark::State & state)
 }
 
 // row^T = A*x
-static void BM_Mult_VectorXd_Target_Transpose(benchmark::State & state)
+[[maybe_unused]] static void BM_Mult_VectorXd_Target_Transpose(benchmark::State & state)
 {
   MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
   VectorXd x = VectorXd::Random(state.range(0));
@@ -93,7 +93,7 @@ static void BM_Mult_VectorXd_Target_Transpose(benchmark::State & state)
 }
 
 // y = L*x
-static void BM_Mult_VectorXd_Triangular(benchmark::State & state)
+[[maybe_unused]] static void BM_Mult_VectorXd_Triangular(benchmark::State & state)
 {
   MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
   VectorXd x = VectorXd::Random(state.range(0));
@@ -103,7 +103,7 @@ static void BM_Mult_VectorXd_Triangular(benchmark::State & state)
 }
 
 // y = L*x
-static void BM_Mult_VectorXd_TriangularOptim4(benchmark::State & state)
+[[maybe_unused]] static void BM_Mult_VectorXd_TriangularOptim4(benchmark::State & state)
 {
   MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
   A.template triangularView<StrictlyUpper>().setZero();
@@ -128,7 +128,7 @@ static void BM_Mult_VectorXd_TriangularOptim4(benchmark::State & state)
 }
 
 // y = L*x
-static void BM_Mult_VectorXd_TriangularOptim8(benchmark::State & state)
+[[maybe_unused]] static void BM_Mult_VectorXd_TriangularOptim8(benchmark::State & state)
 {
   MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
   A.template triangularView<StrictlyUpper>().setZero();
@@ -153,7 +153,7 @@ static void BM_Mult_VectorXd_TriangularOptim8(benchmark::State & state)
 }
 
 // y = L*x
-static void BM_Mult_VectorXd_TriangularOptim16(benchmark::State & state)
+[[maybe_unused]] static void BM_Mult_VectorXd_TriangularOptim16(benchmark::State & state)
 {
   MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
   A.template triangularView<StrictlyUpper>().setZero();
@@ -178,7 +178,7 @@ static void BM_Mult_VectorXd_TriangularOptim16(benchmark::State & state)
 }
 
 // C = A*B
-static void BM_Mult_MatrixXd(benchmark::State & state)
+[[maybe_unused]] static void BM_Mult_MatrixXd(benchmark::State & state)
 {
   MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
   MatrixXd B = MatrixXd::Random(state.range(0), state.range(0));
@@ -188,7 +188,7 @@ static void BM_Mult_MatrixXd(benchmark::State & state)
 }
 
 // C = A^T*B
-static void BM_Mult_MatrixXd_AT(benchmark::State & state)
+[[maybe_unused]] static void BM_Mult_MatrixXd_AT(benchmark::State & state)
 {
   MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
   MatrixXd B = MatrixXd::Random(state.range(0), state.range(0));
@@ -198,7 +198,7 @@ static void BM_Mult_MatrixXd_AT(benchmark::State & state)
 }
 
 // C = A*B^T
-static void BM_Mult_MatrixXd_BT(benchmark::State & state)
+[[maybe_unused]] static void BM_Mult_MatrixXd_BT(benchmark::State & state)
 {
   MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
   MatrixXd B = MatrixXd::Random(state.range(0), state.range(0));
@@ -208,7 +208,7 @@ static void BM_Mult_MatrixXd_BT(benchmark::State & state)
 }
 
 // C = A^T*B^T
-static void BM_Mult_MatrixXd_AT_BT(benchmark::State & state)
+[[maybe_unused]] static void BM_Mult_MatrixXd_AT_BT(benchmark::State & state)
 {
   MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
   MatrixXd B = MatrixXd::Random(state.range(0), state.range(0));
@@ -218,7 +218,7 @@ static void BM_Mult_MatrixXd_AT_BT(benchmark::State & state)
 }
 
 // C^T = A*B
-static void BM_Mult_MatrixXd_Target_Transpose(benchmark::State & state)
+[[maybe_unused]] static void BM_Mult_MatrixXd_Target_Transpose(benchmark::State & state)
 {
   MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
   MatrixXd B = MatrixXd::Random(state.range(0), state.range(0));
@@ -228,7 +228,7 @@ static void BM_Mult_MatrixXd_Target_Transpose(benchmark::State & state)
 }
 
 // Y = L*X
-static void BM_Mult_MatrixXd_Triangular(benchmark::State & state)
+[[maybe_unused]] static void BM_Mult_MatrixXd_Triangular(benchmark::State & state)
 {
   MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
   MatrixXd B = MatrixXd::Random(state.range(0), state.range(0));
@@ -238,7 +238,7 @@ static void BM_Mult_MatrixXd_Triangular(benchmark::State & state)
 }
 
 // y = L*x
-static void BM_Mult_MatrixXd_TriangularOptim4(benchmark::State & state)
+[[maybe_unused]] static void BM_Mult_MatrixXd_TriangularOptim4(benchmark::State & state)
 {
   MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
   A.template triangularView<StrictlyUpper>().setZero();
@@ -263,7 +263,7 @@ static void BM_Mult_MatrixXd_TriangularOptim4(benchmark::State & state)
 }
 
 // y = L*x
-static void BM_Mult_MatrixXd_TriangularOptim8(benchmark::State & state)
+[[maybe_unused]] static void BM_Mult_MatrixXd_TriangularOptim8(benchmark::State & state)
 {
   MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
   A.template triangularView<StrictlyUpper>().setZero();
@@ -288,7 +288,7 @@ static void BM_Mult_MatrixXd_TriangularOptim8(benchmark::State & state)
 }
 
 // y = L*x
-static void BM_Mult_MatrixXd_TriangularOptim16(benchmark::State & state)
+[[maybe_unused]] static void BM_Mult_MatrixXd_TriangularOptim16(benchmark::State & state)
 {
   MatrixXd A = MatrixXd::Random(state.range(0), state.range(0));
   A.template triangularView<StrictlyUpper>().setZero();
@@ -313,7 +313,7 @@ static void BM_Mult_MatrixXd_TriangularOptim16(benchmark::State & state)
 }
 
 // y = D*x
-static void BM_Mult_Diagonal_VectorXd(benchmark::State & state)
+[[maybe_unused]] static void BM_Mult_Diagonal_VectorXd(benchmark::State & state)
 {
   VectorXd d = VectorXd::Random(state.range(0));
   VectorXd x = VectorXd::Random(state.range(0));
@@ -323,7 +323,7 @@ static void BM_Mult_Diagonal_VectorXd(benchmark::State & state)
 }
 
 // y = d*x
-static void BM_Mult_scalar_VectorXd(benchmark::State & state)
+[[maybe_unused]] static void BM_Mult_scalar_VectorXd(benchmark::State & state)
 {
   double d = VectorXd::Random(1)[0];
   VectorXd x = VectorXd::Random(state.range(0));

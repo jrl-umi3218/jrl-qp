@@ -218,9 +218,6 @@ DualSolver::StepLength GoldfarbIdnaniSolver::computeStepLength_(const internal::
         cx = pb_.C.col(p).dot(x);
         cz = pb_.C.col(p).dot(z);
         break;
-      case ActivationStatus::EQUALITY:
-        assert(false);
-        break;
       case ActivationStatus::LOWER_BOUND:
         pb = np.bndIndex();
         b = pb_.xl[pb];
@@ -233,11 +230,16 @@ DualSolver::StepLength GoldfarbIdnaniSolver::computeStepLength_(const internal::
         cx = x[pb];
         cz = z[pb];
         break;
+      case ActivationStatus::EQUALITY:
       case ActivationStatus::FIXED:
-        assert(false);
-        break;
       default:
+#ifdef __GNUC__
+        __builtin_unreachable();
+#elif defined _MSC_VER
+        __assume(false);
+#else
         assert(false);
+#endif
     }
     t2 = (b - cx) / cz;
   }
@@ -245,7 +247,7 @@ DualSolver::StepLength GoldfarbIdnaniSolver::computeStepLength_(const internal::
   return {t1, t2, l};
 }
 
-bool GoldfarbIdnaniSolver::addConstraint_(const internal::SelectedConstraint & sc)
+bool GoldfarbIdnaniSolver::addConstraint_(const internal::SelectedConstraint & /*sc*/)
 {
   int q = A_.nbActiveCstr(); // This already counts the new constraint
   auto d = work_d_.asVector(nbVar_);
@@ -266,7 +268,6 @@ bool GoldfarbIdnaniSolver::addConstraint_(const internal::SelectedConstraint & s
 bool GoldfarbIdnaniSolver::removeConstraint_(int l)
 {
   int q = A_.nbActiveCstr(); // This already counts that the constraint was removed
-  auto d = work_d_.asVector(nbVar_);
   auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
   auto R = work_R_.asMatrix(q + 1, q + 1, nbVar_);
 
@@ -289,7 +290,7 @@ double GoldfarbIdnaniSolver::dot_(const internal::SelectedConstraint & sc, const
   return np.dot(z);
 }
 
-void GoldfarbIdnaniSolver::resize_(int nbVar, int nbCstr, bool useBounds)
+void GoldfarbIdnaniSolver::resize_(int nbVar, int /*nbCstr*/, bool /*useBounds*/)
 {
   if(nbVar != nbVar_)
   {

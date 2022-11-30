@@ -59,7 +59,7 @@ public:
   void solveL(VectorRef out, const VectorConstRef & in) const;
   void solveL(VectorRef out, const internal::SingleNZSegmentVector & in) const;
 
-  friend std::ostream & operator<<(std::ostream & os, const StructuredG & G)
+  friend std::ostream & operator<<(std::ostream & os, const StructuredG & /*G*/)
   {
     // TODO
     return os;

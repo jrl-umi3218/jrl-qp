@@ -36,7 +36,7 @@ public:
 
   void transposeMult(VectorRef out, const VectorConstRef & in) const;
 
-  friend std::ostream & operator<<(std::ostream & os, const StructuredC & C)
+  friend std::ostream & operator<<(std::ostream & os, const StructuredC & /*C*/)
   {
     // TODO
     return os;
