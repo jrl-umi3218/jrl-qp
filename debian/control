@@ -1,0 +1,37 @@
+Source: jrl-qp
+Priority: optional
+Maintainer: Pierre Gergondet <pierre.gergondet+ppa@gmail.com>
+Standards-Version: 3.9.5
+Section: libs
+Homepage: http://github.com/jrl-umi3218/jrl-qp
+Build-Depends: debhelper (>= 9),
+               pkg-config,
+               cmake,
+               doxygen,
+               libeigen3-dev
+
+Package: libjrl-qp-dev
+Section: libdevel
+Architecture: any
+Depends: pkg-config,
+         cmake,
+         libeigen3-dev (>= 3.2),
+         libjrl-qp (= ${binary:Version}),
+         ${misc:Depends}
+Suggests: libjrl-qp-doc
+Description: jrl-qp - development files
+
+Package: libjrl-qp
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends},
+         ${misc:Depends}
+Description: jrl-qp - QP solver with Eigen3
+
+Package: libjrl-qp-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Multi-Arch: foreign
+Suggests: libjrl-qp-dev
+Description: jrl-qp API documentation

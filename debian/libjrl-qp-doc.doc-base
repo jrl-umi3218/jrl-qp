@@ -1,0 +1,8 @@
+Document: libjrl-qp-documentation
+Title: API documentation for jrl-qp
+Author: jrl-qp authors
+Section: Programming/C++
+
+Format: HTML
+Index: /usr/share/doc/jrl-qp/doxygen-html/index.html
+Files: /usr/share/doc/jrl-qp/doxygen-html/*.html

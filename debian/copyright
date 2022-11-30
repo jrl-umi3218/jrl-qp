@@ -1,0 +1,8 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: jrl-qp
+Source: https://github.com/jrl-umi3218/jrl-qp
+
+Files: *
+Copyright: 2020-2022 CNRS-AIST JRL
+License: BSD
+ See `/usr/share/common-licenses/BSD'.
