@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['no_5fiter',['NO_ITER',['../namespacejrl_1_1qp.html#ad24df199de1a6f61275d4c96107b5dc3a00749b615db836bc0f8fd5f087b2595a',1,'jrl::qp']]],
-  ['non_5fpos_5fhessian',['NON_POS_HESSIAN',['../namespacejrl_1_1qp.html#a2be96344dd3712e23a7eabc0d530062cae88b32132c55177d5b27f4cf74e0de9d',1,'jrl::qp']]],
-  ['none',['NONE',['../namespacejrl_1_1qp.html#ad24df199de1a6f61275d4c96107b5dc3ab50339a10e1de285ac99d4c3990b8693',1,'jrl::qp']]]
+  ['householder_786',['Householder',['../namespacejrl_1_1qp_1_1internal.html#aa0759fb36800658279d39fb5949361eca5196f1040c636101b5797c3cbc926613',1,'jrl::qp::internal']]]
 ];

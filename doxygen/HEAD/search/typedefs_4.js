@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['vectorconstref',['VectorConstRef',['../namespacejrl_1_1qp.html#a61011419a1f4de75f658df1d17ceaae8',1,'jrl::qp']]],
-  ['vectorref',['VectorRef',['../namespacejrl_1_1qp.html#a91278fdbb65099f6051406727c2e28eb',1,'jrl::qp']]]
+  ['matrixconstref_767',['MatrixConstRef',['../namespacejrl_1_1qp.html#a36932925bb0032413d85027bcfb42dc5',1,'jrl::qp']]],
+  ['matrixref_768',['MatrixRef',['../namespacejrl_1_1qp.html#a8220344a91c3dcd12dc60b751427cdc7',1,'jrl::qp']]]
 ];

@@ -1,7 +1,7 @@
 var classjrl_1_1qp_1_1utils_1_1Logger =
 [
     [ "Logger", "classjrl_1_1qp_1_1utils_1_1Logger.html#a131ca23640c6cfaa7d0bf0ed92640289", null ],
-    [ "comment", "classjrl_1_1qp_1_1utils_1_1Logger.html#a7bb6e95d37c936870bc6666bf4edc9e3", null ],
+    [ "comment", "classjrl_1_1qp_1_1utils_1_1Logger.html#a6266e1b170e4ce822652d68cf53b9c11", null ],
     [ "iter", "classjrl_1_1qp_1_1utils_1_1Logger.html#ae12b6eaae184a3615753667743582395", null ],
     [ "log", "classjrl_1_1qp_1_1utils_1_1Logger.html#abca4b7a185d6b77d165949c347fcd908", null ],
     [ "setFlag", "classjrl_1_1qp_1_1utils_1_1Logger.html#a7b5b432e0148b144072736b8b35999a4", null ],

@@ -3,7 +3,7 @@
   <compound kind="file">
     <name>api.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/</path>
-    <filename>api_8h</filename>
+    <filename>api_8h.html</filename>
     <member kind="define">
       <type>#define</type>
       <name>JRLQP_DLLIMPORT</name>
@@ -41,9 +41,72 @@
     </member>
   </compound>
   <compound kind="file">
+    <name>blockArrowLLT.h</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/decomposition/</path>
+    <filename>blockArrowLLT_8h.html</filename>
+    <includes id="api_8h" name="api.h" local="no" imported="no">jrl-qp/api.h</includes>
+    <includes id="defs_8h" name="defs.h" local="no" imported="no">jrl-qp/defs.h</includes>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::decomposition</namespace>
+    <member kind="function">
+      <type>JRLQP_DLLAPI bool</type>
+      <name>blockArrowLLT</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>a2f65392b0bcd4dabf6cf997d6d8898a3</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;side, bool up=false)</arglist>
+    </member>
+    <member kind="function">
+      <type>JRLQP_DLLAPI void</type>
+      <name>blockArrowLSolve</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>a944556805b9fcec753b8a7622c5e796e</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;side, bool up, MatrixRef M, int start=0, int end=-1)</arglist>
+    </member>
+    <member kind="function">
+      <type>JRLQP_DLLAPI void</type>
+      <name>blockArrowLTransposeSolve</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>ada4d609948373c6e0a7ecad04787dafb</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;side, bool up, MatrixRef M, int start=0, int end=-1)</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>triBlockDiagLLT.h</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/decomposition/</path>
+    <filename>triBlockDiagLLT_8h.html</filename>
+    <includes id="api_8h" name="api.h" local="no" imported="no">jrl-qp/api.h</includes>
+    <includes id="defs_8h" name="defs.h" local="no" imported="no">jrl-qp/defs.h</includes>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::decomposition</namespace>
+    <member kind="function">
+      <type>JRLQP_DLLAPI bool</type>
+      <name>triBlockDiagLLT</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>ab12e8c947e5c397e5e5384ed017369b5</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;subDiag)</arglist>
+    </member>
+    <member kind="function">
+      <type>JRLQP_DLLAPI void</type>
+      <name>triBlockDiagLSolve</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>a9a9937ec7cc2b641254c81d004cf7ee8</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;subDiag, MatrixRef M, int start=0)</arglist>
+    </member>
+    <member kind="function">
+      <type>JRLQP_DLLAPI void</type>
+      <name>triBlockDiagLTransposeSolve</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>ab817f90e5d71975926a9a2e8c2c43ffd</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;subDiag, MatrixRef M, int end=-1)</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>defs.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/</path>
-    <filename>defs_8h</filename>
+    <filename>defs_8h.html</filename>
+    <namespace>jrl</namespace>
     <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::constant</namespace>
     <member kind="typedef">
@@ -74,6 +137,13 @@
       <anchor>a91278fdbb65099f6051406727c2e28eb</anchor>
       <arglist></arglist>
     </member>
+    <member kind="typedef">
+      <type>Eigen::JacobiRotation&lt; double &gt;</type>
+      <name>Givens</name>
+      <anchorfile>namespacejrl_1_1qp.html</anchorfile>
+      <anchor>a7f003bb597f0e6405c23ec9f3c718670</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="variable">
       <type>const Eigen::MatrixXd</type>
       <name>EmptyMatrix</name>
@@ -99,25 +169,27 @@
   <compound kind="file">
     <name>DualSolver.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/</path>
-    <filename>DualSolver_8h</filename>
+    <filename>DualSolver_8h.html</filename>
     <includes id="SolverOptions_8h" name="SolverOptions.h" local="no" imported="no">jrl-qp/SolverOptions.h</includes>
     <includes id="api_8h" name="api.h" local="no" imported="no">jrl-qp/api.h</includes>
     <includes id="defs_8h" name="defs.h" local="no" imported="no">jrl-qp/defs.h</includes>
     <includes id="ActiveSet_8h" name="ActiveSet.h" local="no" imported="no">jrl-qp/internal/ActiveSet.h</includes>
-    <includes id="ConstraintNormal_8h" name="ConstraintNormal.h" local="no" imported="no">jrl-qp/internal/ConstraintNormal.h</includes>
+    <includes id="SelectedConstraint_8h" name="SelectedConstraint.h" local="no" imported="no">jrl-qp/internal/SelectedConstraint.h</includes>
     <includes id="TerminationType_8h" name="TerminationType.h" local="no" imported="no">jrl-qp/internal/TerminationType.h</includes>
     <includes id="Workspace_8h" name="Workspace.h" local="no" imported="no">jrl-qp/internal/Workspace.h</includes>
     <includes id="Logger_8h" name="Logger.h" local="no" imported="no">jrl-qp/utils/Logger.h</includes>
     <includes id="debug_8h" name="debug.h" local="no" imported="no">jrl-qp/utils/debug.h</includes>
     <class kind="class">jrl::qp::DualSolver</class>
     <class kind="struct">jrl::qp::DualSolver::StepLength</class>
+    <namespace>jrl</namespace>
     <namespace>jrl::qp</namespace>
   </compound>
   <compound kind="file">
     <name>enums.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/</path>
-    <filename>enums_8h</filename>
+    <filename>enums_8h.html</filename>
     <includes id="defs_8h" name="defs.h" local="no" imported="no">jrl-qp/defs.h</includes>
+    <namespace>jrl</namespace>
     <namespace>jrl::qp</namespace>
     <member kind="enumeration">
       <type></type>
@@ -145,6 +217,8 @@
       <enumvalue file="namespacejrl_1_1qp.html" anchor="a2be96344dd3712e23a7eabc0d530062ca6faaca695f728b47f47dd389f31e4a93">INFEASIBLE</enumvalue>
       <enumvalue file="namespacejrl_1_1qp.html" anchor="a2be96344dd3712e23a7eabc0d530062ca166fdb12611b864605b50bcb6ef3c185">MAX_ITER_REACHED</enumvalue>
       <enumvalue file="namespacejrl_1_1qp.html" anchor="a2be96344dd3712e23a7eabc0d530062ca5faf851f584c5d83788f2de723637cdc">LINEAR_DEPENDENCY_DETECTED</enumvalue>
+      <enumvalue file="namespacejrl_1_1qp.html" anchor="a2be96344dd3712e23a7eabc0d530062ca0d4ade66ad6c3f9caf79f8d75b63d75b">OVERCONSTRAINED_PROBLEM</enumvalue>
+      <enumvalue file="namespacejrl_1_1qp.html" anchor="a2be96344dd3712e23a7eabc0d530062ca696b031073e74bf2cb98e5ef201d4aa3">UNKNOWN</enumvalue>
     </member>
     <member kind="enumeration">
       <type></type>
@@ -159,6 +233,7 @@
       <enumvalue file="namespacejrl_1_1qp.html" anchor="ad24df199de1a6f61275d4c96107b5dc3afac1d6b38b3d6531966bceaec0983095">ITERATION_ADVANCE_DETAILS</enumvalue>
       <enumvalue file="namespacejrl_1_1qp.html" anchor="ad24df199de1a6f61275d4c96107b5dc3a6a3ca91cf2d0158ff4a3a3bf791c9f38">ACTIVE_SET</enumvalue>
       <enumvalue file="namespacejrl_1_1qp.html" anchor="ad24df199de1a6f61275d4c96107b5dc3a84033091af4b588002199e5ed322ba6c">ACTIVE_SET_DETAILS</enumvalue>
+      <enumvalue file="namespacejrl_1_1qp.html" anchor="ad24df199de1a6f61275d4c96107b5dc3afaee4ca3c30ee18148ce3ada37466498">INIT</enumvalue>
       <enumvalue file="namespacejrl_1_1qp.html" anchor="ad24df199de1a6f61275d4c96107b5dc3aca5c504c6136e20051be115160b0f0b8">MISC</enumvalue>
       <enumvalue file="namespacejrl_1_1qp.html" anchor="ad24df199de1a6f61275d4c96107b5dc3a00749b615db836bc0f8fd5f087b2595a">NO_ITER</enumvalue>
     </member>
@@ -185,12 +260,29 @@
     </member>
   </compound>
   <compound kind="file">
+    <name>BlockGISolver.h</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/experimental/</path>
+    <filename>BlockGISolver_8h.html</filename>
+    <includes id="DualSolver_8h" name="DualSolver.h" local="no" imported="no">jrl-qp/DualSolver.h</includes>
+    <includes id="StructuredC_8h" name="StructuredC.h" local="no" imported="no">jrl-qp/structured/StructuredC.h</includes>
+    <includes id="StructuredG_8h" name="StructuredG.h" local="no" imported="no">jrl-qp/structured/StructuredG.h</includes>
+    <includes id="StructuredJ_8h" name="StructuredJ.h" local="no" imported="no">jrl-qp/structured/StructuredJ.h</includes>
+    <includes id="StructuredQR_8h" name="StructuredQR.h" local="no" imported="no">jrl-qp/structured/StructuredQR.h</includes>
+    <class kind="class">jrl::qp::experimental::BlockGISolver</class>
+    <class kind="struct">jrl::qp::experimental::BlockGISolver::Problem</class>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::experimental</namespace>
+  </compound>
+  <compound kind="file">
     <name>BoxAndSingleConstraintSolver.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/experimental/</path>
-    <filename>BoxAndSingleConstraintSolver_8h</filename>
+    <filename>BoxAndSingleConstraintSolver_8h.html</filename>
     <includes id="GoldfarbIdnaniSolver_8h" name="GoldfarbIdnaniSolver.h" local="no" imported="no">jrl-qp/GoldfarbIdnaniSolver.h</includes>
     <includes id="problems_8h" name="problems.h" local="no" imported="no">jrl-qp/test/problems.h</includes>
     <class kind="class">jrl::qp::experimental::BoxAndSingleConstraintSolver</class>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::experimental</namespace>
     <namespace>jrl::qp::test</namespace>
     <member kind="function">
@@ -203,20 +295,34 @@
   </compound>
   <compound kind="file">
     <name>GoldfarbIdnaniSolver.h</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/experimental/</path>
+    <filename>experimental_2GoldfarbIdnaniSolver_8h.html</filename>
+    <includes id="DualSolver_8h" name="DualSolver.h" local="no" imported="no">jrl-qp/DualSolver.h</includes>
+    <class kind="class">jrl::qp::experimental::GoldfarbIdnaniSolver</class>
+    <class kind="struct">jrl::qp::experimental::GoldfarbIdnaniSolver::Problem</class>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::experimental</namespace>
+  </compound>
+  <compound kind="file">
+    <name>GoldfarbIdnaniSolver.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/</path>
-    <filename>GoldfarbIdnaniSolver_8h</filename>
+    <filename>GoldfarbIdnaniSolver_8h.html</filename>
     <includes id="DualSolver_8h" name="DualSolver.h" local="no" imported="no">jrl-qp/DualSolver.h</includes>
     <class kind="class">jrl::qp::GoldfarbIdnaniSolver</class>
     <class kind="struct">jrl::qp::GoldfarbIdnaniSolver::Problem</class>
+    <namespace>jrl</namespace>
     <namespace>jrl::qp</namespace>
   </compound>
   <compound kind="file">
     <name>ActiveSet.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/internal/</path>
-    <filename>ActiveSet_8h</filename>
+    <filename>ActiveSet_8h.html</filename>
     <includes id="api_8h" name="api.h" local="no" imported="no">jrl-qp/api.h</includes>
     <includes id="enums_8h" name="enums.h" local="no" imported="no">jrl-qp/enums.h</includes>
     <class kind="class">jrl::qp::internal::ActiveSet</class>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::internal</namespace>
     <member kind="function">
       <type>std::ostream &amp;</type>
@@ -229,19 +335,24 @@
   <compound kind="file">
     <name>ConstraintNormal.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/internal/</path>
-    <filename>ConstraintNormal_8h</filename>
+    <filename>ConstraintNormal_8h.html</filename>
     <includes id="api_8h" name="api.h" local="no" imported="no">jrl-qp/api.h</includes>
     <includes id="defs_8h" name="defs.h" local="no" imported="no">jrl-qp/defs.h</includes>
     <includes id="enums_8h" name="enums.h" local="no" imported="no">jrl-qp/enums.h</includes>
+    <includes id="SelectedConstraint_8h" name="SelectedConstraint.h" local="no" imported="no">jrl-qp/internal/SelectedConstraint.h</includes>
     <includes id="toMatlab_8h" name="toMatlab.h" local="no" imported="no">jrl-qp/utils/toMatlab.h</includes>
     <class kind="class">jrl::qp::internal::ConstraintNormal</class>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::internal</namespace>
   </compound>
   <compound kind="file">
     <name>memoryChecks.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/internal/</path>
-    <filename>memoryChecks_8h</filename>
+    <filename>memoryChecks_8h.html</filename>
     <includes id="api_8h" name="api.h" local="no" imported="no">jrl-qp/api.h</includes>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::internal</namespace>
     <member kind="function">
       <type>void JRLQP_DLLAPI</type>
@@ -261,10 +372,14 @@
   <compound kind="file">
     <name>meta.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/internal/</path>
-    <filename>meta_8h</filename>
+    <filename>meta_8h.html</filename>
     <class kind="struct">jrl::qp::internal::is_base</class>
     <class kind="class">jrl::qp::internal::always_true</class>
     <class kind="class">jrl::qp::internal::always_false</class>
+    <class kind="struct">jrl::qp::internal::identity</class>
+    <class kind="struct">jrl::qp::internal::to_underlying_type</class>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::internal</namespace>
     <member kind="typedef">
       <type>std::enable_if_t&lt;(...||(std::is_same_v&lt; T, Base &gt;||derives_from&lt; T, Base &gt;())), int &gt;</type>
@@ -280,6 +395,13 @@
       <anchor>ae6160ea153be0ec4ab02997407a6adab</anchor>
       <arglist></arglist>
     </member>
+    <member kind="typedef">
+      <type>std::conditional_t&lt; std::is_enum_v&lt; T &gt;, to_underlying_type, identity &gt;</type>
+      <name>cast_as_underlying_if_enum</name>
+      <anchorfile>namespacejrl_1_1qp_1_1internal.html</anchorfile>
+      <anchor>a9222c7f429c9c1c4e65bb38b2252e7e7</anchor>
+      <arglist></arglist>
+    </member>
     <member kind="function">
       <type>constexpr bool</type>
       <name>derives_from</name>
@@ -289,24 +411,72 @@
     </member>
   </compound>
   <compound kind="file">
+    <name>OrthonormalSequence.h</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/internal/</path>
+    <filename>OrthonormalSequence_8h.html</filename>
+    <includes id="api_8h" name="api.h" local="no" imported="no">jrl-qp/api.h</includes>
+    <includes id="defs_8h" name="defs.h" local="no" imported="no">jrl-qp/defs.h</includes>
+    <includes id="SingleNZSegmentVector_8h" name="SingleNZSegmentVector.h" local="no" imported="no">jrl-qp/internal/SingleNZSegmentVector.h</includes>
+    <includes id="Workspace_8h" name="Workspace.h" local="no" imported="no">jrl-qp/internal/Workspace.h</includes>
+    <class kind="class">jrl::qp::internal::ElemOrthonormalSequence</class>
+    <class kind="class">jrl::qp::internal::OrthonormalSequence</class>
+    <class kind="class">jrl::qp::internal::PartitionnedQ</class>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::internal</namespace>
+    <member kind="enumeration">
+      <type></type>
+      <name>OSeqType</name>
+      <anchorfile>namespacejrl_1_1qp_1_1internal.html</anchorfile>
+      <anchor>aa0759fb36800658279d39fb5949361ec</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespacejrl_1_1qp_1_1internal.html" anchor="aa0759fb36800658279d39fb5949361eca5196f1040c636101b5797c3cbc926613">Householder</enumvalue>
+      <enumvalue file="namespacejrl_1_1qp_1_1internal.html" anchor="aa0759fb36800658279d39fb5949361eca0734c05ef4e55a702e6c121ea6609d44">Givens</enumvalue>
+      <enumvalue file="namespacejrl_1_1qp_1_1internal.html" anchor="aa0759fb36800658279d39fb5949361ecafc77ea6ca6b9d7a68b7820f4cc96496b">Permutation</enumvalue>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>SelectedConstraint.h</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/internal/</path>
+    <filename>SelectedConstraint_8h.html</filename>
+    <includes id="enums_8h" name="enums.h" local="no" imported="no">jrl-qp/enums.h</includes>
+    <class kind="class">jrl::qp::internal::SelectedConstraint</class>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::internal</namespace>
+  </compound>
+  <compound kind="file">
+    <name>SingleNZSegmentVector.h</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/internal/</path>
+    <filename>SingleNZSegmentVector_8h.html</filename>
+    <includes id="defs_8h" name="defs.h" local="no" imported="no">jrl-qp/defs.h</includes>
+    <class kind="class">jrl::qp::internal::SingleNZSegmentVector</class>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::internal</namespace>
+  </compound>
+  <compound kind="file">
     <name>TerminationType.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/internal/</path>
-    <filename>TerminationType_8h</filename>
+    <filename>TerminationType_8h.html</filename>
     <includes id="api_8h" name="api.h" local="no" imported="no">jrl-qp/api.h</includes>
     <includes id="enums_8h" name="enums.h" local="no" imported="no">jrl-qp/enums.h</includes>
     <class kind="class">jrl::qp::internal::TerminationType</class>
     <class kind="class">jrl::qp::internal::InitTermination</class>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::internal</namespace>
   </compound>
   <compound kind="file">
     <name>Workspace.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/internal/</path>
-    <filename>Workspace_8h</filename>
+    <filename>Workspace_8h.html</filename>
     <includes id="api_8h" name="api.h" local="no" imported="no">jrl-qp/api.h</includes>
     <class kind="struct">jrl::qp::internal::NotConst</class>
     <class kind="class">jrl::qp::internal::Workspace</class>
-    <namespace>jrl::qp::internal</namespace>
+    <namespace>jrl</namespace>
     <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::internal</namespace>
     <member kind="typedef">
       <type>decltype(internal::Workspace&lt; double &gt;().asVector(0))</type>
       <name>WVector</name>
@@ -325,19 +495,78 @@
   <compound kind="file">
     <name>SolverOptions.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/</path>
-    <filename>SolverOptions_8h</filename>
+    <filename>SolverOptions_8h.html</filename>
     <includes id="api_8h" name="api.h" local="no" imported="no">jrl-qp/api.h</includes>
     <includes id="enums_8h" name="enums.h" local="no" imported="no">jrl-qp/enums.h</includes>
     <class kind="struct">jrl::qp::SolverOptions</class>
+    <namespace>jrl</namespace>
     <namespace>jrl::qp</namespace>
+  </compound>
+  <compound kind="file">
+    <name>StructuredC.h</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/structured/</path>
+    <filename>StructuredC_8h.html</filename>
+    <includes id="api_8h" name="api.h" local="no" imported="no">jrl-qp/api.h</includes>
+    <includes id="defs_8h" name="defs.h" local="no" imported="no">jrl-qp/defs.h</includes>
+    <includes id="SingleNZSegmentVector_8h" name="SingleNZSegmentVector.h" local="no" imported="no">jrl-qp/internal/SingleNZSegmentVector.h</includes>
+    <class kind="class">jrl::qp::structured::StructuredC</class>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::structured</namespace>
+  </compound>
+  <compound kind="file">
+    <name>StructuredG.h</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/structured/</path>
+    <filename>StructuredG_8h.html</filename>
+    <includes id="api_8h" name="api.h" local="no" imported="no">jrl-qp/api.h</includes>
+    <includes id="defs_8h" name="defs.h" local="no" imported="no">jrl-qp/defs.h</includes>
+    <includes id="SingleNZSegmentVector_8h" name="SingleNZSegmentVector.h" local="no" imported="no">jrl-qp/internal/SingleNZSegmentVector.h</includes>
+    <class kind="class">jrl::qp::structured::StructuredG</class>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::structured</namespace>
+  </compound>
+  <compound kind="file">
+    <name>StructuredJ.h</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/structured/</path>
+    <filename>StructuredJ_8h.html</filename>
+    <includes id="api_8h" name="api.h" local="no" imported="no">jrl-qp/api.h</includes>
+    <includes id="defs_8h" name="defs.h" local="no" imported="no">jrl-qp/defs.h</includes>
+    <includes id="OrthonormalSequence_8h" name="OrthonormalSequence.h" local="no" imported="no">jrl-qp/internal/OrthonormalSequence.h</includes>
+    <includes id="SelectedConstraint_8h" name="SelectedConstraint.h" local="no" imported="no">jrl-qp/internal/SelectedConstraint.h</includes>
+    <includes id="Workspace_8h" name="Workspace.h" local="no" imported="no">jrl-qp/internal/Workspace.h</includes>
+    <includes id="StructuredC_8h" name="StructuredC.h" local="no" imported="no">jrl-qp/structured/StructuredC.h</includes>
+    <includes id="StructuredG_8h" name="StructuredG.h" local="no" imported="no">jrl-qp/structured/StructuredG.h</includes>
+    <class kind="class">jrl::qp::structured::StructuredJ</class>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::structured</namespace>
+  </compound>
+  <compound kind="file">
+    <name>StructuredQR.h</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/structured/</path>
+    <filename>StructuredQR_8h.html</filename>
+    <includes id="api_8h" name="api.h" local="no" imported="no">jrl-qp/api.h</includes>
+    <includes id="defs_8h" name="defs.h" local="no" imported="no">jrl-qp/defs.h</includes>
+    <includes id="OrthonormalSequence_8h" name="OrthonormalSequence.h" local="no" imported="no">jrl-qp/internal/OrthonormalSequence.h</includes>
+    <includes id="SelectedConstraint_8h" name="SelectedConstraint.h" local="no" imported="no">jrl-qp/internal/SelectedConstraint.h</includes>
+    <includes id="Workspace_8h" name="Workspace.h" local="no" imported="no">jrl-qp/internal/Workspace.h</includes>
+    <includes id="StructuredC_8h" name="StructuredC.h" local="no" imported="no">jrl-qp/structured/StructuredC.h</includes>
+    <includes id="StructuredG_8h" name="StructuredG.h" local="no" imported="no">jrl-qp/structured/StructuredG.h</includes>
+    <class kind="class">jrl::qp::structured::StructuredQR</class>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::structured</namespace>
   </compound>
   <compound kind="file">
     <name>kkt.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/test/</path>
-    <filename>kkt_8h</filename>
+    <filename>kkt_8h.html</filename>
     <includes id="api_8h" name="api.h" local="no" imported="no">jrl-qp/api.h</includes>
     <includes id="defs_8h" name="defs.h" local="no" imported="no">jrl-qp/defs.h</includes>
     <includes id="problems_8h" name="problems.h" local="no" imported="no">jrl-qp/test/problems.h</includes>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::test</namespace>
     <member kind="function">
       <type>void JRLQP_DLLAPI</type>
@@ -406,12 +635,14 @@
   <compound kind="file">
     <name>problems.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/test/</path>
-    <filename>problems_8h</filename>
+    <filename>problems_8h.html</filename>
     <includes id="api_8h" name="api.h" local="no" imported="no">jrl-qp/api.h</includes>
     <class kind="struct">jrl::qp::test::FeasibilityConstraints</class>
     <class kind="struct">jrl::qp::test::SeparatedFeasibilityConstraints</class>
     <class kind="struct">jrl::qp::test::LeastSquareProblem</class>
     <class kind="struct">jrl::qp::test::QPProblem</class>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::test</namespace>
     <member kind="variable">
       <type>struct JRLQP_DLLAPI</type>
@@ -424,8 +655,10 @@
   <compound kind="file">
     <name>randomMatrices.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/test/</path>
-    <filename>randomMatrices_8h</filename>
+    <filename>randomMatrices_8h.html</filename>
     <class kind="struct">jrl::qp::test::scalar_normal_random_op</class>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::test</namespace>
     <member kind="function">
       <type>auto</type>
@@ -473,12 +706,14 @@
   <compound kind="file">
     <name>randomProblems.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/test/</path>
-    <filename>randomProblems_8h</filename>
+    <filename>randomProblems_8h.html</filename>
     <includes id="api_8h" name="api.h" local="no" imported="no">jrl-qp/api.h</includes>
     <includes id="problems_8h" name="problems.h" local="no" imported="no">jrl-qp/test/problems.h</includes>
     <class kind="struct">jrl::qp::test::ProblemCharacteristics</class>
     <class kind="struct">jrl::qp::test::RandomLeastSquare</class>
     <class kind="struct">jrl::qp::test::RandomLeastSquare::KKT</class>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::test</namespace>
     <member kind="function">
       <type>RandomLeastSquare JRLQP_DLLAPI</type>
@@ -491,236 +726,236 @@
   <compound kind="file">
     <name>debug.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/utils/</path>
-    <filename>debug_8h</filename>
+    <filename>debug_8h.html</filename>
     <member kind="define">
       <type>#define</type>
-      <name>PP_ID</name>
+      <name>JRLQP_PP_ID</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a97b400c69266f278085ba434add0f311</anchor>
+      <anchor>a44ee27d1d83fe83986640b965cfd2455</anchor>
       <arglist>(x)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>PP_APPLY</name>
+      <name>JRLQP_PP_APPLY</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a832c2b017c0034975b09dd73ccc03535</anchor>
+      <anchor>a4619c0c60951c239ddd38a4ddd5ffbcd</anchor>
       <arglist>(macro,...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>PP_NARG</name>
+      <name>JRLQP_PP_NARG</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a31b9bcd0e7f30adb8ed947d86d4ae11b</anchor>
+      <anchor>ad6a8f61dfce362aaf9f20ec10903189e</anchor>
       <arglist>(...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>PP_NARG_</name>
+      <name>JRLQP_PP_NARG_</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a1b4b6dfcca38ee665c4c88c07d58c4f0</anchor>
+      <anchor>a26479c0777b34e04563114c9c208943a</anchor>
       <arglist>(...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>PP_ARG_N</name>
+      <name>JRLQP_PP_ARG_N</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a31d18775318062742eac4b072d3d09aa</anchor>
+      <anchor>a177dda44ecc66aba9493cc6bc14eadb4</anchor>
       <arglist>(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, N,...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>PP_RSEQ_N</name>
+      <name>JRLQP_PP_RSEQ_N</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a15967218850ac6ac5ffd777368fec7fd</anchor>
+      <anchor>ad60943a8e16f50b82e129b9bc6398483</anchor>
       <arglist>()</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>CHOOSE_AUTO_NAME_START</name>
+      <name>JRLQP_CHOOSE_AUTO_NAME_START</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a9a00fe245c54039d3b9e2b81e4b85bd5</anchor>
+      <anchor>ad2334ae1a10c6f0aa3b0bb80138d0194</anchor>
       <arglist>(count)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>AUTO_NAME_ARG</name>
+      <name>JRLQP_AUTO_NAME_ARG</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a13d4f3fcfc261c0ae91678600ba69669</anchor>
+      <anchor>a7309e4978e6a8441d6dad7d7d75a9aae</anchor>
       <arglist>(...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>AUTO_NAME_ARG1</name>
+      <name>JRLQP_AUTO_NAME_ARG1</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a5747d27406c6a834c133eb77b9578a58</anchor>
+      <anchor>a17d4ef19160a14a0a6177d60687988ce</anchor>
       <arglist>(x)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>AUTO_NAME_ARG2</name>
+      <name>JRLQP_AUTO_NAME_ARG2</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a2a010c151202d77441a1c562edc2785d</anchor>
+      <anchor>ad16419569da05218faf75413c4c26690</anchor>
       <arglist>(x,...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>AUTO_NAME_ARG3</name>
+      <name>JRLQP_AUTO_NAME_ARG3</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>aa16c688ca19a6917be31efb771ed13ad</anchor>
+      <anchor>a0245b1072aab3d3e91208fdaede84c56</anchor>
       <arglist>(x,...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>AUTO_NAME_ARG4</name>
+      <name>JRLQP_AUTO_NAME_ARG4</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a84ae98c9a35d191074146a3e9d9dec58</anchor>
+      <anchor>a70bf637076b0329939c2764112350cb0</anchor>
       <arglist>(x,...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>AUTO_NAME_ARG5</name>
+      <name>JRLQP_AUTO_NAME_ARG5</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a2cdee854f18b329e6106a871bcd0748b</anchor>
+      <anchor>a1254917cd72b15516bfeae4037d7b29d</anchor>
       <arglist>(x,...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>AUTO_NAME_ARG6</name>
+      <name>JRLQP_AUTO_NAME_ARG6</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a40d86bb967fbefa6106ffa28cc32b62a</anchor>
+      <anchor>a8f0f05fe1d005fe8063058b536429405</anchor>
       <arglist>(x,...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>AUTO_NAME_ARG7</name>
+      <name>JRLQP_AUTO_NAME_ARG7</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>aac981491af68ed22a3abbc74cb718309</anchor>
+      <anchor>a0642cdd735c2ff2c59a23cef9246fdee</anchor>
       <arglist>(x,...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>AUTO_NAME_ARG8</name>
+      <name>JRLQP_AUTO_NAME_ARG8</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>ab712239275c4a5b635f6a37c930f9989</anchor>
+      <anchor>a7c3076781f76d28d1a4023a19d012b90</anchor>
       <arglist>(x,...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>AUTO_NAME_ARG9</name>
+      <name>JRLQP_AUTO_NAME_ARG9</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a00203244e00d03c2909799e970196df2</anchor>
+      <anchor>a589335bd1cc9d6826f868806231ca7c7</anchor>
       <arglist>(x,...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>AUTO_NAME_ARG10</name>
+      <name>JRLQP_AUTO_NAME_ARG10</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a5119b16f08ae5ee08d0721513b1fc1cd</anchor>
+      <anchor>aa66f4d4504ddb34675582d117ed73b24</anchor>
       <arglist>(x,...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>ENABLE_LOG_</name>
+      <name>JRLQP_ENABLE_LOG_</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>abec14c72afdd37e63ae11c0900f3d20a</anchor>
+      <anchor>a83d3f53c3c3aab940986f12b26763eb9</anchor>
       <arglist>(macro,...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>ENABLE_DEBUG_</name>
+      <name>JRLQP_ENABLE_DEBUG_</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a2bb98b871b017f46fe610efdc25066a7</anchor>
+      <anchor>a82a0d7493be62a7351abb9c7ac695206</anchor>
       <arglist>(macro,...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>LOG_</name>
+      <name>JRLQP_LOG_</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>af0c6345baa24ca11fa4be3b5f250374d</anchor>
+      <anchor>a2bd0e4db7525210915b51b6acffef837</anchor>
       <arglist>(logger, flags,...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>LOG_AS_</name>
+      <name>JRLQP_LOG_AS_</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a1e5baa4571fa1c5acbce0d3145281813</anchor>
+      <anchor>aa93a4494bc7215e968f3e54fa7d0b3cd</anchor>
       <arglist>(logger, flags,...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>LOG</name>
+      <name>JRLQP_LOG</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a3577749fb48d57a158b8ac1a0b3ab57e</anchor>
+      <anchor>a49aea847db91233c9a07569d9d788c12</anchor>
       <arglist>(...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>DBG</name>
+      <name>JRLQP_DBG</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>ae8924623ca601364965e3d88fb7f40fa</anchor>
+      <anchor>a02a1c62fcb6fb371ec8f236c4b3673c8</anchor>
       <arglist>(...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>LOG_AS</name>
+      <name>JRLQP_LOG_AS</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a84ee857e27b70c910ef63c28daeb10bf</anchor>
+      <anchor>aa99dc5c5ba0c16dd26287a5ad77aa331</anchor>
       <arglist>(...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>DBG_AS</name>
+      <name>JRLQP_DBG_AS</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a494120bb3508189e5cab122fd43ef9af</anchor>
+      <anchor>a7cb760fe8c075b64e39acef7f1223fed</anchor>
       <arglist>(...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>LOG_COMMENT</name>
+      <name>JRLQP_LOG_COMMENT</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>ac5cc72c2bc97b36e23c4fb5b3ce5e1c9</anchor>
-      <arglist>(logger, flag, s)</arglist>
+      <anchor>a6b4990b946544bf704e5e62edf9992b6</anchor>
+      <arglist>(logger, flag,...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>DBG_COMMENT</name>
+      <name>JRLQP_DBG_COMMENT</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>ab6c60f8c271194e4330569895ced16c3</anchor>
-      <arglist>(logger, flag, s)</arglist>
+      <anchor>aba4b1da548c543974c42de318eac0e0e</anchor>
+      <arglist>(logger, flag,...)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>LOG_NEW_ITER</name>
+      <name>JRLQP_LOG_NEW_ITER</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a3fa0d2568e9bdfc654ae334d501b9482</anchor>
+      <anchor>ae6b524d16d233f29bbbf3a410f124a9e</anchor>
       <arglist>(logger, it)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>DBG_NEW_ITER</name>
+      <name>JRLQP_DBG_NEW_ITER</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a3e4c72f26f33da3e3625450712ba2907</anchor>
+      <anchor>aad3eca6a5f8d12218ba3a558373f854d</anchor>
       <arglist>(logger, it)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>LOG_RESET</name>
+      <name>JRLQP_LOG_RESET</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>afe359d29f7fb2b00b33fb1e9cda59897</anchor>
+      <anchor>aff6fac7327ee0ca9066edd57c13fb9d7</anchor>
       <arglist>(logger)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>DBG_RESET</name>
+      <name>JRLQP_DBG_RESET</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>ab7261c66aaba1b589b5443f2acff6b42</anchor>
+      <anchor>a1d814944fdc3c711d6602d077b464cb3</anchor>
       <arglist>(logger)</arglist>
     </member>
     <member kind="define">
       <type>#define</type>
-      <name>DEBUG_ONLY</name>
+      <name>JRLQP_DEBUG_ONLY</name>
       <anchorfile>debug_8h.html</anchorfile>
-      <anchor>a117f8d6af256db413e569b0b8bb8f585</anchor>
+      <anchor>ab1da2a8f7643689edf7f65d2f45da84b</anchor>
       <arglist>(expr)</arglist>
     </member>
     <member kind="variable">
@@ -739,22 +974,40 @@
     </member>
   </compound>
   <compound kind="file">
+    <name>enumsIO.h</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/utils/</path>
+    <filename>enumsIO_8h.html</filename>
+    <includes id="api_8h" name="api.h" local="no" imported="no">jrl-qp/api.h</includes>
+    <includes id="enums_8h" name="enums.h" local="no" imported="no">jrl-qp/enums.h</includes>
+    <member kind="function">
+      <type>JRLQP_DLLAPI std::ostream &amp;</type>
+      <name>operator&lt;&lt;</name>
+      <anchorfile>enumsIO_8h.html</anchorfile>
+      <anchor>a4cff36867f4f7ea750cef0edd5eefa86</anchor>
+      <arglist>(std::ostream &amp;os, jrl::qp::TerminationStatus s)</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>Logger.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/utils/</path>
-    <filename>Logger_8h</filename>
+    <filename>Logger_8h.html</filename>
     <includes id="api_8h" name="api.h" local="no" imported="no">jrl-qp/api.h</includes>
     <includes id="defs_8h" name="defs.h" local="no" imported="no">jrl-qp/defs.h</includes>
     <includes id="meta_8h" name="meta.h" local="no" imported="no">jrl-qp/internal/meta.h</includes>
     <includes id="toMatlab_8h" name="toMatlab.h" local="no" imported="no">jrl-qp/utils/toMatlab.h</includes>
     <class kind="class">jrl::qp::utils::Logger</class>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::utils</namespace>
   </compound>
   <compound kind="file">
     <name>toMatlab.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/utils/</path>
-    <filename>toMatlab_8h</filename>
+    <filename>toMatlab_8h.html</filename>
     <includes id="meta_8h" name="meta.h" local="no" imported="no">jrl-qp/internal/meta.h</includes>
     <class kind="class">jrl::qp::utils::toMatlab</class>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::utils</namespace>
     <member kind="function">
       <type>std::ostream &amp;</type>
@@ -772,17 +1025,111 @@
     </member>
   </compound>
   <compound kind="file">
+    <name>blockArrowLLT.cpp</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/src/decomposition/</path>
+    <filename>blockArrowLLT_8cpp.html</filename>
+    <includes id="blockArrowLLT_8h" name="blockArrowLLT.h" local="no" imported="no">jrl-qp/decomposition/blockArrowLLT.h</includes>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::decomposition</namespace>
+    <member kind="function">
+      <type>bool</type>
+      <name>blockArrowLLT_</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>a642f87ad7947600ff28ad25113c20219</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;side)</arglist>
+    </member>
+    <member kind="function">
+      <type>JRLQP_DLLAPI bool</type>
+      <name>blockArrowLLT</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>a2f65392b0bcd4dabf6cf997d6d8898a3</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;side, bool up=false)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>blockArrowLSolve_</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>aeb2c2953ca0f7fb5170758f574b92a7f</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;side, MatrixRef M, int start, int end)</arglist>
+    </member>
+    <member kind="function">
+      <type>JRLQP_DLLAPI void</type>
+      <name>blockArrowLSolve</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>a944556805b9fcec753b8a7622c5e796e</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;side, bool up, MatrixRef M, int start=0, int end=-1)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>blockArrowLTransposeSolve_</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>ae88cb7056884a3725d6efeef2a53202f</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;side, MatrixRef M, int start, int end)</arglist>
+    </member>
+    <member kind="function">
+      <type>JRLQP_DLLAPI void</type>
+      <name>blockArrowLTransposeSolve</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>ada4d609948373c6e0a7ecad04787dafb</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;side, bool up, MatrixRef M, int start=0, int end=-1)</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
+    <name>triBlockDiagLLT.cpp</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/src/decomposition/</path>
+    <filename>triBlockDiagLLT_8cpp.html</filename>
+    <includes id="triBlockDiagLLT_8h" name="triBlockDiagLLT.h" local="no" imported="no">jrl-qp/decomposition/triBlockDiagLLT.h</includes>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::decomposition</namespace>
+    <member kind="function">
+      <type>JRLQP_DLLAPI bool</type>
+      <name>triBlockDiagLLT</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>ab12e8c947e5c397e5e5384ed017369b5</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;subDiag)</arglist>
+    </member>
+    <member kind="function">
+      <type>JRLQP_DLLAPI void</type>
+      <name>triBlockDiagLSolve</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>a9a9937ec7cc2b641254c81d004cf7ee8</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;subDiag, MatrixRef M, int start=0)</arglist>
+    </member>
+    <member kind="function">
+      <type>JRLQP_DLLAPI void</type>
+      <name>triBlockDiagLTransposeSolve</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>ab817f90e5d71975926a9a2e8c2c43ffd</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;subDiag, MatrixRef M, int end=-1)</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>DualSolver.cpp</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/src/</path>
-    <filename>DualSolver_8cpp</filename>
+    <filename>DualSolver_8cpp.html</filename>
     <includes id="DualSolver_8h" name="DualSolver.h" local="no" imported="no">jrl-qp/DualSolver.h</includes>
+    <namespace>jrl</namespace>
     <namespace>jrl::qp</namespace>
+  </compound>
+  <compound kind="file">
+    <name>BlockGISolver.cpp</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/src/experimental/</path>
+    <filename>BlockGISolver_8cpp.html</filename>
+    <includes id="BlockGISolver_8h" name="BlockGISolver.h" local="no" imported="no">jrl-qp/experimental/BlockGISolver.h</includes>
+    <includes id="ConstraintNormal_8h" name="ConstraintNormal.h" local="no" imported="no">jrl-qp/internal/ConstraintNormal.h</includes>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::experimental</namespace>
   </compound>
   <compound kind="file">
     <name>BoxAndSingleConstraintSolver.cpp</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/src/experimental/</path>
-    <filename>BoxAndSingleConstraintSolver_8cpp</filename>
+    <filename>BoxAndSingleConstraintSolver_8cpp.html</filename>
     <includes id="BoxAndSingleConstraintSolver_8h" name="BoxAndSingleConstraintSolver.h" local="no" imported="no">jrl-qp/experimental/BoxAndSingleConstraintSolver.h</includes>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::experimental</namespace>
     <namespace>jrl::qp::test</namespace>
     <member kind="function">
@@ -795,23 +1142,38 @@
   </compound>
   <compound kind="file">
     <name>GoldfarbIdnaniSolver.cpp</name>
-    <path>/home/runner/work/jrl-qp/jrl-qp/src/</path>
-    <filename>GoldfarbIdnaniSolver_8cpp</filename>
-    <includes id="GoldfarbIdnaniSolver_8h" name="GoldfarbIdnaniSolver.h" local="no" imported="no">jrl-qp/GoldfarbIdnaniSolver.h</includes>
+    <path>/home/runner/work/jrl-qp/jrl-qp/src/experimental/</path>
+    <filename>experimental_2GoldfarbIdnaniSolver_8cpp.html</filename>
+    <includes id="experimental_2GoldfarbIdnaniSolver_8h" name="GoldfarbIdnaniSolver.h" local="no" imported="no">jrl-qp/experimental/GoldfarbIdnaniSolver.h</includes>
+    <includes id="ConstraintNormal_8h" name="ConstraintNormal.h" local="no" imported="no">jrl-qp/internal/ConstraintNormal.h</includes>
+    <namespace>jrl</namespace>
     <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::experimental</namespace>
     <member kind="typedef">
       <type>Eigen::JacobiRotation&lt; double &gt;</type>
       <name>Givens</name>
-      <anchorfile>GoldfarbIdnaniSolver_8cpp.html</anchorfile>
+      <anchorfile>experimental_2GoldfarbIdnaniSolver_8cpp.html</anchorfile>
       <anchor>a66abf55e355e7df1283ea73e2e3d02e8</anchor>
       <arglist></arglist>
     </member>
   </compound>
   <compound kind="file">
+    <name>GoldfarbIdnaniSolver.cpp</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/src/</path>
+    <filename>GoldfarbIdnaniSolver_8cpp.html</filename>
+    <includes id="GoldfarbIdnaniSolver_8h" name="GoldfarbIdnaniSolver.h" local="no" imported="no">jrl-qp/GoldfarbIdnaniSolver.h</includes>
+    <includes id="experimental_2GoldfarbIdnaniSolver_8h" name="GoldfarbIdnaniSolver.h" local="no" imported="no">jrl-qp/experimental/GoldfarbIdnaniSolver.h</includes>
+    <includes id="ConstraintNormal_8h" name="ConstraintNormal.h" local="no" imported="no">jrl-qp/internal/ConstraintNormal.h</includes>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
+  </compound>
+  <compound kind="file">
     <name>ActiveSet.cpp</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/src/internal/</path>
-    <filename>ActiveSet_8cpp</filename>
+    <filename>ActiveSet_8cpp.html</filename>
     <includes id="ActiveSet_8h" name="ActiveSet.h" local="no" imported="no">jrl-qp/internal/ActiveSet.h</includes>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::internal</namespace>
     <member kind="function">
       <type>std::ostream &amp;</type>
@@ -824,8 +1186,10 @@
   <compound kind="file">
     <name>memoryChecks.cpp</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/src/internal/</path>
-    <filename>memoryChecks_8cpp</filename>
+    <filename>memoryChecks_8cpp.html</filename>
     <includes id="memoryChecks_8h" name="memoryChecks.h" local="no" imported="no">jrl-qp/internal/memoryChecks.h</includes>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::internal</namespace>
     <member kind="function">
       <type>bool</type>
@@ -850,17 +1214,66 @@
     </member>
   </compound>
   <compound kind="file">
+    <name>OrthonormalSequence.cpp</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/src/internal/</path>
+    <filename>OrthonormalSequence_8cpp.html</filename>
+    <includes id="OrthonormalSequence_8h" name="OrthonormalSequence.h" local="no" imported="no">jrl-qp/internal/OrthonormalSequence.h</includes>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::internal</namespace>
+  </compound>
+  <compound kind="file">
     <name>SolverOptions.cpp</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/src/</path>
-    <filename>SolverOptions_8cpp</filename>
+    <filename>SolverOptions_8cpp.html</filename>
     <includes id="SolverOptions_8h" name="SolverOptions.h" local="no" imported="no">jrl-qp/SolverOptions.h</includes>
+    <namespace>jrl</namespace>
     <namespace>jrl::qp</namespace>
+  </compound>
+  <compound kind="file">
+    <name>StructuredC.cpp</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/src/structured/</path>
+    <filename>StructuredC_8cpp.html</filename>
+    <includes id="StructuredC_8h" name="StructuredC.h" local="no" imported="no">jrl-qp/structured/StructuredC.h</includes>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::structured</namespace>
+  </compound>
+  <compound kind="file">
+    <name>StructuredG.cpp</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/src/structured/</path>
+    <filename>StructuredG_8cpp.html</filename>
+    <includes id="StructuredG_8h" name="StructuredG.h" local="no" imported="no">jrl-qp/structured/StructuredG.h</includes>
+    <includes id="blockArrowLLT_8h" name="blockArrowLLT.h" local="no" imported="no">jrl-qp/decomposition/blockArrowLLT.h</includes>
+    <includes id="triBlockDiagLLT_8h" name="triBlockDiagLLT.h" local="no" imported="no">jrl-qp/decomposition/triBlockDiagLLT.h</includes>
+  </compound>
+  <compound kind="file">
+    <name>StructuredJ.cpp</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/src/structured/</path>
+    <filename>StructuredJ_8cpp.html</filename>
+    <includes id="StructuredJ_8h" name="StructuredJ.h" local="no" imported="no">jrl-qp/structured/StructuredJ.h</includes>
+    <includes id="debug_8h" name="debug.h" local="no" imported="no">jrl-qp/utils/debug.h</includes>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::structured</namespace>
+  </compound>
+  <compound kind="file">
+    <name>StructuredQR.cpp</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/src/structured/</path>
+    <filename>StructuredQR_8cpp.html</filename>
+    <includes id="StructuredQR_8h" name="StructuredQR.h" local="no" imported="no">jrl-qp/structured/StructuredQR.h</includes>
+    <includes id="debug_8h" name="debug.h" local="no" imported="no">jrl-qp/utils/debug.h</includes>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
+    <namespace>jrl::qp::structured</namespace>
   </compound>
   <compound kind="file">
     <name>kkt.cpp</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/src/test/</path>
-    <filename>kkt_8cpp</filename>
+    <filename>kkt_8cpp.html</filename>
     <includes id="kkt_8h" name="kkt.h" local="no" imported="no">jrl-qp/test/kkt.h</includes>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::test</namespace>
     <member kind="function">
       <type>void</type>
@@ -936,16 +1349,20 @@
   <compound kind="file">
     <name>problems.cpp</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/src/test/</path>
-    <filename>problems_8cpp</filename>
+    <filename>problems_8cpp.html</filename>
     <includes id="problems_8h" name="problems.h" local="no" imported="no">jrl-qp/test/problems.h</includes>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::test</namespace>
   </compound>
   <compound kind="file">
     <name>randomProblems.cpp</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/src/test/</path>
-    <filename>randomProblems_8cpp</filename>
+    <filename>randomProblems_8cpp.html</filename>
     <includes id="randomMatrices_8h" name="randomMatrices.h" local="no" imported="no">jrl-qp/test/randomMatrices.h</includes>
     <includes id="randomProblems_8h" name="randomProblems.h" local="no" imported="no">jrl-qp/test/randomProblems.h</includes>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::test</namespace>
     <member kind="function">
       <type>RandomLeastSquare JRLQP_DLLAPI</type>
@@ -963,10 +1380,25 @@
     </member>
   </compound>
   <compound kind="file">
+    <name>enumsIO.cpp</name>
+    <path>/home/runner/work/jrl-qp/jrl-qp/src/utils/</path>
+    <filename>enumsIO_8cpp.html</filename>
+    <includes id="enumsIO_8h" name="enumsIO.h" local="no" imported="no">jrl-qp/utils/enumsIO.h</includes>
+    <member kind="function">
+      <type>std::ostream &amp;</type>
+      <name>operator&lt;&lt;</name>
+      <anchorfile>enumsIO_8cpp.html</anchorfile>
+      <anchor>af2f82eb407403b2be98dadb6f4c5d207</anchor>
+      <arglist>(std::ostream &amp;os, jrl::qp::TerminationStatus s)</arglist>
+    </member>
+  </compound>
+  <compound kind="file">
     <name>Logger.cpp</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/src/utils/</path>
-    <filename>Logger_8cpp</filename>
+    <filename>Logger_8cpp.html</filename>
     <includes id="Logger_8h" name="Logger.h" local="no" imported="no">jrl-qp/utils/Logger.h</includes>
+    <namespace>jrl</namespace>
+    <namespace>jrl::qp</namespace>
     <namespace>jrl::qp::utils</namespace>
   </compound>
   <compound kind="class">
@@ -1159,9 +1591,162 @@
     <templarg></templarg>
   </compound>
   <compound kind="class">
+    <name>jrl::qp::experimental::BlockGISolver</name>
+    <filename>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</filename>
+    <base>jrl::qp::DualSolver</base>
+    <class kind="struct">jrl::qp::experimental::BlockGISolver::Problem</class>
+    <member kind="function">
+      <type></type>
+      <name>BlockGISolver</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>a5041777960ed3720e78676c179998016</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>BlockGISolver</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>a82976ed7a29ade9fd650a00cfb4f7513</anchor>
+      <arglist>(int nbVar, int nbCstr, bool useBounds)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~BlockGISolver</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>a893c76eb6e5d818046c725ddc2ec01b8</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type>TerminationStatus</type>
+      <name>solve</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>aa5b084508e40ebfbaf3c9046fb837c5a</anchor>
+      <arglist>(const structured::StructuredG &amp;G, const VectorConstRef &amp;a, const structured::StructuredC &amp;C, const VectorConstRef &amp;bl, const VectorConstRef &amp;bu, const VectorConstRef &amp;xl, const VectorConstRef &amp;xu, const std::vector&lt; ActivationStatus &gt; &amp;as={})</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>internal::InitTermination</type>
+      <name>init_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>a8e7ba1ba679524fd62559557c62629aa</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>internal::SelectedConstraint</type>
+      <name>selectViolatedConstraint_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>a17743ca8c60aa1ff08c5c683c5f1ccb4</anchor>
+      <arglist>(const VectorConstRef &amp;x) const override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>computeStep_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>ad26d72a087831165a67f126fa9f5e3a0</anchor>
+      <arglist>(VectorRef z, VectorRef r, const internal::SelectedConstraint &amp;sc) const override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>StepLength</type>
+      <name>computeStepLength_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>abb9e04d307219c853411ef172aa9b4e2</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc, const VectorConstRef &amp;x, const VectorConstRef &amp;u, const VectorConstRef &amp;z, const VectorConstRef &amp;r) const override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>bool</type>
+      <name>addConstraint_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>a61af909e4e058e0cfe67c033f1f8061e</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc) override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>bool</type>
+      <name>removeConstraint_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>a51eb102dfe99f35ddd75294cfc53b5ee</anchor>
+      <arglist>(int l) override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>double</type>
+      <name>dot_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>ae391c8f190c38f81d3a33052bc55f9ea</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc, const VectorConstRef &amp;z) override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>resize_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>a34841fef94d320a6b58017980734ff4e</anchor>
+      <arglist>(int nbVar, int nbCstr, bool useBounds) override</arglist>
+    </member>
+    <member kind="function" protection="protected" virtualness="virtual">
+      <type>virtual internal::TerminationType</type>
+      <name>processInitialActiveSet</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>a53bb466c97134321d3d742f5c751a1f1</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected" virtualness="virtual">
+      <type>virtual internal::TerminationType</type>
+      <name>initializeComputationData</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>a39c2958307ae7085b18bd3ffb3975fe1</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected" virtualness="virtual">
+      <type>virtual internal::TerminationType</type>
+      <name>initializePrimalDualPoints</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>af68e374ffaceb9aa467e9c67701c893b</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>internal::Workspace</type>
+      <name>work_d_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>a4bae229fb8d8f705aa62b36546626820</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>structured::StructuredJ</type>
+      <name>J_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>a59cd1066062615a5a0426dffb3f7b37e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>structured::StructuredQR</type>
+      <name>QR_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>ae9b4471e29ade1e5c41a62a40ef5910f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>internal::Workspace</type>
+      <name>work_cx_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>ad63b83bd90d1e8b4a0d79a70c725cc84</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>internal::Workspace</type>
+      <name>work_bact_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>afd65f34f0a9b01c589079de26334ce2a</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>Problem</type>
+      <name>pb_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html</anchorfile>
+      <anchor>a8bd4db0c685e520ce42645639db1546a</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>jrl::qp::experimental::BoxAndSingleConstraintSolver</name>
     <filename>classjrl_1_1qp_1_1experimental_1_1BoxAndSingleConstraintSolver.html</filename>
-    <base>jrl::qp::GoldfarbIdnaniSolver</base>
+    <base>jrl::qp::experimental::GoldfarbIdnaniSolver</base>
     <member kind="function">
       <type></type>
       <name>BoxAndSingleConstraintSolver</name>
@@ -1207,6 +1792,13 @@
       <anchorfile>classjrl_1_1qp_1_1internal_1_1ConstraintNormal.html</anchorfile>
       <anchor>a83579b54b72db82daf43916264c92d21</anchor>
       <arglist>(const MatrixConstRef &amp;C, int p, ActivationStatus status)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>ConstraintNormal</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1ConstraintNormal.html</anchorfile>
+      <anchor>ae8ed9272e7ac813a43164ea5814180be</anchor>
+      <arglist>(const MatrixConstRef &amp;C, const SelectedConstraint &amp;sc)</arglist>
     </member>
     <member kind="function">
       <type></type>
@@ -1332,6 +1924,27 @@
       <anchor>ae8282c4e7de404ca4a053efff8481371</anchor>
       <arglist>() const</arglist>
     </member>
+    <member kind="function">
+      <type>int</type>
+      <name>iterations</name>
+      <anchorfile>classjrl_1_1qp_1_1DualSolver.html</anchorfile>
+      <anchor>a2fa3996908841e4ed4d3c7f1bbb127a3</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>const std::vector&lt; ActivationStatus &gt; &amp;</type>
+      <name>activeSet</name>
+      <anchorfile>classjrl_1_1qp_1_1DualSolver.html</anchorfile>
+      <anchor>af5a9d65d11cf6b60e512bde998da8576</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>resetActiveSet</name>
+      <anchorfile>classjrl_1_1qp_1_1DualSolver.html</anchorfile>
+      <anchor>a883e28bd95225bc7f726ceaa266b2b9d</anchor>
+      <arglist>()</arglist>
+    </member>
     <member kind="function" protection="protected">
       <type>TerminationStatus</type>
       <name>solve</name>
@@ -1354,32 +1967,32 @@
       <arglist>()</arglist>
     </member>
     <member kind="function" protection="protected">
-      <type>internal::ConstraintNormal</type>
+      <type>internal::SelectedConstraint</type>
       <name>selectViolatedConstraint</name>
       <anchorfile>classjrl_1_1qp_1_1DualSolver.html</anchorfile>
-      <anchor>a19f515282d904549f5ca13ffde51326d</anchor>
+      <anchor>af07db89f460b1ccb8193f3a8e0e96531</anchor>
       <arglist>(const VectorConstRef &amp;x) const</arglist>
     </member>
     <member kind="function" protection="protected">
       <type>void</type>
       <name>computeStep</name>
       <anchorfile>classjrl_1_1qp_1_1DualSolver.html</anchorfile>
-      <anchor>a25b9fadbcd3b39d9914b72270d4549d4</anchor>
-      <arglist>(VectorRef z, VectorRef r, const internal::ConstraintNormal &amp;np) const</arglist>
+      <anchor>ab003d4b52c24290488bae1ec2c27864f</anchor>
+      <arglist>(VectorRef z, VectorRef r, const internal::SelectedConstraint &amp;sc) const</arglist>
     </member>
     <member kind="function" protection="protected">
       <type>StepLength</type>
       <name>computeStepLength</name>
       <anchorfile>classjrl_1_1qp_1_1DualSolver.html</anchorfile>
-      <anchor>ab558919d2c70b4127929adeed1c355f6</anchor>
-      <arglist>(const internal::ConstraintNormal &amp;np, const VectorConstRef &amp;x, const VectorConstRef &amp;u, const VectorConstRef &amp;z, const VectorConstRef &amp;r) const</arglist>
+      <anchor>ac958b17d7806a545448569f789dc2590</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc, const VectorConstRef &amp;x, const VectorConstRef &amp;u, const VectorConstRef &amp;z, const VectorConstRef &amp;r) const</arglist>
     </member>
     <member kind="function" protection="protected">
       <type>bool</type>
       <name>addConstraint</name>
       <anchorfile>classjrl_1_1qp_1_1DualSolver.html</anchorfile>
-      <anchor>a32f8e9430d0fa607232ec733a060776b</anchor>
-      <arglist>(const internal::ConstraintNormal &amp;np)</arglist>
+      <anchor>ad557cd4fc4ecff28a5906b01a622d1e8</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc)</arglist>
     </member>
     <member kind="function" protection="protected">
       <type>bool</type>
@@ -1387,6 +2000,13 @@
       <anchorfile>classjrl_1_1qp_1_1DualSolver.html</anchorfile>
       <anchor>aa8f5542740bea0db7e1e50d0e280d178</anchor>
       <arglist>(int l, VectorRef u)</arglist>
+    </member>
+    <member kind="function" protection="protected" virtualness="virtual">
+      <type>virtual double</type>
+      <name>dot</name>
+      <anchorfile>classjrl_1_1qp_1_1DualSolver.html</anchorfile>
+      <anchor>afa9730eef19ebf95ba1f04d9d5cfe5a5</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc, const VectorConstRef &amp;z)</arglist>
     </member>
     <member kind="function" protection="protected" virtualness="pure">
       <type>virtual internal::InitTermination</type>
@@ -1396,32 +2016,32 @@
       <arglist>()=0</arglist>
     </member>
     <member kind="function" protection="protected" virtualness="pure">
-      <type>virtual internal::ConstraintNormal</type>
+      <type>virtual internal::SelectedConstraint</type>
       <name>selectViolatedConstraint_</name>
       <anchorfile>classjrl_1_1qp_1_1DualSolver.html</anchorfile>
-      <anchor>a9339dfe0c1327dd8e6e98eaecf05a7e5</anchor>
+      <anchor>a644bc226af57551c09b6414e15ecf286</anchor>
       <arglist>(const VectorConstRef &amp;x) const =0</arglist>
     </member>
     <member kind="function" protection="protected" virtualness="pure">
       <type>virtual void</type>
       <name>computeStep_</name>
       <anchorfile>classjrl_1_1qp_1_1DualSolver.html</anchorfile>
-      <anchor>a7078a20f85c558bf7d5fe9ab32b5fe3f</anchor>
-      <arglist>(VectorRef z, VectorRef r, const internal::ConstraintNormal &amp;np) const =0</arglist>
+      <anchor>aa6898a1fef433dfa88e8c6c4097b4f07</anchor>
+      <arglist>(VectorRef z, VectorRef r, const internal::SelectedConstraint &amp;sc) const =0</arglist>
     </member>
     <member kind="function" protection="protected" virtualness="pure">
       <type>virtual StepLength</type>
       <name>computeStepLength_</name>
       <anchorfile>classjrl_1_1qp_1_1DualSolver.html</anchorfile>
-      <anchor>aab1aaa1fdd27a165ade535218822521f</anchor>
-      <arglist>(const internal::ConstraintNormal &amp;np, const VectorConstRef &amp;x, const VectorConstRef &amp;u, const VectorConstRef &amp;z, const VectorConstRef &amp;r) const =0</arglist>
+      <anchor>ab679771e83a52147c439fce1aaa19f15</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc, const VectorConstRef &amp;x, const VectorConstRef &amp;u, const VectorConstRef &amp;z, const VectorConstRef &amp;r) const =0</arglist>
     </member>
     <member kind="function" protection="protected" virtualness="pure">
       <type>virtual bool</type>
       <name>addConstraint_</name>
       <anchorfile>classjrl_1_1qp_1_1DualSolver.html</anchorfile>
-      <anchor>afe731b505351737fffd77f838ee300f0</anchor>
-      <arglist>(const internal::ConstraintNormal &amp;np)=0</arglist>
+      <anchor>aa1ca3f3a129348df0be2269efc667945</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc)=0</arglist>
     </member>
     <member kind="function" protection="protected" virtualness="pure">
       <type>virtual bool</type>
@@ -1429,6 +2049,13 @@
       <anchorfile>classjrl_1_1qp_1_1DualSolver.html</anchorfile>
       <anchor>a8997464678859277471b64ea525220d0</anchor>
       <arglist>(int l)=0</arglist>
+    </member>
+    <member kind="function" protection="protected" virtualness="pure">
+      <type>virtual double</type>
+      <name>dot_</name>
+      <anchorfile>classjrl_1_1qp_1_1DualSolver.html</anchorfile>
+      <anchor>a46f899ca18ee72f419172bd5a3211950</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc, const VectorConstRef &amp;z)=0</arglist>
     </member>
     <member kind="function" protection="protected" virtualness="pure">
       <type>virtual void</type>
@@ -1449,6 +2076,13 @@
       <name>log_</name>
       <anchorfile>classjrl_1_1qp_1_1DualSolver.html</anchorfile>
       <anchor>a0b8954ba8dc452d9917a7e029b490542</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>int</type>
+      <name>it_</name>
+      <anchorfile>classjrl_1_1qp_1_1DualSolver.html</anchorfile>
+      <anchor>ad51f543b6ad18ede9678298467656dce</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable" protection="protected">
@@ -1506,6 +2140,87 @@
       <anchorfile>classjrl_1_1qp_1_1DualSolver.html</anchorfile>
       <anchor>aa1ee85d727856bdbda3214a2dd12e2cf</anchor>
       <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>jrl::qp::internal::ElemOrthonormalSequence</name>
+    <filename>classjrl_1_1qp_1_1internal_1_1ElemOrthonormalSequence.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>ElemOrthonormalSequence</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1ElemOrthonormalSequence.html</anchorfile>
+      <anchor>ab46d33fb3093529db4dcd61ae14a0858</anchor>
+      <arglist>(OSeqType type, int n, int size)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>add</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1ElemOrthonormalSequence.html</anchorfile>
+      <anchor>aa0d4bb7e49af68cd46b039b22015b59f</anchor>
+      <arglist>(const Eigen::HouseholderSequence&lt; VectorType, CoeffType &gt; &amp;Q)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>add</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1ElemOrthonormalSequence.html</anchorfile>
+      <anchor>a490cc02cab86f549be2a2d25b5a19fa3</anchor>
+      <arglist>(const Givens &amp;Q)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>add</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1ElemOrthonormalSequence.html</anchorfile>
+      <anchor>ad1c46d9cdc08be51aeb33db7aecd4d07</anchor>
+      <arglist>(const VectorConstRef &amp;essential, double tau)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>applyToTheLeft</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1ElemOrthonormalSequence.html</anchorfile>
+      <anchor>a38a37eed4117a94fca13b5b02990e211</anchor>
+      <arglist>(VectorRef v, int start, int size) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>applyTransposeToTheLeft</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1ElemOrthonormalSequence.html</anchorfile>
+      <anchor>af7f5a30cba61ee08b3a129759c08ce8d</anchor>
+      <arglist>(VectorRef v, int start, int size) const</arglist>
+    </member>
+    <member kind="function">
+      <type>OSeqType</type>
+      <name>type</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1ElemOrthonormalSequence.html</anchorfile>
+      <anchor>ab48be8e45cf1c6b804a577fbc45c980e</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>n</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1ElemOrthonormalSequence.html</anchorfile>
+      <anchor>a78b33e6e5b91a4cc123f5df6dffecced</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>size</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1ElemOrthonormalSequence.html</anchorfile>
+      <anchor>a5679c5e0353d1899e89907b85af52603</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>full</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1ElemOrthonormalSequence.html</anchorfile>
+      <anchor>a290c7d62a5fe671b0cdbad81cf77b5ed</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>Eigen::MatrixXd</type>
+      <name>toDense</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1ElemOrthonormalSequence.html</anchorfile>
+      <anchor>a7271f228e2bd9664f86e4d78d9241da5</anchor>
+      <arglist>() const</arglist>
     </member>
   </compound>
   <compound kind="struct">
@@ -1644,32 +2359,32 @@
       <arglist>() override</arglist>
     </member>
     <member kind="function" protection="protected">
-      <type>internal::ConstraintNormal</type>
+      <type>internal::SelectedConstraint</type>
       <name>selectViolatedConstraint_</name>
       <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>a89442013bab841f7e9fb93a80cec4c0a</anchor>
+      <anchor>a0d6707d7cb9d3d75314f30e7a8130e49</anchor>
       <arglist>(const VectorConstRef &amp;x) const override</arglist>
     </member>
     <member kind="function" protection="protected">
       <type>void</type>
       <name>computeStep_</name>
       <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>a894a13eafbc2265b4d8672c49024c99b</anchor>
-      <arglist>(VectorRef z, VectorRef r, const internal::ConstraintNormal &amp;np) const override</arglist>
+      <anchor>ae264d405b14a29c934a9b97d8eb56e38</anchor>
+      <arglist>(VectorRef z, VectorRef r, const internal::SelectedConstraint &amp;sc) const override</arglist>
     </member>
     <member kind="function" protection="protected">
       <type>StepLength</type>
       <name>computeStepLength_</name>
       <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>ab8b468e7b1f28140de294bd3e6445796</anchor>
-      <arglist>(const internal::ConstraintNormal &amp;np, const VectorConstRef &amp;x, const VectorConstRef &amp;u, const VectorConstRef &amp;z, const VectorConstRef &amp;r) const override</arglist>
+      <anchor>aa0ad60b2a7814cbe6b1be041cf778888</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc, const VectorConstRef &amp;x, const VectorConstRef &amp;u, const VectorConstRef &amp;z, const VectorConstRef &amp;r) const override</arglist>
     </member>
     <member kind="function" protection="protected">
       <type>bool</type>
       <name>addConstraint_</name>
       <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>ac44cc604247caef14f0261a0918acf75</anchor>
-      <arglist>(const internal::ConstraintNormal &amp;np) override</arglist>
+      <anchor>abc0df95f057531189f1d20b79468c600</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc) override</arglist>
     </member>
     <member kind="function" protection="protected">
       <type>bool</type>
@@ -1677,6 +2392,13 @@
       <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
       <anchor>a4bf239a70d1ac5a703909663461edfc2</anchor>
       <arglist>(int l) override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>double</type>
+      <name>dot_</name>
+      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a7457ce5af79fb547fa9550e264cbe468</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc, const VectorConstRef &amp;z) override</arglist>
     </member>
     <member kind="function" protection="protected">
       <type>void</type>
@@ -1696,8 +2418,8 @@
       <type>void</type>
       <name>addInitialConstraint</name>
       <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>aaf012758e14ef5b18f88437f22ddeffb</anchor>
-      <arglist>(const internal::ConstraintNormal &amp;np)</arglist>
+      <anchor>afc1ad095c4f5b8a2fcb0959584008143</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc)</arglist>
     </member>
     <member kind="variable" protection="protected">
       <type>internal::Workspace</type>
@@ -1729,9 +2451,194 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>jrl::qp::experimental::GoldfarbIdnaniSolver</name>
+    <filename>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</filename>
+    <base>jrl::qp::DualSolver</base>
+    <class kind="struct">jrl::qp::experimental::GoldfarbIdnaniSolver::Problem</class>
+    <member kind="function">
+      <type></type>
+      <name>GoldfarbIdnaniSolver</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>ae825d7f0ce1a220cdb0aeed8df98ca32</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>GoldfarbIdnaniSolver</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a4b2dc0b50c24d15f9bd2e96f97f0aa27</anchor>
+      <arglist>(int nbVar, int nbCstr, bool useBounds)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~GoldfarbIdnaniSolver</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>afe49544908d6d947a0b6b8119181f540</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type>TerminationStatus</type>
+      <name>solve</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>adc8cc6d39496332b1ac1ca132810bb7a</anchor>
+      <arglist>(MatrixRef G, const VectorConstRef &amp;a, const MatrixConstRef &amp;C, const VectorConstRef &amp;bl, const VectorConstRef &amp;bu, const VectorConstRef &amp;xl, const VectorConstRef &amp;xu, const std::vector&lt; ActivationStatus &gt; &amp;as={})</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>internal::InitTermination</type>
+      <name>init_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>ac909689a54427bdc90ab63fc79cf746a</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>internal::SelectedConstraint</type>
+      <name>selectViolatedConstraint_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>ae4b218c21358538f6c0d537e0055350c</anchor>
+      <arglist>(const VectorConstRef &amp;x) const override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>computeStep_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a2a36e64743c67d9d4212874fcca7fefc</anchor>
+      <arglist>(VectorRef z, VectorRef r, const internal::SelectedConstraint &amp;sc) const override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>StepLength</type>
+      <name>computeStepLength_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a058ee461278d3e183ab0e11132983175</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc, const VectorConstRef &amp;x, const VectorConstRef &amp;u, const VectorConstRef &amp;z, const VectorConstRef &amp;r) const override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>bool</type>
+      <name>addConstraint_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a7e4acd86253debf754de8c8b945d6575</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc) override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>bool</type>
+      <name>removeConstraint_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>aac6aa99da97e04447ad16d989631bca4</anchor>
+      <arglist>(int l) override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>double</type>
+      <name>dot_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a9190592c0f1265667755de7b2326d065</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc, const VectorConstRef &amp;z) override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>resize_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>ac493cab8260a846f7a6abcbf54142dc0</anchor>
+      <arglist>(int nbVar, int nbCstr, bool useBounds) override</arglist>
+    </member>
+    <member kind="function" protection="protected" virtualness="virtual">
+      <type>virtual internal::TerminationType</type>
+      <name>processInitialActiveSet</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>ad59cc22f276aa36d0db0afc7525e9e13</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected" virtualness="virtual">
+      <type>virtual internal::TerminationType</type>
+      <name>initializeComputationData</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>afef8acec0b83061608e8a46a1de31182</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected" virtualness="virtual">
+      <type>virtual internal::TerminationType</type>
+      <name>initializePrimalDualPoints</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>af3f31518c8afa7353e6412dbae02bf8a</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>internal::Workspace</type>
+      <name>work_d_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a26b710c860da17034a7c12b3f2b63cb6</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>internal::Workspace</type>
+      <name>work_J_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>afb29add55b2e6b7626a2c64441ddea3b</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>internal::Workspace</type>
+      <name>work_R_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>ae4b4a53e3b594a4c70db62bd352fbbcb</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>internal::Workspace</type>
+      <name>work_tmp_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a683d587fb97fbee70fb8ba73de4b905d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>internal::Workspace</type>
+      <name>work_hCoeffs_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a083aa05042891a1a4e8af9fb45eea06d</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>internal::Workspace</type>
+      <name>work_bact_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a26aa3a2afe4182de45d308c67775d55f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>Problem</type>
+      <name>pb_</name>
+      <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a5cc3e85ef061d1dc7dc2296ff8b09f6f</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>jrl::qp::internal::identity</name>
+    <filename>structjrl_1_1qp_1_1internal_1_1identity.html</filename>
+    <member kind="function">
+      <type>constexpr auto</type>
+      <name>operator()</name>
+      <anchorfile>structjrl_1_1qp_1_1internal_1_1identity.html</anchorfile>
+      <anchor>ac6c08e92c5042fe8e33a118988cb45e4</anchor>
+      <arglist>(T &amp;&amp;v) const noexcept -&gt; decltype(std::forward&lt; T &gt;(v))</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>jrl::qp::internal::InitTermination</name>
     <filename>classjrl_1_1qp_1_1internal_1_1InitTermination.html</filename>
     <base>jrl::qp::internal::TerminationType</base>
+    <member kind="function">
+      <type></type>
+      <name>InitTermination</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1InitTermination.html</anchorfile>
+      <anchor>a9a175d4f996e6ef4207473703ebbc75c</anchor>
+      <arglist>(const TerminationType &amp;tt)</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>TerminationType</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1InitTermination.html</anchorfile>
+      <anchor>a5d3846c81d71bfcab552f0734603a512</anchor>
+      <arglist>(TerminationStatus status)</arglist>
+    </member>
   </compound>
   <compound kind="struct">
     <name>jrl::qp::internal::is_base</name>
@@ -1891,8 +2798,8 @@
       <type>void</type>
       <name>comment</name>
       <anchorfile>classjrl_1_1qp_1_1utils_1_1Logger.html</anchorfile>
-      <anchor>a7bb6e95d37c936870bc6666bf4edc9e3</anchor>
-      <arglist>(std::uint32_t flag, std::string_view c) const</arglist>
+      <anchor>a6266e1b170e4ce822652d68cf53b9c11</anchor>
+      <arglist>(std::uint32_t flag, Args &amp;&amp;... args) const</arglist>
     </member>
     <member kind="function">
       <type>void</type>
@@ -1926,6 +2833,207 @@
   <compound kind="struct">
     <name>jrl::qp::internal::NotConst</name>
     <filename>structjrl_1_1qp_1_1internal_1_1NotConst.html</filename>
+  </compound>
+  <compound kind="class">
+    <name>jrl::qp::internal::OrthonormalSequence</name>
+    <filename>classjrl_1_1qp_1_1internal_1_1OrthonormalSequence.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>OrthonormalSequence</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1OrthonormalSequence.html</anchorfile>
+      <anchor>aedcee81901447ef302e7ede1e7a3ed2f</anchor>
+      <arglist>(int n=0)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>add</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1OrthonormalSequence.html</anchorfile>
+      <anchor>a7177699056e87f6a6d033c4aa958ea6a</anchor>
+      <arglist>(int start, const Givens &amp;Q)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>add</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1OrthonormalSequence.html</anchorfile>
+      <anchor>a1b43edf26783b4209ea3e74da705c58f</anchor>
+      <arglist>(int start, const VectorConstRef &amp;essential, double tau)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>prepare</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1OrthonormalSequence.html</anchorfile>
+      <anchor>a7fd868b9a24b0c91eea58f59ca420f39</anchor>
+      <arglist>(OSeqType type, int n, int seqSize)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>clear</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1OrthonormalSequence.html</anchorfile>
+      <anchor>a5510ee4eca3a3e59b4446495b8862b00</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>resize</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1OrthonormalSequence.html</anchorfile>
+      <anchor>a96e185985c2454e3abf9a7a838010d1d</anchor>
+      <arglist>(int n)</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>size</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1OrthonormalSequence.html</anchorfile>
+      <anchor>a39b5da2b12c59042eaf36e0451a35bd3</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>applyToTheLeft</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1OrthonormalSequence.html</anchorfile>
+      <anchor>a411e2db280e09b75c867b561a76ac8a7</anchor>
+      <arglist>(VectorRef v) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>applyTransposeToTheLeft</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1OrthonormalSequence.html</anchorfile>
+      <anchor>a5db03c87dfbcb14584af0f5028868d68</anchor>
+      <arglist>(VectorRef v) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>applyToTheLeft</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1OrthonormalSequence.html</anchorfile>
+      <anchor>a4cca74381bd0c0fd8d98fe0c6ca851b0</anchor>
+      <arglist>(VectorRef v, const SingleNZSegmentVector &amp;in) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>applyTransposeToTheLeft</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1OrthonormalSequence.html</anchorfile>
+      <anchor>a010b8f9a0e598bab7675b64a80e0871d</anchor>
+      <arglist>(VectorRef out, const SingleNZSegmentVector &amp;in) const</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>jrl::qp::internal::PartitionnedQ</name>
+    <filename>classjrl_1_1qp_1_1internal_1_1PartitionnedQ.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>PartitionnedQ</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1PartitionnedQ.html</anchorfile>
+      <anchor>aeb6e93da85d1e51326dec7f3d2b893d7</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>PartitionnedQ</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1PartitionnedQ.html</anchorfile>
+      <anchor>adc2f2beb21b6ed1eb604a966824d8be8</anchor>
+      <arglist>(const OrthonormalSequence &amp;Q, const int &amp;m1)</arglist>
+    </member>
+    <member kind="function">
+      <type>const OrthonormalSequence &amp;</type>
+      <name>Q</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1PartitionnedQ.html</anchorfile>
+      <anchor>a3f8d7faa0742fb5062af68d891ac76a8</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>m1</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1PartitionnedQ.html</anchorfile>
+      <anchor>a8c85391e172dcd93bae5a560584b1c5b</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>m2</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1PartitionnedQ.html</anchorfile>
+      <anchor>ad4f53a7289cb653667b63798f6a9885f</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>reset</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1PartitionnedQ.html</anchorfile>
+      <anchor>a9a0cc2c463355586ed446491816360ad</anchor>
+      <arglist>()</arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>jrl::qp::experimental::BlockGISolver::Problem</name>
+    <filename>structjrl_1_1qp_1_1experimental_1_1BlockGISolver_1_1Problem.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>Problem</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1BlockGISolver_1_1Problem.html</anchorfile>
+      <anchor>a5090a91c534789901c6d8a3948f69ec8</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Problem &amp;</type>
+      <name>operator=</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1BlockGISolver_1_1Problem.html</anchorfile>
+      <anchor>a8baf281175ccf78589de827230cdd1ea</anchor>
+      <arglist>(const Problem &amp;)=delete</arglist>
+    </member>
+    <member kind="variable">
+      <type>structured::StructuredG</type>
+      <name>G</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1BlockGISolver_1_1Problem.html</anchorfile>
+      <anchor>a9faca1e484ee7ff05d40bbad73c57142</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>VectorConstRef</type>
+      <name>a</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1BlockGISolver_1_1Problem.html</anchorfile>
+      <anchor>a4e8625eefb885f985aeec827e918102e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>structured::StructuredC</type>
+      <name>C</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1BlockGISolver_1_1Problem.html</anchorfile>
+      <anchor>a281dec691a5a8f726ca3dd809d6d08bd</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>VectorConstRef</type>
+      <name>bl</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1BlockGISolver_1_1Problem.html</anchorfile>
+      <anchor>adbd9fc71d11296869cf756a05a81ad77</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>VectorConstRef</type>
+      <name>bu</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1BlockGISolver_1_1Problem.html</anchorfile>
+      <anchor>a903edd4f10bbde2f9e0fe75aba68213e</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>VectorConstRef</type>
+      <name>xl</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1BlockGISolver_1_1Problem.html</anchorfile>
+      <anchor>a4f11302ed30c2fceed2d1fde3663bd1f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>VectorConstRef</type>
+      <name>xu</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1BlockGISolver_1_1Problem.html</anchorfile>
+      <anchor>a6e9dd76412ae26b9badd7bb5eaee2c74</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::vector&lt; ActivationStatus &gt;</type>
+      <name>as</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1BlockGISolver_1_1Problem.html</anchorfile>
+      <anchor>aa4ee3e9bcfffa169f410db1abbb06bbc</anchor>
+      <arglist></arglist>
+    </member>
   </compound>
   <compound kind="struct">
     <name>jrl::qp::GoldfarbIdnaniSolver::Problem</name>
@@ -1991,6 +3099,80 @@
       <name>xu</name>
       <anchorfile>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
       <anchor>a8e53da99f1b731e5feaf2f0bf5b0f335</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>jrl::qp::experimental::GoldfarbIdnaniSolver::Problem</name>
+    <filename>structjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver_1_1Problem.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>Problem</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
+      <anchor>a37c8b68f98f4a4252217e077c10038a3</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Problem &amp;</type>
+      <name>operator=</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
+      <anchor>a20fbea5b48685f3ad5e904bf091b035b</anchor>
+      <arglist>(const Problem &amp;)=delete</arglist>
+    </member>
+    <member kind="variable">
+      <type>MatrixRef</type>
+      <name>G</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
+      <anchor>aec7bcf8de16b1f04b1579afa7d8691f4</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>VectorConstRef</type>
+      <name>a</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
+      <anchor>a6bec7edcb49dcaf02b07b089411e048f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>MatrixConstRef</type>
+      <name>C</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
+      <anchor>a4de01d9b1204b27de322e513930dd8c9</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>VectorConstRef</type>
+      <name>bl</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
+      <anchor>a3612100d11ad7161474f5097033e1ace</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>VectorConstRef</type>
+      <name>bu</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
+      <anchor>a20e49e8ca3c992a40ccee2439ed19c31</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>VectorConstRef</type>
+      <name>xl</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
+      <anchor>a417260277677e840377ca8d46b74f6fe</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>VectorConstRef</type>
+      <name>xu</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
+      <anchor>a2142d545409765c859afe65e8b930f19</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>std::vector&lt; ActivationStatus &gt;</type>
+      <name>as</name>
+      <anchorfile>structjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
+      <anchor>a41fafcf9acbc4bdd88255d200e0ac105</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -2413,6 +3595,45 @@
       <arglist></arglist>
     </member>
   </compound>
+  <compound kind="class">
+    <name>jrl::qp::internal::SelectedConstraint</name>
+    <filename>classjrl_1_1qp_1_1internal_1_1SelectedConstraint.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>SelectedConstraint</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1SelectedConstraint.html</anchorfile>
+      <anchor>a05722d338553576b881ae49e49fb39bf</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>SelectedConstraint</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1SelectedConstraint.html</anchorfile>
+      <anchor>ad4e4a77c9f6fe81f1004f9003824d8fd</anchor>
+      <arglist>(int p, ActivationStatus status)</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>index</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1SelectedConstraint.html</anchorfile>
+      <anchor>a0c9d8a8683fdfed9f3c3e2714c5b14e5</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>ActivationStatus</type>
+      <name>status</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1SelectedConstraint.html</anchorfile>
+      <anchor>a892cd5bf3cdb4f5af57a437f9c14defc</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="friend">
+      <type>friend std::ostream &amp;</type>
+      <name>operator&lt;&lt;</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1SelectedConstraint.html</anchorfile>
+      <anchor>a3768ec80a12e5b13df497abc5da5f907</anchor>
+      <arglist>(std::ostream &amp;os, const SelectedConstraint &amp;sc)</arglist>
+    </member>
+  </compound>
   <compound kind="struct">
     <name>jrl::qp::test::SeparatedFeasibilityConstraints</name>
     <filename>structjrl_1_1qp_1_1test_1_1SeparatedFeasibilityConstraints.html</filename>
@@ -2481,9 +3702,69 @@
       <arglist></arglist>
     </member>
   </compound>
+  <compound kind="class">
+    <name>jrl::qp::internal::SingleNZSegmentVector</name>
+    <filename>classjrl_1_1qp_1_1internal_1_1SingleNZSegmentVector.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>SingleNZSegmentVector</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1SingleNZSegmentVector.html</anchorfile>
+      <anchor>acedb7a3f267d3adc9a132c066b5414e7</anchor>
+      <arglist>(const VectorConstRef &amp;v, int start, int size)</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>start</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1SingleNZSegmentVector.html</anchorfile>
+      <anchor>a0a9cd304e749783742eff6a3d67f9b25</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>end</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1SingleNZSegmentVector.html</anchorfile>
+      <anchor>aadaeac6703be152e05ee800063260b51</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>size</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1SingleNZSegmentVector.html</anchorfile>
+      <anchor>adbbe1207460a8aec0cd7f16c10f28626</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>const VectorConstRef &amp;</type>
+      <name>nzSegment</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1SingleNZSegmentVector.html</anchorfile>
+      <anchor>ae280dbeee246ab2d697d07ae3ee0975e</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>toFullVector</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1SingleNZSegmentVector.html</anchorfile>
+      <anchor>a904df3383ec6f7fa9ba1d73e3232f7d5</anchor>
+      <arglist>(VectorRef u) const</arglist>
+    </member>
+    <member kind="function">
+      <type>double</type>
+      <name>dot</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1SingleNZSegmentVector.html</anchorfile>
+      <anchor>ad600ef27d5e3f7eddd87d635ade10b54</anchor>
+      <arglist>(const VectorConstRef &amp;u) const</arglist>
+    </member>
+  </compound>
   <compound kind="struct">
     <name>jrl::qp::SolverOptions</name>
     <filename>structjrl_1_1qp_1_1SolverOptions.html</filename>
+    <member kind="function">
+      <type>std::uint32_t</type>
+      <name>logFlags</name>
+      <anchorfile>structjrl_1_1qp_1_1SolverOptions.html</anchorfile>
+      <anchor>a7c3ab3b3fa305aca354d5f382d5276cd</anchor>
+      <arglist>() const</arglist>
+    </member>
     <member kind="function">
       <type>SolverOptions &amp;</type>
       <name>logFlags</name>
@@ -2512,6 +3793,62 @@
       <anchor>acb3faaee22420e96fd608660bb12e3bf</anchor>
       <arglist>(LogFlags f)</arglist>
     </member>
+    <member kind="function">
+      <type>int</type>
+      <name>maxIter</name>
+      <anchorfile>structjrl_1_1qp_1_1SolverOptions.html</anchorfile>
+      <anchor>a52cedd1d9b19dcbcd2d5f479a0307229</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>SolverOptions &amp;</type>
+      <name>maxIter</name>
+      <anchorfile>structjrl_1_1qp_1_1SolverOptions.html</anchorfile>
+      <anchor>a8cb10bb1bb84b14ee5c406d0746f0535</anchor>
+      <arglist>(int max)</arglist>
+    </member>
+    <member kind="function">
+      <type>double</type>
+      <name>bigBnd</name>
+      <anchorfile>structjrl_1_1qp_1_1SolverOptions.html</anchorfile>
+      <anchor>aaf2c08da50da6c00f1fef0e061b21269</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>SolverOptions &amp;</type>
+      <name>bigBnd</name>
+      <anchorfile>structjrl_1_1qp_1_1SolverOptions.html</anchorfile>
+      <anchor>a28e05cd61e6c6f51edb12bc5148f040e</anchor>
+      <arglist>(double big)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>warmStart</name>
+      <anchorfile>structjrl_1_1qp_1_1SolverOptions.html</anchorfile>
+      <anchor>a5dec01e3edc9c4df93f9d39f0093ef61</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>SolverOptions &amp;</type>
+      <name>warmStart</name>
+      <anchorfile>structjrl_1_1qp_1_1SolverOptions.html</anchorfile>
+      <anchor>a66dddd6e80dd8e3981f7f760e200a090</anchor>
+      <arglist>(bool warm)</arglist>
+    </member>
+    <member kind="function">
+      <type>std::ostream &amp;</type>
+      <name>logStream</name>
+      <anchorfile>structjrl_1_1qp_1_1SolverOptions.html</anchorfile>
+      <anchor>abeeb665e478aea410f5e695bf33d414d</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>SolverOptions &amp;</type>
+      <name>logStream</name>
+      <anchorfile>structjrl_1_1qp_1_1SolverOptions.html</anchorfile>
+      <anchor>ad6375b64d78a681f34728937f8650465</anchor>
+      <arglist>(std::ostream &amp;os)</arglist>
+    </member>
     <member kind="variable">
       <type>int</type>
       <name>maxIter_</name>
@@ -2524,6 +3861,13 @@
       <name>bigBnd_</name>
       <anchorfile>structjrl_1_1qp_1_1SolverOptions.html</anchorfile>
       <anchor>aaf65597aba4934ea7a53284125265477</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>bool</type>
+      <name>warmStart_</name>
+      <anchorfile>structjrl_1_1qp_1_1SolverOptions.html</anchorfile>
+      <anchor>a27854976d075dfdfaa81f2d208d016d0</anchor>
       <arglist></arglist>
     </member>
     <member kind="variable">
@@ -2574,6 +3918,320 @@
     </member>
   </compound>
   <compound kind="class">
+    <name>jrl::qp::structured::StructuredC</name>
+    <filename>classjrl_1_1qp_1_1structured_1_1StructuredC.html</filename>
+    <member kind="enumeration">
+      <type></type>
+      <name>Type</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredC.html</anchorfile>
+      <anchor>a36b9bbce9b2655b86bbca6a53da27114</anchor>
+      <arglist></arglist>
+      <enumvalue file="classjrl_1_1qp_1_1structured_1_1StructuredC.html" anchor="a36b9bbce9b2655b86bbca6a53da27114a9ac677ee4eec25d9e59707a661d2c5e1">Diagonal</enumvalue>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>StructuredC</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredC.html</anchorfile>
+      <anchor>acbee76f8eb8d69ca56c8dcf149e9fc29</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>StructuredC</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredC.html</anchorfile>
+      <anchor>aa808c2911035b1c47cbe78ef8a647a75</anchor>
+      <arglist>(std::vector&lt; MatrixConstRef &gt; C)</arglist>
+    </member>
+    <member kind="function">
+      <type>StructuredC &amp;</type>
+      <name>operator=</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredC.html</anchorfile>
+      <anchor>aff916e750a90bbc450de69ef6d846aea</anchor>
+      <arglist>(const StructuredC &amp;other)</arglist>
+    </member>
+    <member kind="function">
+      <type>const MatrixConstRef &amp;</type>
+      <name>diag</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredC.html</anchorfile>
+      <anchor>aab0604470b83ac56de67d2d9a731b642</anchor>
+      <arglist>(int i) const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>nbVar</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredC.html</anchorfile>
+      <anchor>afa4486bee5d2657a96fec979d21c45b5</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>nbVar</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredC.html</anchorfile>
+      <anchor>a5048993acd504e63a84babe6b2d20752</anchor>
+      <arglist>(int i) const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>nbCstr</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredC.html</anchorfile>
+      <anchor>a0b07d9d4192e24c6ae7c457d56bd2530</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>nbCstr</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredC.html</anchorfile>
+      <anchor>a97a9e47a17df471d0e4b0847f6cc6fac</anchor>
+      <arglist>(int i) const</arglist>
+    </member>
+    <member kind="function">
+      <type>internal::SingleNZSegmentVector</type>
+      <name>col</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredC.html</anchorfile>
+      <anchor>aa5008e17efe133f99f679225cd79ddc5</anchor>
+      <arglist>(int i) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>transposeMult</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredC.html</anchorfile>
+      <anchor>a796f85ce709510014eaa6b7b476b00ab</anchor>
+      <arglist>(VectorRef out, const VectorConstRef &amp;in) const</arglist>
+    </member>
+    <member kind="friend">
+      <type>friend std::ostream &amp;</type>
+      <name>operator&lt;&lt;</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredC.html</anchorfile>
+      <anchor>a5fea4c166a21cd183a1a68ef10bfd240</anchor>
+      <arglist>(std::ostream &amp;os, const StructuredC &amp;)</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>jrl::qp::structured::StructuredG</name>
+    <filename>classjrl_1_1qp_1_1structured_1_1StructuredG.html</filename>
+    <member kind="enumeration">
+      <type></type>
+      <name>Type</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredG.html</anchorfile>
+      <anchor>aa44fc2e844ab04277211eb87b6a6f71a</anchor>
+      <arglist></arglist>
+      <enumvalue file="classjrl_1_1qp_1_1structured_1_1StructuredG.html" anchor="aa44fc2e844ab04277211eb87b6a6f71aa5703e9c5e91f1422d8cc46c4da1b4121">TriBlockDiagonal</enumvalue>
+      <enumvalue file="classjrl_1_1qp_1_1structured_1_1StructuredG.html" anchor="aa44fc2e844ab04277211eb87b6a6f71aafe2f8601f22f1978fa215a3dc8c9fa73">BlockArrowUp</enumvalue>
+      <enumvalue file="classjrl_1_1qp_1_1structured_1_1StructuredG.html" anchor="aa44fc2e844ab04277211eb87b6a6f71aa002c3dc5e4c51602047adb24dddbc119">BlockArrowDown</enumvalue>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>StructuredG</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredG.html</anchorfile>
+      <anchor>acdfd560d391ea94a19cbd4e9780cd3cd</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>StructuredG</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredG.html</anchorfile>
+      <anchor>a1a3d1205e5a034465034e59c93ee06f3</anchor>
+      <arglist>(Type t, const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;offDiag)</arglist>
+    </member>
+    <member kind="function">
+      <type>Type</type>
+      <name>type</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredG.html</anchorfile>
+      <anchor>a7a65b959af98570a8ac0eb66a799c8f9</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>const MatrixRef &amp;</type>
+      <name>diag</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredG.html</anchorfile>
+      <anchor>a212c91bd7478db5604f1f1f62a050ffc</anchor>
+      <arglist>(int i) const</arglist>
+    </member>
+    <member kind="function">
+      <type>const MatrixRef &amp;</type>
+      <name>offDiag</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredG.html</anchorfile>
+      <anchor>a54846e1054a4215796634977b55c7f23</anchor>
+      <arglist>(int i) const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>nbVar</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredG.html</anchorfile>
+      <anchor>a820c143386bab6d2d9bc8af32ae248ea</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>int</type>
+      <name>nbVar</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredG.html</anchorfile>
+      <anchor>a5534c80ffe30e08f92f7dfbc79f9d9b0</anchor>
+      <arglist>(int i) const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>lltInPlace</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredG.html</anchorfile>
+      <anchor>aa76a36461cb547bc16ca75c66de8128d</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>decomposed</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredG.html</anchorfile>
+      <anchor>a3a71ce0708e089ff83532b4bd216321e</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>solveInPlaceLTranspose</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredG.html</anchorfile>
+      <anchor>a947c7da651c57ad4ced3b538e14f9cd8</anchor>
+      <arglist>(VectorRef v) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>solveL</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredG.html</anchorfile>
+      <anchor>a8561815dc743082734e55feb5f997fc8</anchor>
+      <arglist>(VectorRef out, const VectorConstRef &amp;in) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>solveL</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredG.html</anchorfile>
+      <anchor>ab617d132535b4788c81770b818a5a36a</anchor>
+      <arglist>(VectorRef out, const internal::SingleNZSegmentVector &amp;in) const</arglist>
+    </member>
+    <member kind="friend">
+      <type>friend std::ostream &amp;</type>
+      <name>operator&lt;&lt;</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredG.html</anchorfile>
+      <anchor>a24dea4b99238cee9b26153df9018d496</anchor>
+      <arglist>(std::ostream &amp;os, const StructuredG &amp;)</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>jrl::qp::structured::StructuredJ</name>
+    <filename>classjrl_1_1qp_1_1structured_1_1StructuredJ.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>StructuredJ</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredJ.html</anchorfile>
+      <anchor>aa58c53fefde94f8982b2e45bd5146b7e</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setL</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredJ.html</anchorfile>
+      <anchor>a61b8b8196e80c885e04fd1f8c5c20aac</anchor>
+      <arglist>(const StructuredG &amp;decomposedG)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setQ</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredJ.html</anchorfile>
+      <anchor>aade0892b147f28d6f6e25a28582d292e</anchor>
+      <arglist>(const internal::PartitionnedQ &amp;Q)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>reset</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredJ.html</anchorfile>
+      <anchor>a78700f9caf7481f43407bfacf597f470</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>resize</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredJ.html</anchorfile>
+      <anchor>a8200ea0a6b454d8c0f7b64c0278f402d</anchor>
+      <arglist>(int nbVar)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>premultByJ2</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredJ.html</anchorfile>
+      <anchor>a9e6e7cebf05a762bc28108912b7cd454</anchor>
+      <arglist>(VectorRef out, const VectorConstRef &amp;in) const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>premultByJt</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredJ.html</anchorfile>
+      <anchor>ad81d21ac7d083600651a3a4ac879f336</anchor>
+      <arglist>(VectorRef out, const StructuredC &amp;C, const internal::SelectedConstraint &amp;sc) const</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>jrl::qp::structured::StructuredQR</name>
+    <filename>classjrl_1_1qp_1_1structured_1_1StructuredQR.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>StructuredQR</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredQR.html</anchorfile>
+      <anchor>ac0771e90ad1ec9c292122398ee0667b5</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setL</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredQR.html</anchorfile>
+      <anchor>ad75ce82a154bbc2b8d1fc0035f3f63ef</anchor>
+      <arglist>(const StructuredG &amp;decomposedG)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>reset</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredQR.html</anchorfile>
+      <anchor>ad48335b60a69c99a064189b288c6d7a1</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>resize</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredQR.html</anchorfile>
+      <anchor>a503bade24991b50e51c6ac7beb39d9f0</anchor>
+      <arglist>(int nbVar)</arglist>
+    </member>
+    <member kind="function">
+      <type>internal::PartitionnedQ</type>
+      <name>getPartitionnedQ</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredQR.html</anchorfile>
+      <anchor>a4f45de5e865df88aab6e496768dcf417</anchor>
+      <arglist>() const</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>setRToZero</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredQR.html</anchorfile>
+      <anchor>a19fb0ceb6347ab331a2292ff7073b747</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>RSolve</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredQR.html</anchorfile>
+      <anchor>a445fd8df1419cb731d2932fba18bc1f3</anchor>
+      <arglist>(VectorRef out, const VectorConstRef &amp;in) const</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>add</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredQR.html</anchorfile>
+      <anchor>a6d2b5c494f9d1f6530372e7274b1de7e</anchor>
+      <arglist>(const VectorConstRef &amp;d)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>remove</name>
+      <anchorfile>classjrl_1_1qp_1_1structured_1_1StructuredQR.html</anchorfile>
+      <anchor>ac6f0dcb644c73bbb4cd6709d97b33d65</anchor>
+      <arglist>(int l)</arglist>
+    </member>
+  </compound>
+  <compound kind="class">
     <name>jrl::qp::internal::TerminationType</name>
     <filename>classjrl_1_1qp_1_1internal_1_1TerminationType.html</filename>
     <member kind="function">
@@ -2605,6 +4263,17 @@
       <arglist>() const</arglist>
     </member>
   </compound>
+  <compound kind="struct">
+    <name>jrl::qp::internal::to_underlying_type</name>
+    <filename>structjrl_1_1qp_1_1internal_1_1to__underlying__type.html</filename>
+    <member kind="function">
+      <type>constexpr auto</type>
+      <name>operator()</name>
+      <anchorfile>structjrl_1_1qp_1_1internal_1_1to__underlying__type.html</anchorfile>
+      <anchor>a22954c67e7ffd2a3a68a66faf2dd5fd3</anchor>
+      <arglist>(const T &amp;v) const noexcept</arglist>
+    </member>
+  </compound>
   <compound kind="class">
     <name>jrl::qp::utils::toMatlab</name>
     <filename>classjrl_1_1qp_1_1utils_1_1toMatlab.html</filename>
@@ -2633,7 +4302,7 @@
   <compound kind="class">
     <name>jrl::qp::internal::Workspace</name>
     <filename>classjrl_1_1qp_1_1internal_1_1Workspace.html</filename>
-    <templarg>Scalar</templarg>
+    <templarg></templarg>
     <member kind="function">
       <type></type>
       <name>Workspace</name>
@@ -2675,6 +4344,13 @@
       <anchorfile>classjrl_1_1qp_1_1internal_1_1Workspace.html</anchorfile>
       <anchor>ae3f6a668aa70c6d5c6996ec28b2666d4</anchor>
       <arglist>(int rows, int cols, bool fit=false)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>changeLd</name>
+      <anchorfile>classjrl_1_1qp_1_1internal_1_1Workspace.html</anchorfile>
+      <anchor>a881921de56482098876bcb232dc555ff</anchor>
+      <arglist>(int rows, int cols, int oldLd, int newLd)</arglist>
     </member>
     <member kind="function">
       <type>auto</type>
@@ -2721,8 +4397,10 @@
     <name>jrl::qp</name>
     <filename>namespacejrl_1_1qp.html</filename>
     <namespace>jrl::qp::constant</namespace>
+    <namespace>jrl::qp::decomposition</namespace>
     <namespace>jrl::qp::experimental</namespace>
     <namespace>jrl::qp::internal</namespace>
+    <namespace>jrl::qp::structured</namespace>
     <namespace>jrl::qp::test</namespace>
     <namespace>jrl::qp::utils</namespace>
     <class kind="class">jrl::qp::DualSolver</class>
@@ -2754,6 +4432,13 @@
       <name>VectorRef</name>
       <anchorfile>namespacejrl_1_1qp.html</anchorfile>
       <anchor>a91278fdbb65099f6051406727c2e28eb</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>Eigen::JacobiRotation&lt; double &gt;</type>
+      <name>Givens</name>
+      <anchorfile>namespacejrl_1_1qp.html</anchorfile>
+      <anchor>a7f003bb597f0e6405c23ec9f3c718670</anchor>
       <arglist></arglist>
     </member>
     <member kind="typedef">
@@ -2796,6 +4481,8 @@
       <enumvalue file="namespacejrl_1_1qp.html" anchor="a2be96344dd3712e23a7eabc0d530062ca6faaca695f728b47f47dd389f31e4a93">INFEASIBLE</enumvalue>
       <enumvalue file="namespacejrl_1_1qp.html" anchor="a2be96344dd3712e23a7eabc0d530062ca166fdb12611b864605b50bcb6ef3c185">MAX_ITER_REACHED</enumvalue>
       <enumvalue file="namespacejrl_1_1qp.html" anchor="a2be96344dd3712e23a7eabc0d530062ca5faf851f584c5d83788f2de723637cdc">LINEAR_DEPENDENCY_DETECTED</enumvalue>
+      <enumvalue file="namespacejrl_1_1qp.html" anchor="a2be96344dd3712e23a7eabc0d530062ca0d4ade66ad6c3f9caf79f8d75b63d75b">OVERCONSTRAINED_PROBLEM</enumvalue>
+      <enumvalue file="namespacejrl_1_1qp.html" anchor="a2be96344dd3712e23a7eabc0d530062ca696b031073e74bf2cb98e5ef201d4aa3">UNKNOWN</enumvalue>
     </member>
     <member kind="enumeration">
       <type></type>
@@ -2810,6 +4497,7 @@
       <enumvalue file="namespacejrl_1_1qp.html" anchor="ad24df199de1a6f61275d4c96107b5dc3afac1d6b38b3d6531966bceaec0983095">ITERATION_ADVANCE_DETAILS</enumvalue>
       <enumvalue file="namespacejrl_1_1qp.html" anchor="ad24df199de1a6f61275d4c96107b5dc3a6a3ca91cf2d0158ff4a3a3bf791c9f38">ACTIVE_SET</enumvalue>
       <enumvalue file="namespacejrl_1_1qp.html" anchor="ad24df199de1a6f61275d4c96107b5dc3a84033091af4b588002199e5ed322ba6c">ACTIVE_SET_DETAILS</enumvalue>
+      <enumvalue file="namespacejrl_1_1qp.html" anchor="ad24df199de1a6f61275d4c96107b5dc3afaee4ca3c30ee18148ce3ada37466498">INIT</enumvalue>
       <enumvalue file="namespacejrl_1_1qp.html" anchor="ad24df199de1a6f61275d4c96107b5dc3aca5c504c6136e20051be115160b0f0b8">MISC</enumvalue>
       <enumvalue file="namespacejrl_1_1qp.html" anchor="ad24df199de1a6f61275d4c96107b5dc3a00749b615db836bc0f8fd5f087b2595a">NO_ITER</enumvalue>
     </member>
@@ -2861,9 +4549,78 @@
     </member>
   </compound>
   <compound kind="namespace">
+    <name>jrl::qp::decomposition</name>
+    <filename>namespacejrl_1_1qp_1_1decomposition.html</filename>
+    <member kind="function">
+      <type>JRLQP_DLLAPI bool</type>
+      <name>blockArrowLLT</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>a2f65392b0bcd4dabf6cf997d6d8898a3</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;side, bool up=false)</arglist>
+    </member>
+    <member kind="function">
+      <type>JRLQP_DLLAPI void</type>
+      <name>blockArrowLSolve</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>a944556805b9fcec753b8a7622c5e796e</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;side, bool up, MatrixRef M, int start=0, int end=-1)</arglist>
+    </member>
+    <member kind="function">
+      <type>JRLQP_DLLAPI void</type>
+      <name>blockArrowLTransposeSolve</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>ada4d609948373c6e0a7ecad04787dafb</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;side, bool up, MatrixRef M, int start=0, int end=-1)</arglist>
+    </member>
+    <member kind="function">
+      <type>JRLQP_DLLAPI bool</type>
+      <name>triBlockDiagLLT</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>ab12e8c947e5c397e5e5384ed017369b5</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;subDiag)</arglist>
+    </member>
+    <member kind="function">
+      <type>JRLQP_DLLAPI void</type>
+      <name>triBlockDiagLSolve</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>a9a9937ec7cc2b641254c81d004cf7ee8</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;subDiag, MatrixRef M, int start=0)</arglist>
+    </member>
+    <member kind="function">
+      <type>JRLQP_DLLAPI void</type>
+      <name>triBlockDiagLTransposeSolve</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>ab817f90e5d71975926a9a2e8c2c43ffd</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;subDiag, MatrixRef M, int end=-1)</arglist>
+    </member>
+    <member kind="function">
+      <type>bool</type>
+      <name>blockArrowLLT_</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>a642f87ad7947600ff28ad25113c20219</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;side)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>blockArrowLSolve_</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>aeb2c2953ca0f7fb5170758f574b92a7f</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;side, MatrixRef M, int start, int end)</arglist>
+    </member>
+    <member kind="function">
+      <type>void</type>
+      <name>blockArrowLTransposeSolve_</name>
+      <anchorfile>namespacejrl_1_1qp_1_1decomposition.html</anchorfile>
+      <anchor>ae88cb7056884a3725d6efeef2a53202f</anchor>
+      <arglist>(const std::vector&lt; MatrixRef &gt; &amp;diag, const std::vector&lt; MatrixRef &gt; &amp;side, MatrixRef M, int start, int end)</arglist>
+    </member>
+  </compound>
+  <compound kind="namespace">
     <name>jrl::qp::experimental</name>
     <filename>namespacejrl_1_1qp_1_1experimental.html</filename>
+    <class kind="class">jrl::qp::experimental::BlockGISolver</class>
     <class kind="class">jrl::qp::experimental::BoxAndSingleConstraintSolver</class>
+    <class kind="class">jrl::qp::experimental::GoldfarbIdnaniSolver</class>
   </compound>
   <compound kind="namespace">
     <name>jrl::qp::internal</name>
@@ -2872,10 +4629,17 @@
     <class kind="class">jrl::qp::internal::always_false</class>
     <class kind="class">jrl::qp::internal::always_true</class>
     <class kind="class">jrl::qp::internal::ConstraintNormal</class>
+    <class kind="class">jrl::qp::internal::ElemOrthonormalSequence</class>
+    <class kind="struct">jrl::qp::internal::identity</class>
     <class kind="class">jrl::qp::internal::InitTermination</class>
     <class kind="struct">jrl::qp::internal::is_base</class>
     <class kind="struct">jrl::qp::internal::NotConst</class>
+    <class kind="class">jrl::qp::internal::OrthonormalSequence</class>
+    <class kind="class">jrl::qp::internal::PartitionnedQ</class>
+    <class kind="class">jrl::qp::internal::SelectedConstraint</class>
+    <class kind="class">jrl::qp::internal::SingleNZSegmentVector</class>
     <class kind="class">jrl::qp::internal::TerminationType</class>
+    <class kind="struct">jrl::qp::internal::to_underlying_type</class>
     <class kind="class">jrl::qp::internal::Workspace</class>
     <member kind="typedef">
       <type>std::enable_if_t&lt;(...||(std::is_same_v&lt; T, Base &gt;||derives_from&lt; T, Base &gt;())), int &gt;</type>
@@ -2890,6 +4654,23 @@
       <anchorfile>namespacejrl_1_1qp_1_1internal.html</anchorfile>
       <anchor>ae6160ea153be0ec4ab02997407a6adab</anchor>
       <arglist></arglist>
+    </member>
+    <member kind="typedef">
+      <type>std::conditional_t&lt; std::is_enum_v&lt; T &gt;, to_underlying_type, identity &gt;</type>
+      <name>cast_as_underlying_if_enum</name>
+      <anchorfile>namespacejrl_1_1qp_1_1internal.html</anchorfile>
+      <anchor>a9222c7f429c9c1c4e65bb38b2252e7e7</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="enumeration">
+      <type></type>
+      <name>OSeqType</name>
+      <anchorfile>namespacejrl_1_1qp_1_1internal.html</anchorfile>
+      <anchor>aa0759fb36800658279d39fb5949361ec</anchor>
+      <arglist></arglist>
+      <enumvalue file="namespacejrl_1_1qp_1_1internal.html" anchor="aa0759fb36800658279d39fb5949361eca5196f1040c636101b5797c3cbc926613">Householder</enumvalue>
+      <enumvalue file="namespacejrl_1_1qp_1_1internal.html" anchor="aa0759fb36800658279d39fb5949361eca0734c05ef4e55a702e6c121ea6609d44">Givens</enumvalue>
+      <enumvalue file="namespacejrl_1_1qp_1_1internal.html" anchor="aa0759fb36800658279d39fb5949361ecafc77ea6ca6b9d7a68b7820f4cc96496b">Permutation</enumvalue>
     </member>
     <member kind="function">
       <type>std::ostream &amp;</type>
@@ -2926,6 +4707,14 @@
       <anchor>aae7ef3e5987a86cb20f10d20292f7a34</anchor>
       <arglist>(bool update, bool new_value=false)</arglist>
     </member>
+  </compound>
+  <compound kind="namespace">
+    <name>jrl::qp::structured</name>
+    <filename>namespacejrl_1_1qp_1_1structured.html</filename>
+    <class kind="class">jrl::qp::structured::StructuredC</class>
+    <class kind="class">jrl::qp::structured::StructuredG</class>
+    <class kind="class">jrl::qp::structured::StructuredJ</class>
+    <class kind="class">jrl::qp::structured::StructuredQR</class>
   </compound>
   <compound kind="namespace">
     <name>jrl::qp::test</name>

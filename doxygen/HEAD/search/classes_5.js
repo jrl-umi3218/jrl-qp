@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['goldfarbidnanisolver',['GoldfarbIdnaniSolver',['../classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html',1,'jrl::qp']]]
+  ['feasibilityconstraints_415',['FeasibilityConstraints',['../structjrl_1_1qp_1_1test_1_1FeasibilityConstraints.html',1,'jrl::qp::test']]]
 ];

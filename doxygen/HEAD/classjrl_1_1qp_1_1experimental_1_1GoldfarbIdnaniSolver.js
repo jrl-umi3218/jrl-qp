@@ -1,0 +1,26 @@
+var classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver =
+[
+    [ "Problem", "structjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver_1_1Problem.html", "structjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver_1_1Problem" ],
+    [ "GoldfarbIdnaniSolver", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#ae825d7f0ce1a220cdb0aeed8df98ca32", null ],
+    [ "GoldfarbIdnaniSolver", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#a4b2dc0b50c24d15f9bd2e96f97f0aa27", null ],
+    [ "~GoldfarbIdnaniSolver", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#afe49544908d6d947a0b6b8119181f540", null ],
+    [ "addConstraint_", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#a7e4acd86253debf754de8c8b945d6575", null ],
+    [ "computeStep_", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#a2a36e64743c67d9d4212874fcca7fefc", null ],
+    [ "computeStepLength_", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#a058ee461278d3e183ab0e11132983175", null ],
+    [ "dot_", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#a9190592c0f1265667755de7b2326d065", null ],
+    [ "init_", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#ac909689a54427bdc90ab63fc79cf746a", null ],
+    [ "initializeComputationData", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#afef8acec0b83061608e8a46a1de31182", null ],
+    [ "initializePrimalDualPoints", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#af3f31518c8afa7353e6412dbae02bf8a", null ],
+    [ "processInitialActiveSet", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#ad59cc22f276aa36d0db0afc7525e9e13", null ],
+    [ "removeConstraint_", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#aac6aa99da97e04447ad16d989631bca4", null ],
+    [ "resize_", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#ac493cab8260a846f7a6abcbf54142dc0", null ],
+    [ "selectViolatedConstraint_", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#ae4b218c21358538f6c0d537e0055350c", null ],
+    [ "solve", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#adc8cc6d39496332b1ac1ca132810bb7a", null ],
+    [ "pb_", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#a5cc3e85ef061d1dc7dc2296ff8b09f6f", null ],
+    [ "work_bact_", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#a26aa3a2afe4182de45d308c67775d55f", null ],
+    [ "work_d_", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#a26b710c860da17034a7c12b3f2b63cb6", null ],
+    [ "work_hCoeffs_", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#a083aa05042891a1a4e8af9fb45eea06d", null ],
+    [ "work_J_", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#afb29add55b2e6b7626a2c64441ddea3b", null ],
+    [ "work_R_", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#ae4b4a53e3b594a4c70db62bd352fbbcb", null ],
+    [ "work_tmp_", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html#a683d587fb97fbee70fb8ba73de4b905d", null ]
+];

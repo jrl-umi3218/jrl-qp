@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['terminationstatus',['TerminationStatus',['../namespacejrl_1_1qp.html#a2be96344dd3712e23a7eabc0d530062c',1,'jrl::qp']]]
+  ['oseqtype_775',['OSeqType',['../namespacejrl_1_1qp_1_1internal.html#aa0759fb36800658279d39fb5949361ec',1,'jrl::qp::internal']]]
 ];

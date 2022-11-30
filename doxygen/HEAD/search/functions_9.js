@@ -1,22 +1,7 @@
 var searchData=
 [
-  ['nbactivebound',['nbActiveBound',['../classjrl_1_1qp_1_1internal_1_1ActiveSet.html#a4a35ba59abf19fd419f75a0b3c08065a',1,'jrl::qp::internal::ActiveSet']]],
-  ['nbactivecstr',['nbActiveCstr',['../classjrl_1_1qp_1_1internal_1_1ActiveSet.html#abea466119b8642a2bf13f764c3124b05',1,'jrl::qp::internal::ActiveSet']]],
-  ['nbactiveequality',['nbActiveEquality',['../classjrl_1_1qp_1_1internal_1_1ActiveSet.html#a1c4046ebffd7c67614cbae88aab704e0',1,'jrl::qp::internal::ActiveSet']]],
-  ['nbactiveinequality',['nbActiveInequality',['../classjrl_1_1qp_1_1internal_1_1ActiveSet.html#a15225c1e7bb222f84643609d7da1aad4',1,'jrl::qp::internal::ActiveSet']]],
-  ['nbactivelowerbound',['nbActiveLowerBound',['../classjrl_1_1qp_1_1internal_1_1ActiveSet.html#a1a34f706c725f641fe1d5a72becd59fd',1,'jrl::qp::internal::ActiveSet']]],
-  ['nbactivelowerinequality',['nbActiveLowerInequality',['../classjrl_1_1qp_1_1internal_1_1ActiveSet.html#a56eb9ea9e655265c15f77b399ce76053',1,'jrl::qp::internal::ActiveSet']]],
-  ['nbactiveupperbound',['nbActiveUpperBound',['../classjrl_1_1qp_1_1internal_1_1ActiveSet.html#a62cde1372396867b9500a10802d0e4a3',1,'jrl::qp::internal::ActiveSet']]],
-  ['nbactiveupperinequality',['nbActiveUpperInequality',['../classjrl_1_1qp_1_1internal_1_1ActiveSet.html#a9bb5f74aefdf808201e55dba8252155d',1,'jrl::qp::internal::ActiveSet']]],
-  ['nball',['nbAll',['../classjrl_1_1qp_1_1internal_1_1ActiveSet.html#aaf46e4b12ff48ae4c39a7780ab0ea3cd',1,'jrl::qp::internal::ActiveSet']]],
-  ['nbbnd',['nbBnd',['../classjrl_1_1qp_1_1internal_1_1ActiveSet.html#ae310a82d849a4734b61506c54273b0d2',1,'jrl::qp::internal::ActiveSet']]],
-  ['nbcstr',['nbCstr',['../classjrl_1_1qp_1_1internal_1_1ActiveSet.html#a4037e6f04e033feb5061e476b945ba23',1,'jrl::qp::internal::ActiveSet']]],
-  ['nbfixedvariable',['nbFixedVariable',['../classjrl_1_1qp_1_1internal_1_1ActiveSet.html#ad2ff188466c76bc58044b9838ce08dc1',1,'jrl::qp::internal::ActiveSet']]],
-  ['neq',['nEq',['../structjrl_1_1qp_1_1test_1_1ProblemCharacteristics.html#a9591d56e1f896bb0567de2dc7cfadc0f',1,'jrl::qp::test::ProblemCharacteristics']]],
-  ['nineq',['nIneq',['../structjrl_1_1qp_1_1test_1_1ProblemCharacteristics.html#aa16bfafdf72d51075af117010372374d',1,'jrl::qp::test::ProblemCharacteristics']]],
-  ['nsharedrank',['nSharedRank',['../structjrl_1_1qp_1_1test_1_1ProblemCharacteristics.html#a63d727f6181639dd658a5e561967d3b5',1,'jrl::qp::test::ProblemCharacteristics']]],
-  ['nstrongactbounds',['nStrongActBounds',['../structjrl_1_1qp_1_1test_1_1ProblemCharacteristics.html#adbb4fdfcd5f29a61c717f977e2677d53',1,'jrl::qp::test::ProblemCharacteristics']]],
-  ['nstrongactineq',['nStrongActIneq',['../structjrl_1_1qp_1_1test_1_1ProblemCharacteristics.html#a052e1ea0985ba66389f49911d13b59a8',1,'jrl::qp::test::ProblemCharacteristics']]],
-  ['nweakactbounds',['nWeakActBounds',['../structjrl_1_1qp_1_1test_1_1ProblemCharacteristics.html#a4c79988746c223b2a4bfeddef84437e5',1,'jrl::qp::test::ProblemCharacteristics']]],
-  ['nweakactineq',['nWeakActIneq',['../structjrl_1_1qp_1_1test_1_1ProblemCharacteristics.html#aafbfd1ee6277de257d9c70d26c388180',1,'jrl::qp::test::ProblemCharacteristics']]]
+  ['m1_576',['m1',['../classjrl_1_1qp_1_1internal_1_1PartitionnedQ.html#a8c85391e172dcd93bae5a560584b1c5b',1,'jrl::qp::internal::PartitionnedQ']]],
+  ['m2_577',['m2',['../classjrl_1_1qp_1_1internal_1_1PartitionnedQ.html#ad4f53a7289cb653667b63798f6a9885f',1,'jrl::qp::internal::PartitionnedQ']]],
+  ['maxiter_578',['maxIter',['../structjrl_1_1qp_1_1SolverOptions.html#a52cedd1d9b19dcbcd2d5f479a0307229',1,'jrl::qp::SolverOptions::maxIter() const'],['../structjrl_1_1qp_1_1SolverOptions.html#a8cb10bb1bb84b14ee5c406d0746f0535',1,'jrl::qp::SolverOptions::maxIter(int max)']]],
+  ['multipliers_579',['multipliers',['../classjrl_1_1qp_1_1DualSolver.html#a7f782a38554b3a745fdf944987aa92e0',1,'jrl::qp::DualSolver']]]
 ];

@@ -1,7 +1,9 @@
 var dir_98f7936f085cf19cdf0ebc7927b0f05e =
 [
+    [ "decomposition", "dir_94cec8ec405267c61c0577e12f478c50.html", "dir_94cec8ec405267c61c0577e12f478c50" ],
     [ "experimental", "dir_49c9cda5c07df36712bc188c48f3d0a4.html", "dir_49c9cda5c07df36712bc188c48f3d0a4" ],
     [ "internal", "dir_0c0370eeef4944a898a68d897a53cda4.html", "dir_0c0370eeef4944a898a68d897a53cda4" ],
+    [ "structured", "dir_b4a791bd487cf0f47958fc202c570eab.html", "dir_b4a791bd487cf0f47958fc202c570eab" ],
     [ "test", "dir_bce3761f5705fc7212499374e6418948.html", "dir_bce3761f5705fc7212499374e6418948" ],
     [ "utils", "dir_8ae0bef1e7736cfe385d33155400a06c.html", "dir_8ae0bef1e7736cfe385d33155400a06c" ],
     [ "api.h", "api_8h.html", "api_8h" ],

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['qpproblem',['QPProblem',['../structjrl_1_1qp_1_1test_1_1QPProblem.html',1,'jrl::qp::test']]]
+  ['orthonormalsequence_425',['OrthonormalSequence',['../classjrl_1_1qp_1_1internal_1_1OrthonormalSequence.html',1,'jrl::qp::internal']]]
 ];

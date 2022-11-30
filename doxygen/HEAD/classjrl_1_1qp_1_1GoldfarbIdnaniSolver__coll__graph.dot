@@ -1,20 +1,21 @@
 digraph "jrl::qp::GoldfarbIdnaniSolver"
 {
+ // LATEX_PDF_SIZE
   edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
   node [fontname="Helvetica",fontsize="10",shape=record];
   rankdir="LR";
-  Node3 [label="jrl::qp::GoldfarbIdnaniSolver",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
-  Node4 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node4 [label="jrl::qp::DualSolver",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classjrl_1_1qp_1_1DualSolver.html"];
-  Node5 -> Node4 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" work_r_\nwork_u_\nwork_x_\nwork_z_" ,fontname="Helvetica"];
-  Node5 [label="jrl::qp::internal::\lWorkspace\< Scalar \>",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classjrl_1_1qp_1_1internal_1_1Workspace.html"];
-  Node6 -> Node4 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" A_" ,fontname="Helvetica"];
-  Node6 [label="jrl::qp::internal::\lActiveSet",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classjrl_1_1qp_1_1internal_1_1ActiveSet.html"];
-  Node7 -> Node4 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" log_" ,fontname="Helvetica"];
-  Node7 [label="jrl::qp::utils::Logger",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classjrl_1_1qp_1_1utils_1_1Logger.html"];
-  Node8 -> Node4 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" options_" ,fontname="Helvetica"];
-  Node8 [label="jrl::qp::SolverOptions",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structjrl_1_1qp_1_1SolverOptions.html"];
-  Node5 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" work_R_\nwork_d_\nwork_J_" ,fontname="Helvetica"];
-  Node9 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" pb_" ,fontname="Helvetica"];
-  Node9 [label="jrl::qp::GoldfarbIdnaniSolver\l::Problem",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html"];
+  Node1 [label="jrl::qp::GoldfarbIdnaniSolver",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node2 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="jrl::qp::DualSolver",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classjrl_1_1qp_1_1DualSolver.html",tooltip=" "];
+  Node3 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" work_r_\nwork_u_\nwork_x_\nwork_z_" ,fontname="Helvetica"];
+  Node3 [label="jrl::qp::internal::\lWorkspace\< Scalar \>",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classjrl_1_1qp_1_1internal_1_1Workspace.html",tooltip=" "];
+  Node4 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" A_" ,fontname="Helvetica"];
+  Node4 [label="jrl::qp::internal::\lActiveSet",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classjrl_1_1qp_1_1internal_1_1ActiveSet.html",tooltip=" "];
+  Node5 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" log_" ,fontname="Helvetica"];
+  Node5 [label="jrl::qp::utils::Logger",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classjrl_1_1qp_1_1utils_1_1Logger.html",tooltip=" "];
+  Node6 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" options_" ,fontname="Helvetica"];
+  Node6 [label="jrl::qp::SolverOptions",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structjrl_1_1qp_1_1SolverOptions.html",tooltip=" "];
+  Node3 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" work_R_\nwork_d_\nwork_J_" ,fontname="Helvetica"];
+  Node7 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" pb_" ,fontname="Helvetica"];
+  Node7 [label="jrl::qp::GoldfarbIdnaniSolver\l::Problem",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html",tooltip=" "];
 }

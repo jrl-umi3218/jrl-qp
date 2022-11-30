@@ -1,0 +1,25 @@
+var classjrl_1_1qp_1_1experimental_1_1BlockGISolver =
+[
+    [ "Problem", "structjrl_1_1qp_1_1experimental_1_1BlockGISolver_1_1Problem.html", "structjrl_1_1qp_1_1experimental_1_1BlockGISolver_1_1Problem" ],
+    [ "BlockGISolver", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#a5041777960ed3720e78676c179998016", null ],
+    [ "BlockGISolver", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#a82976ed7a29ade9fd650a00cfb4f7513", null ],
+    [ "~BlockGISolver", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#a893c76eb6e5d818046c725ddc2ec01b8", null ],
+    [ "addConstraint_", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#a61af909e4e058e0cfe67c033f1f8061e", null ],
+    [ "computeStep_", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#ad26d72a087831165a67f126fa9f5e3a0", null ],
+    [ "computeStepLength_", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#abb9e04d307219c853411ef172aa9b4e2", null ],
+    [ "dot_", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#ae391c8f190c38f81d3a33052bc55f9ea", null ],
+    [ "init_", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#a8e7ba1ba679524fd62559557c62629aa", null ],
+    [ "initializeComputationData", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#a39c2958307ae7085b18bd3ffb3975fe1", null ],
+    [ "initializePrimalDualPoints", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#af68e374ffaceb9aa467e9c67701c893b", null ],
+    [ "processInitialActiveSet", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#a53bb466c97134321d3d742f5c751a1f1", null ],
+    [ "removeConstraint_", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#a51eb102dfe99f35ddd75294cfc53b5ee", null ],
+    [ "resize_", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#a34841fef94d320a6b58017980734ff4e", null ],
+    [ "selectViolatedConstraint_", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#a17743ca8c60aa1ff08c5c683c5f1ccb4", null ],
+    [ "solve", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#aa5b084508e40ebfbaf3c9046fb837c5a", null ],
+    [ "J_", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#a59cd1066062615a5a0426dffb3f7b37e", null ],
+    [ "pb_", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#a8bd4db0c685e520ce42645639db1546a", null ],
+    [ "QR_", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#ae9b4471e29ade1e5c41a62a40ef5910f", null ],
+    [ "work_bact_", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#afd65f34f0a9b01c589079de26334ce2a", null ],
+    [ "work_cx_", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#ad63b83bd90d1e8b4a0d79a70c725cc84", null ],
+    [ "work_d_", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html#a4bae229fb8d8f705aa62b36546626820", null ]
+];

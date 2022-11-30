@@ -7,5 +7,7 @@ digraph "include/jrl-qp/experimental" {
   dir_49c9cda5c07df36712bc188c48f3d0a4 [shape=box, label="experimental", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_49c9cda5c07df36712bc188c48f3d0a4.html"];
   }
   dir_bce3761f5705fc7212499374e6418948 [shape=box label="test" URL="dir_bce3761f5705fc7212499374e6418948.html"];
-  dir_49c9cda5c07df36712bc188c48f3d0a4->dir_bce3761f5705fc7212499374e6418948 [headlabel="1", labeldistance=1.5 headhref="dir_000002_000004.html"];
+  dir_b4a791bd487cf0f47958fc202c570eab [shape=box label="structured" URL="dir_b4a791bd487cf0f47958fc202c570eab.html"];
+  dir_49c9cda5c07df36712bc188c48f3d0a4->dir_bce3761f5705fc7212499374e6418948 [headlabel="1", labeldistance=1.5 headhref="dir_000003_000006.html"];
+  dir_49c9cda5c07df36712bc188c48f3d0a4->dir_b4a791bd487cf0f47958fc202c570eab [headlabel="4", labeldistance=1.5 headhref="dir_000003_000005.html"];
 }

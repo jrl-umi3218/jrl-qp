@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['fixed',['FIXED',['../namespacejrl_1_1qp.html#a8200417432fa485fd7e8cc8ef1d1ff49ac6e6dc18b53b4c2681394b9d8aefcec7',1,'jrl::qp']]]
+  ['diagonal_782',['Diagonal',['../classjrl_1_1qp_1_1structured_1_1StructuredC.html#a36b9bbce9b2655b86bbca6a53da27114a9ac677ee4eec25d9e59707a661d2c5e1',1,'jrl::qp::structured::StructuredC']]]
 ];

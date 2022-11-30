@@ -1,5 +1,6 @@
 var defs_8h =
 [
+    [ "Givens", "defs_8h.html#a7f003bb597f0e6405c23ec9f3c718670", null ],
     [ "MatrixConstRef", "defs_8h.html#a36932925bb0032413d85027bcfb42dc5", null ],
     [ "MatrixRef", "defs_8h.html#a8220344a91c3dcd12dc60b751427cdc7", null ],
     [ "VectorConstRef", "defs_8h.html#a61011419a1f4de75f658df1d17ceaae8", null ],
