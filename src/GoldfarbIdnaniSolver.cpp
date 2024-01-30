@@ -55,7 +55,7 @@ TerminationStatus GoldfarbIdnaniSolver::solve(MatrixRef G,
 
 internal::InitTermination GoldfarbIdnaniSolver::init_()
 {
-  auto ret = Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb_.G);
+  auto ret = (!options_.factorizedG_) ? Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb_.G) : -1;
   auto L = pb_.G.template triangularView<Eigen::Lower>();
 
   if(ret >= 0) return TerminationStatus::NON_POS_HESSIAN;

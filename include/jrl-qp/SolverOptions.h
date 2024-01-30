@@ -16,6 +16,10 @@ struct JRLQP_DLLAPI SolverOptions
   int maxIter_ = 500;
   double bigBnd_ = 1e100;
   bool warmStart_ = false;
+  /** If true, the input matrix G must contain the lower triangular matrix L
+   * such that G = L L^T. The upper part of the matrix is ignored.
+   */
+  bool factorizedG_ = false;
   std::uint32_t logFlags_ = 0;
   std::ostream * logStream_ = &defaultStream_;
 
@@ -73,6 +77,16 @@ struct JRLQP_DLLAPI SolverOptions
   SolverOptions & warmStart(bool warm)
   {
     warmStart_ = warm;
+    return *this;
+  }
+
+  bool factorizedG() const
+  {
+    return factorizedG_;
+  }
+  SolverOptions & factorizedG(bool fact)
+  {
+    factorizedG_ = fact;
     return *this;
   }
 
