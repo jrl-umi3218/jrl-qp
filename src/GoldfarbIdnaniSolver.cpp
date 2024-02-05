@@ -55,20 +55,49 @@ TerminationStatus GoldfarbIdnaniSolver::solve(MatrixRef G,
 
 internal::InitTermination GoldfarbIdnaniSolver::init_()
 {
-  auto ret = (!options_.factorizedG_) ? Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb_.G) : -1;
-  auto L = pb_.G.template triangularView<Eigen::Lower>();
+  auto ret = (options_.gFactorization_ == GFactorization::NONE)
+                 ? Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb_.G)
+                 : -1;
 
   if(ret >= 0) return TerminationStatus::NON_POS_HESSIAN;
 
-  // J = L^-t
   auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
-  J.setIdentity();
-  L.transpose().solveInPlace(J);
-
-  // x = -G^-1 * a
   auto x = work_x_.asVector(nbVar_);
-  x = L.solve(pb_.a);
-  L.transpose().solveInPlace(x); // possible [OPTIM]: J already contains L^-T
+
+  // J = L^-t
+  // x = -G^-1 * a
+  switch(options_.gFactorization_)
+  {
+    case GFactorization::NONE:
+      [[fallthrough]];
+    case GFactorization::L:
+    {
+      auto L = pb_.G.template triangularView<Eigen::Lower>();
+      J.setIdentity();
+      L.transpose().solveInPlace(J);
+      x = L.solve(pb_.a);
+      L.transpose().solveInPlace(x); // possible [OPTIM]: J already contains L^-T
+    }
+    break;
+    case GFactorization::L_INV:
+    {
+      auto invL = pb_.G.template triangularView<Eigen::Lower>();
+      J = invL.transpose();
+      x = invL * pb_.a;
+      x = J.template triangularView<Eigen::Upper>() * x;
+    }
+    break;
+    case GFactorization::L_TINV:
+    {
+      auto invLT = pb_.G.template triangularView<Eigen::Upper>();
+      J = invLT;
+      x = invLT.transpose() * pb_.a;
+      x = invLT * x;
+    }
+    break;
+    default:
+      assert(false);
+  }
   x = -x;
   f_ = 0.5 * pb_.a.dot(x);
 

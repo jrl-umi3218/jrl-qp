@@ -21,17 +21,31 @@ TEST_CASE("Test FactorizedG")
 
     auto llt = pb.G.llt();
     Eigen::MatrixXd L = llt.matrixL();
+    Eigen::MatrixXd invL = L.inverse();
+    Eigen::MatrixXd invLT = invL.transpose();
 
-    options.factorizedG(true);
+    options.gFactorization(jrl::qp::GFactorization::NONE);
+    solver.options(options);
+    solver.solve(pb.G, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu);
+    Eigen::VectorXd x0 = solver.solution();
+
+    options.gFactorization(jrl::qp::GFactorization::L);
     solver.options(options);
     solver.solve(L, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu);
     Eigen::VectorXd x1 = solver.solution();
 
-    options.factorizedG(false);
+    options.gFactorization(jrl::qp::GFactorization::L_INV);
     solver.options(options);
-    solver.solve(pb.G, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu);
+    solver.solve(invL, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu);
     Eigen::VectorXd x2 = solver.solution();
 
-    FAST_CHECK_UNARY(x1.isApprox(x2));
+    options.gFactorization(jrl::qp::GFactorization::L_TINV);
+    solver.options(options);
+    solver.solve(invLT, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu);
+    Eigen::VectorXd x3 = solver.solution();
+
+    FAST_CHECK_UNARY(x1.isApprox(x0));
+    FAST_CHECK_UNARY(x2.isApprox(x0));
+    FAST_CHECK_UNARY(x3.isApprox(x0));
   }
 }

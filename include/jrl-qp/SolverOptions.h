@@ -10,16 +10,26 @@
 
 namespace jrl::qp
 {
+/** Factorization of G */
+enum class GFactorization
+{
+  /** No factorization */
+  NONE,
+  /** G is given as the lower triangular matrix L such that G = L L^T */
+  L,
+  /** G is given as the lower triangular matrix invL such that G^-1 = invL^T invL */
+  L_INV,
+  /** G is given as the lower triangular matrix invL such that G^-1 = invL invL^T */
+  L_TINV
+};
+
 /** Options for the solvers*/
 struct JRLQP_DLLAPI SolverOptions
 {
   int maxIter_ = 500;
   double bigBnd_ = 1e100;
   bool warmStart_ = false;
-  /** If true, the input matrix G must contain the lower triangular matrix L
-   * such that G = L L^T. The upper part of the matrix is ignored.
-   */
-  bool factorizedG_ = false;
+  GFactorization gFactorization_ = GFactorization::NONE;
   std::uint32_t logFlags_ = 0;
   std::ostream * logStream_ = &defaultStream_;
 
@@ -80,13 +90,13 @@ struct JRLQP_DLLAPI SolverOptions
     return *this;
   }
 
-  bool factorizedG() const
+  GFactorization gFactorization() const
   {
-    return factorizedG_;
+    return gFactorization_;
   }
-  SolverOptions & factorizedG(bool fact)
+  SolverOptions & gFactorization(GFactorization fact)
   {
-    factorizedG_ = fact;
+    gFactorization_ = fact;
     return *this;
   }
 
