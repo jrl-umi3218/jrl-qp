@@ -31,9 +31,7 @@ public:
     }
   }
 
-  void TearDown(const ::benchmark::State &)
-  {
-  }
+  void TearDown(const ::benchmark::State &) {}
 
   int idx() const
   {
@@ -148,6 +146,5 @@ BENCHMARK_DEFINE_F(test0, DECOMP_TINV_0)(benchmark::State & st)
   }
 }
 BENCHMARK_REGISTER_F(test0, DECOMP_TINV_0)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);
-
 
 BENCHMARK_MAIN();
