@@ -45,11 +45,6 @@ public:
     return static_cast<int>((nVar * EqPercentage) / 100);
   }
 
-  const LeastSquareProblem<> & getBSCPb() const
-  {
-    return pb[idx()];
-  }
-
   QPProblem<> & getGIPb()
   {
     int i = idx();
@@ -64,87 +59,122 @@ private:
 };
 
 using test0 = ProblemFixture<1000, 0>;
-BENCHMARK_DEFINE_F(test0, NO_PRE_DECOMP_0)(benchmark::State & st)
+using test50 = ProblemFixture<1000, 50>;
+
+BENCHMARK_DEFINE_F(test0, LLT_INTERNAL)(benchmark::State & st)
 {
-  int n = static_cast<int>(st.range(0));
-  int neq = test0::nEq(n);
-  GoldfarbIdnaniSolver solver(n, neq, false);
-
-  for(auto _ : st)
-  {
-    auto & pb = getGIPb();
-    solver.solve(pb.G, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu);
-  }
-}
-BENCHMARK_REGISTER_F(test0, NO_PRE_DECOMP_0)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);
-
-BENCHMARK_DEFINE_F(test0, DECOMP_0)(benchmark::State & st)
-{
-  int n = static_cast<int>(st.range(0));
-  int neq = test0::nEq(n);
-  GoldfarbIdnaniSolver solver(n, neq, false);
-
   for(auto _ : st)
   {
     auto & pb = getGIPb();
     Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb.G);
   }
 }
-BENCHMARK_REGISTER_F(test0, DECOMP_0)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);
+BENCHMARK_REGISTER_F(test0, LLT_INTERNAL)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);
 
-BENCHMARK_DEFINE_F(test0, DECOMP_INV_0)(benchmark::State & st)
+BENCHMARK_DEFINE_F(test0, LLT_FUNCTION)(benchmark::State & st)
+{
+  for(auto _ : st)
+  {
+    auto & pb = getGIPb();
+    auto llt = pb.G.llt();
+  }
+}
+BENCHMARK_REGISTER_F(test0, LLT_FUNCTION)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);
+
+BENCHMARK_DEFINE_F(test0, LLT_OBJECT)(benchmark::State & st)
+{
+  for(auto _ : st)
+  {
+    auto & pb = getGIPb();
+    LLT<MatrixXd> llt(pb.G);
+  }
+}
+BENCHMARK_REGISTER_F(test0, LLT_OBJECT)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);
+
+BENCHMARK_DEFINE_F(test0, LLT_PREALLOC)(benchmark::State & st)
 {
   int n = static_cast<int>(st.range(0));
-  int neq = test0::nEq(n);
-  GoldfarbIdnaniSolver solver(n, neq, false);
-  MatrixXd J(n, n);
+  LLT<MatrixXd> llt(n);
 
   for(auto _ : st)
   {
     auto & pb = getGIPb();
-    Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb.G);
-    auto L = pb.G.template triangularView<Eigen::Lower>();
-    J.setIdentity();
-    L.solveInPlace(J);
+    llt.compute(pb.G);
   }
 }
-BENCHMARK_REGISTER_F(test0, DECOMP_INV_0)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);
+BENCHMARK_REGISTER_F(test0, LLT_PREALLOC)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);
 
-BENCHMARK_DEFINE_F(test0, DECOMP_INVT_0)(benchmark::State & st)
-{
-  int n = static_cast<int>(st.range(0));
-  int neq = test0::nEq(n);
-  GoldfarbIdnaniSolver solver(n, neq, false);
-  MatrixXd J(n, n);
+#define BENCH_DECOMP(fixture)                                                                           \
+  BENCHMARK_DEFINE_F(fixture, NO_PRE_DECOMP)(benchmark::State & st)                                     \
+  {                                                                                                     \
+    int n = static_cast<int>(st.range(0));                                                              \
+    int neq = fixture::nEq(n);                                                                          \
+    GoldfarbIdnaniSolver solver(n, neq, false);                                                         \
+                                                                                                        \
+    for(auto _ : st)                                                                                    \
+    {                                                                                                   \
+      auto & pb = getGIPb();                                                                            \
+      solver.solve(pb.G, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu);                                         \
+    }                                                                                                   \
+  }                                                                                                     \
+  BENCHMARK_REGISTER_F(fixture, NO_PRE_DECOMP)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10); \
+                                                                                                        \
+  BENCHMARK_DEFINE_F(fixture, DECOMP_INV)(benchmark::State & st)                                        \
+  {                                                                                                     \
+    int n = static_cast<int>(st.range(0));                                                              \
+    int neq = fixture::nEq(n);                                                                          \
+    GoldfarbIdnaniSolver solver(n, neq, false);                                                         \
+    MatrixXd J(n, n);                                                                                   \
+                                                                                                        \
+    for(auto _ : st)                                                                                    \
+    {                                                                                                   \
+      auto & pb = getGIPb();                                                                            \
+      Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb.G);                                \
+      auto L = pb.G.template triangularView<Eigen::Lower>();                                            \
+      J.setIdentity();                                                                                  \
+      L.solveInPlace(J);                                                                                \
+    }                                                                                                   \
+  }                                                                                                     \
+  BENCHMARK_REGISTER_F(fixture, DECOMP_INV)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);    \
+                                                                                                        \
+  BENCHMARK_DEFINE_F(fixture, DECOMP_INVT)(benchmark::State & st)                                       \
+  {                                                                                                     \
+    int n = static_cast<int>(st.range(0));                                                              \
+    int neq = fixture::nEq(n);                                                                          \
+    GoldfarbIdnaniSolver solver(n, neq, false);                                                         \
+    MatrixXd J(n, n);                                                                                   \
+                                                                                                        \
+    for(auto _ : st)                                                                                    \
+    {                                                                                                   \
+      auto & pb = getGIPb();                                                                            \
+      Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb.G);                                \
+      auto L = pb.G.template triangularView<Eigen::Lower>();                                            \
+      J.setIdentity();                                                                                  \
+      L.solveInPlace(J);                                                                                \
+      J.transposeInPlace();                                                                             \
+    }                                                                                                   \
+  }                                                                                                     \
+  BENCHMARK_REGISTER_F(fixture, DECOMP_INVT)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);   \
+                                                                                                        \
+  BENCHMARK_DEFINE_F(fixture, DECOMP_TINV)(benchmark::State & st)                                       \
+  {                                                                                                     \
+    int n = static_cast<int>(st.range(0));                                                              \
+    int neq = fixture::nEq(n);                                                                          \
+    GoldfarbIdnaniSolver solver(n, neq, false);                                                         \
+    MatrixXd J(n, n);                                                                                   \
+                                                                                                        \
+    for(auto _ : st)                                                                                    \
+    {                                                                                                   \
+      auto & pb = getGIPb();                                                                            \
+      Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb.G);                                \
+      auto L = pb.G.template triangularView<Eigen::Lower>();                                            \
+      J.setIdentity();                                                                                  \
+      L.transpose().solveInPlace(J);                                                                    \
+    }                                                                                                   \
+  }                                                                                                     \
+  BENCHMARK_REGISTER_F(fixture, DECOMP_TINV)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);
 
-  for(auto _ : st)
-  {
-    auto & pb = getGIPb();
-    Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb.G);
-    auto L = pb.G.template triangularView<Eigen::Lower>();
-    J.setIdentity();
-    L.solveInPlace(J);
-    J.transposeInPlace();
-  }
-}
-BENCHMARK_REGISTER_F(test0, DECOMP_INVT_0)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);
-
-BENCHMARK_DEFINE_F(test0, DECOMP_TINV_0)(benchmark::State & st)
-{
-  int n = static_cast<int>(st.range(0));
-  int neq = test0::nEq(n);
-  GoldfarbIdnaniSolver solver(n, neq, false);
-  MatrixXd J(n, n);
-
-  for(auto _ : st)
-  {
-    auto & pb = getGIPb();
-    Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb.G);
-    auto L = pb.G.template triangularView<Eigen::Lower>();
-    J.setIdentity();
-    L.transpose().solveInPlace(J);
-  }
-}
-BENCHMARK_REGISTER_F(test0, DECOMP_TINV_0)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);
+BENCH_DECOMP(test0)
+BENCH_DECOMP(test50)
 
 BENCHMARK_MAIN();
