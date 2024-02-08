@@ -57,6 +57,7 @@ addBenchmark(BasicEigen)
 addBenchmark(Decomposition)
 addBenchmark(LinearSystemSolving)
 
+addBenchmark(SolverPreDecomposition problemAdaptors.cpp)
 addBenchmark(Solvers problemAdaptors.cpp)
 addBenchmark(SolversWarmStart problemAdaptors.cpp)
 addBenchmark(BoxAndSingleConstraintSolver)

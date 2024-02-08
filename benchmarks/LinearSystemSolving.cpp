@@ -93,7 +93,6 @@ BENCHMARK(BM_TriangularInverse_Transpose)->Apply(testSizes)->Unit(benchmark::kMi
       invA.col(i1).head(i1 - 1) = -invA(i1, i1) * A.row(i1).head(i1 - 1).transpose();
       invA.col(i + 1).head(i) = invA.topLeftCorner(i, i) * invA.col(i + 1).head(i);
     }
-    A.template triangularView<Eigen::Lower>().transpose().solveInPlace(invA);
   }
 }
 BENCHMARK(BM_TriangularInverse_Transpose_ByHand)->Apply(testSizes)->Unit(benchmark::kMicrosecond);
