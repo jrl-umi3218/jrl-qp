@@ -3,7 +3,6 @@
 #include <Eigen/Cholesky>
 #include <Eigen/QR>
 #include <jrl-qp/GoldfarbIdnaniSolver.h>
-#include <jrl-qp/experimental/GoldfarbIdnaniSolver.h>
 #include <jrl-qp/internal/ConstraintNormal.h>
 
 namespace jrl::qp
@@ -62,10 +61,8 @@ internal::InitTermination GoldfarbIdnaniSolver::init_()
   if(ret >= 0) return TerminationStatus::NON_POS_HESSIAN;
 
   auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
-  auto x = work_x_.asVector(nbVar_);
 
   // J = L^-t
-  // x = -G^-1 * a
   switch(options_.gFactorization_)
   {
     case GFactorization::NONE:
@@ -75,29 +72,29 @@ internal::InitTermination GoldfarbIdnaniSolver::init_()
       auto L = pb_.G.template triangularView<Eigen::Lower>();
       J.setIdentity();
       L.transpose().solveInPlace(J);
-      x = L.solve(pb_.a);
-      L.transpose().solveInPlace(x); // possible [OPTIM]: J already contains L^-T
     }
     break;
     case GFactorization::L_INV:
     {
       auto invL = pb_.G.template triangularView<Eigen::Lower>();
       J = invL.transpose();
-      x = invL * pb_.a;
-      x = J.template triangularView<Eigen::Upper>() * x;
     }
     break;
     case GFactorization::L_TINV:
     {
       auto invLT = pb_.G.template triangularView<Eigen::Upper>();
       J = invLT;
-      x = invLT.transpose() * pb_.a;
-      x = invLT * x;
     }
     break;
     default:
       assert(false);
   }
+
+  // x = -G^-1 * a
+  auto x = work_x_.asVector(nbVar_);
+  auto tmp = work_tmp_.asVector(nbVar_);
+  tmp.noalias() = J.template triangularView<Eigen::Upper>().transpose() * pb_.a;
+  x.noalias() = J.template triangularView<Eigen::Upper>() * tmp;
   x = -x;
   f_ = 0.5 * pb_.a.dot(x);
 
@@ -291,6 +288,7 @@ void GoldfarbIdnaniSolver::resize_(int nbVar, int /*nbCstr*/, bool /*useBounds*/
     work_d_.resize(nbVar);
     work_J_.resize(nbVar, nbVar);
     work_R_.resize(nbVar, nbVar);
+    work_tmp_.resize(nbVar);
   }
 }
 

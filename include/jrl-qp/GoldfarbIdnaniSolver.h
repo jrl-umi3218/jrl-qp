@@ -77,6 +77,7 @@ protected:
   mutable internal::Workspace<> work_d_;
   internal::Workspace<> work_J_;
   internal::Workspace<> work_R_;
+  internal::Workspace<> work_tmp_;
   Problem pb_;
 };
 
