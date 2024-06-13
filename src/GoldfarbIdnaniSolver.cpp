@@ -52,8 +52,24 @@ TerminationStatus GoldfarbIdnaniSolver::solve(MatrixRef G,
   return DualSolver::solve();
 }
 
+void GoldfarbIdnaniSolver::setPrecomputedR(MatrixConstRef precompR)
+{
+  assert(precompR.rows() == precompR.cols() || precompR.rows() == nbVar_);
+  auto R = work_R_.asMatrix(precompR.rows(), precompR.cols(), nbVar_);
+  // Set lower part of R to 0
+  JRLQP_DEBUG_ONLY(for(int i = 0; i < precompR.cols(); ++i) R.col(i).tail(nbVar_ - i - 1).setZero(););
+}
+
 internal::InitTermination GoldfarbIdnaniSolver::init_()
 {
+  // Check options
+  if(options_.RIsGiven())
+  {
+    if(options_.gFactorization() != GFactorization::L_TINV_Q || !options_.equalityFirst())
+      JRLQP_LOG_COMMENT(log_, LogFlags::INPUT, "Incompatible options: RIsGiven with gFactorization or equalityFirst");
+  }
+
+
   auto ret = (options_.gFactorization_ == GFactorization::NONE)
                  ? Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb_.G)
                  : -1;
@@ -368,6 +384,11 @@ internal::TerminationType GoldfarbIdnaniSolver::processMatrixG()
       J = invLT;
     }
     break;
+    case GFactorization::L_TINV_Q:
+    {
+      J = pb_.G;
+    }
+    break;
     default:
       assert(false);
   }
@@ -398,65 +419,80 @@ internal::TerminationType GoldfarbIdnaniSolver::initializeComputationData()
   int q = A_.nbActiveCstr();
   auto N = work_R_.asMatrix(nbVar_, q, nbVar_);
   auto b_act = work_bact_.asVector(q);
-  for(int i = 0; i < q; ++i)
-  {
-    int cstrIdx = A_[i];
-    switch(A_.activationStatus(cstrIdx))
-    {
-      case ActivationStatus::LOWER:
-        [[fallthrough]];
-      case ActivationStatus::EQUALITY:
-        N.col(i) = pb_.C.col(cstrIdx);
-        b_act[i] = pb_.bl(cstrIdx);
-        break;
-      case ActivationStatus::UPPER:
-        N.col(i) = -pb_.C.col(cstrIdx);
-        b_act[i] = -pb_.bu(cstrIdx);
-        break;
-      case ActivationStatus::LOWER_BOUND:
-        [[fallthrough]];
-      case ActivationStatus::FIXED:
-        N.col(i).setZero();
-        N.col(i)[cstrIdx - A_.nbCstr()] = 1;
-        b_act[i] = pb_.xl(cstrIdx - A_.nbCstr());
-        break;
-      case ActivationStatus::UPPER_BOUND:
-        N.col(i).setZero();
-        N.col(i)[cstrIdx - A_.nbCstr()] = -1;
-        b_act[i] = -pb_.xu(cstrIdx - A_.nbCstr());
-        break;
-      default:
-        break;
-    }
-  }
 
   // J = L^-t
   processMatrixG();
-
-  // B = L^-1 N
-  auto L = pb_.G.template triangularView<Eigen::Lower>();
-  L.solveInPlace(N); // [OPTIM] There are other possible ways to do this:
-                     //  - use solveInPlace while filling N
-                     //  - multiply N by J^T = L^-1 (this would require that multiplication by triangular matrix can be
-                     //  done in place with Eigen)
-
-  // QR in place
-  Eigen::Map<Eigen::VectorXd> hCoeffs(work_hCoeffs_.asVector(q).data(),
-                                      q); // Should be simply hCoeffs = work_hCoeffs_.asVector(q), but his does compile
-                                          // with householder_qr_inplace_blocked
-  WVector tmp = work_tmp_.asVector(nbVar_);
-  bool b = Eigen::internal::is_malloc_allowed();
-  Eigen::internal::set_is_malloc_allowed(true);
-  Eigen::internal::householder_qr_inplace_blocked<decltype(N), decltype(hCoeffs)>::run(N, hCoeffs, 48, tmp.data());
-
-  // J = J*Q
   auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
-  Eigen::HouseholderSequence Q(N, hCoeffs);
-  Q.applyThisOnTheRight(J, tmp);
-  Eigen::internal::set_is_malloc_allowed(b);
 
-  // Set lower part of R to 0
-  JRLQP_DEBUG_ONLY(for(int i = 0; i < q; ++i) N.col(i).tail(nbVar_ - i - 1).setZero(););
+  if(options_.RIsGiven() && options_.equalityFirst())
+  {
+    assert(options_.gFactorization() == GFactorization::L_TINV_Q);
+    for(int i = 0; i < q; ++i)
+    {
+      int cstrIdx = A_[i];
+      b_act[i] = pb_.bl(cstrIdx);
+    }
+  }
+  else
+  {
+    for(int i = 0; i < q; ++i)
+    {
+      int cstrIdx = A_[i];
+      // We have here the code for any kind of activation status while for now only
+      // equality constraints can be activated before reaching this part.
+      switch(A_.activationStatus(cstrIdx))
+      {
+        case ActivationStatus::LOWER:
+          [[fallthrough]];
+        case ActivationStatus::EQUALITY:
+          N.col(i) = pb_.C.col(cstrIdx);
+          b_act[i] = pb_.bl(cstrIdx);
+          break;
+        case ActivationStatus::UPPER:
+          N.col(i) = -pb_.C.col(cstrIdx);
+          b_act[i] = -pb_.bu(cstrIdx);
+          break;
+        case ActivationStatus::LOWER_BOUND:
+          [[fallthrough]];
+        case ActivationStatus::FIXED:
+          N.col(i).setZero();
+          N.col(i)[cstrIdx - A_.nbCstr()] = 1;
+          b_act[i] = pb_.xl(cstrIdx - A_.nbCstr());
+          break;
+        case ActivationStatus::UPPER_BOUND:
+          N.col(i).setZero();
+          N.col(i)[cstrIdx - A_.nbCstr()] = -1;
+          b_act[i] = -pb_.xu(cstrIdx - A_.nbCstr());
+          break;
+        default:
+          break;
+      }
+    }
+
+    // B = L^-1 N
+    auto L = pb_.G.template triangularView<Eigen::Lower>();
+    L.solveInPlace(N); // [OPTIM] There are other possible ways to do this:
+                       //  - use solveInPlace while filling N
+                       //  - multiply N by J^T = L^-1 (this would require that multiplication by triangular matrix can
+                       //  be done in place with Eigen)
+
+    // QR in place
+    Eigen::Map<Eigen::VectorXd> hCoeffs(work_hCoeffs_.asVector(q).data(),
+                                        q); // Should be simply hCoeffs = work_hCoeffs_.asVector(q), but his does
+                                            // compile with householder_qr_inplace_blocked
+    WVector tmp = work_tmp_.asVector(nbVar_);
+    bool b = Eigen::internal::is_malloc_allowed();
+    Eigen::internal::set_is_malloc_allowed(true);
+    Eigen::internal::householder_qr_inplace_blocked<decltype(N), decltype(hCoeffs)>::run(N, hCoeffs, 48, tmp.data());
+
+    // J = J*Q
+    Eigen::HouseholderSequence Q(N, hCoeffs);
+    Q.applyThisOnTheRight(J, tmp);
+    Eigen::internal::set_is_malloc_allowed(b);
+
+    // Set lower part of R to 0
+    JRLQP_DEBUG_ONLY(for(int i = 0; i < q; ++i) N.col(i).tail(nbVar_ - i - 1).setZero(););
+  }
 
   JRLQP_LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, N, J, b_act);
 
