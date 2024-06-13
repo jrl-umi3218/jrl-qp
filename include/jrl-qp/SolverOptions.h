@@ -29,6 +29,7 @@ struct JRLQP_DLLAPI SolverOptions
   int maxIter_ = 500;
   double bigBnd_ = 1e100;
   bool warmStart_ = false;
+  bool equalityFirst_ = false;  //True if all equality constraints are given first in the constraint matrix
   GFactorization gFactorization_ = GFactorization::NONE;
   std::uint32_t logFlags_ = 0;
   std::ostream * logStream_ = &defaultStream_;
@@ -87,6 +88,16 @@ struct JRLQP_DLLAPI SolverOptions
   SolverOptions & warmStart(bool warm)
   {
     warmStart_ = warm;
+    return *this;
+  }
+
+  bool equalityFirst() const
+  {
+    return equalityFirst_;
+  }
+  SolverOptions & equalityFirst(bool eqFirst)
+  {
+    equalityFirst_ = eqFirst;
     return *this;
   }
 
