@@ -22,7 +22,7 @@ enum class GFactorization
   /** G is given as the lower triangular matrix invL such that G^-1 = invL invL^T */
   L_TINV,
   /** G is given as a matrix J = L^-T Q, where G = L L^T and Q is the orthonormal
-  matrix appearing in the QR decomposition of the activated constraints (see other 
+  matrix appearing in the QR decomposition of the activated constraints (see other
   options for details). */
   L_TINV_Q
 };
@@ -33,8 +33,10 @@ struct JRLQP_DLLAPI SolverOptions
   int maxIter_ = 500;
   double bigBnd_ = 1e100;
   bool warmStart_ = false;
-  bool equalityFirst_ = false;  //True if all equality constraints are given first in the constraint matrix
-  bool RIsGiven_ = false; // True when the R factor in the decomposition of some initially active constraints is given. If equalityFirst is true, these are the equality constraints. Ignored if gFactorization != L_TINV_Q or equalityFirst_ = false.
+  bool equalityFirst_ = false; // True if all equality constraints are given first in the constraint matrix
+  bool RIsGiven_ = false; // True when the R factor in the decomposition of some initially active constraints is given.
+                          // If equalityFirst is true, these are the equality constraints. Ignored if gFactorization !=
+                          // L_TINV_Q or equalityFirst_ = false.
   GFactorization gFactorization_ = GFactorization::NONE;
   std::uint32_t logFlags_ = 0;
   std::ostream * logStream_ = &defaultStream_;

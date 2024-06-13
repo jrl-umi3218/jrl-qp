@@ -61,7 +61,7 @@ TEST_CASE("Test EqualityFirst")
     auto pb = QPProblem(randomProblem(ProblemCharacteristics(7, 7, neq, 8)));
     pb.C.transposeInPlace();
 
-    for (int i = 0; i < neq; ++i)
+    for(int i = 0; i < neq; ++i)
     {
       REQUIRE_EQ(pb.l[i], pb.u[i]);
     }
@@ -86,20 +86,20 @@ TEST_CASE("Test EqualityFirst")
     solver.solve(L, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu);
     Eigen::VectorXd x2 = solver.solution();
 
-    //options.gFactorization(jrl::qp::GFactorization::L_INV);
-    //solver.options(options);
-    //solver.solve(invL, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu);
-    //Eigen::VectorXd x3 = solver.solution();
+    // options.gFactorization(jrl::qp::GFactorization::L_INV);
+    // solver.options(options);
+    // solver.solve(invL, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu);
+    // Eigen::VectorXd x3 = solver.solution();
 
-    //options.gFactorization(jrl::qp::GFactorization::L_TINV);
-    //solver.options(options);
-    //solver.solve(invLT, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu);
-    //Eigen::VectorXd x4 = solver.solution();
+    // options.gFactorization(jrl::qp::GFactorization::L_TINV);
+    // solver.options(options);
+    // solver.solve(invLT, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu);
+    // Eigen::VectorXd x4 = solver.solution();
 
     FAST_CHECK_UNARY(x1.isApprox(x0));
     FAST_CHECK_UNARY(x2.isApprox(x0));
-    //FAST_CHECK_UNARY(x3.isApprox(x0));
-    //FAST_CHECK_UNARY(x4.isApprox(x0));
+    // FAST_CHECK_UNARY(x3.isApprox(x0));
+    // FAST_CHECK_UNARY(x4.isApprox(x0));
   }
 }
 
@@ -108,7 +108,7 @@ TEST_CASE("Precomputed R")
   const int nbVar = 7;
   const int neq = 4;
   const int nIneq = 8;
-  jrl::qp::GoldfarbIdnaniSolver solver(nbVar, neq+nIneq, false);
+  jrl::qp::GoldfarbIdnaniSolver solver(nbVar, neq + nIneq, false);
   jrl::qp::SolverOptions options;
 
   for(int i = 0; i < 10; ++i)
@@ -137,8 +137,9 @@ TEST_CASE("Precomputed R")
 
     options.gFactorization(jrl::qp::GFactorization::L_TINV_Q);
     options.RIsGiven(true);
+    options.equalityFirst(true);
     solver.options(options);
-    solver.setPrecomputedR(Eigen::MatrixXd(qr.matrixQR().triangularView<Eigen::Upper>()));
+    solver.setPrecomputedR(qr.matrixQR());
     solver.solve(J, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu);
     Eigen::VectorXd x1 = solver.solution();
 

@@ -32,7 +32,6 @@ public:
                           const VectorConstRef & xl,
                           const VectorConstRef & xu);
 
-
   /** This is used to set the precomputed R factor in the QR decomposition of the initially
    * active constraints. Should be used when options.gFactorization is GFactorization::L_TINV_Q.
    * Use only if you know what you are doing.

@@ -69,14 +69,13 @@ internal::InitTermination GoldfarbIdnaniSolver::init_()
       JRLQP_LOG_COMMENT(log_, LogFlags::INPUT, "Incompatible options: RIsGiven with gFactorization or equalityFirst");
   }
 
-
   auto ret = (options_.gFactorization_ == GFactorization::NONE)
                  ? Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb_.G)
                  : -1;
 
   if(ret >= 0) return TerminationStatus::NON_POS_HESSIAN;
 
-  if (options_.equalityFirst())
+  if(options_.equalityFirst())
   {
     processInitialActiveSetWithEqualityOnly();
     initializeComputationData();
