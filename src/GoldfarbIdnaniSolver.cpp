@@ -56,6 +56,7 @@ void GoldfarbIdnaniSolver::setPrecomputedR(MatrixConstRef precompR)
 {
   assert(precompR.rows() == precompR.cols() || precompR.rows() == nbVar_);
   auto R = work_R_.asMatrix(precompR.rows(), precompR.cols(), nbVar_);
+  R = precompR;
   // Set lower part of R to 0
   JRLQP_DEBUG_ONLY(for(int i = 0; i < precompR.cols(); ++i) R.col(i).tail(nbVar_ - i - 1).setZero(););
 }
