@@ -32,6 +32,12 @@ public:
                           const VectorConstRef & xl,
                           const VectorConstRef & xu);
 
+  /** This is used to set the precomputed R factor in the QR decomposition of the initially
+   * active constraints. Should be used when options.gFactorization is GFactorization::L_TINV_Q.
+   * Use only if you know what you are doing.
+   */
+  void setPrecomputedR(MatrixConstRef precompR);
+
 protected:
   /** Structure to gather the problem definition. */
   struct Problem
@@ -74,9 +80,17 @@ protected:
 
   void addInitialConstraint(const internal::SelectedConstraint & sc);
 
+  internal::TerminationType processMatrixG();
+  internal::TerminationType processInitialActiveSetWithEqualityOnly();
+  internal::TerminationType initializeComputationData();
+  internal::TerminationType initializePrimalDualPoints();
+
   mutable internal::Workspace<> work_d_;
   internal::Workspace<> work_J_;
   internal::Workspace<> work_R_;
+  internal::Workspace<> work_tmp_;
+  internal::Workspace<> work_hCoeffs_; // for initial QR decomposition
+  internal::Workspace<> work_bact_;
   Problem pb_;
 };
 

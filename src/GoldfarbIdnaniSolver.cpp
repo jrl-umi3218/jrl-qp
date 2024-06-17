@@ -3,7 +3,6 @@
 #include <Eigen/Cholesky>
 #include <Eigen/QR>
 #include <jrl-qp/GoldfarbIdnaniSolver.h>
-#include <jrl-qp/experimental/GoldfarbIdnaniSolver.h>
 #include <jrl-qp/internal/ConstraintNormal.h>
 
 namespace jrl::qp
@@ -53,30 +52,47 @@ TerminationStatus GoldfarbIdnaniSolver::solve(MatrixRef G,
   return DualSolver::solve();
 }
 
+void GoldfarbIdnaniSolver::setPrecomputedR(MatrixConstRef precompR)
+{
+  assert(precompR.rows() == precompR.cols() || precompR.rows() == nbVar_);
+  auto R = work_R_.asMatrix(precompR.rows(), precompR.cols(), nbVar_);
+  R = precompR;
+  // Set lower part of R to 0
+  JRLQP_DEBUG_ONLY(for(int i = 0; i < precompR.cols(); ++i) R.col(i).tail(nbVar_ - i - 1).setZero(););
+}
+
 internal::InitTermination GoldfarbIdnaniSolver::init_()
 {
-  auto ret = Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb_.G);
-  auto L = pb_.G.template triangularView<Eigen::Lower>();
+  // Check options
+  if(options_.RIsGiven())
+  {
+    if(options_.gFactorization() != GFactorization::L_TINV_Q || !options_.equalityFirst())
+      JRLQP_LOG_COMMENT(log_, LogFlags::INPUT, "Incompatible options: RIsGiven with gFactorization or equalityFirst");
+  }
+
+  auto ret = (options_.gFactorization_ == GFactorization::NONE)
+                 ? Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb_.G)
+                 : -1;
 
   if(ret >= 0) return TerminationStatus::NON_POS_HESSIAN;
 
-  // J = L^-t
-  auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
-  J.setIdentity();
-  L.transpose().solveInPlace(J);
+  if(options_.equalityFirst())
+  {
+    processInitialActiveSetWithEqualityOnly();
+    initializeComputationData();
+    initializePrimalDualPoints();
+  }
+  else
+  {
+    processMatrixG();
+    initializePrimalDualPoints();
 
-  // x = -G^-1 * a
-  auto x = work_x_.asVector(nbVar_);
-  x = L.solve(pb_.a);
-  L.transpose().solveInPlace(x); // possible [OPTIM]: J already contains L^-T
-  x = -x;
-  f_ = 0.5 * pb_.a.dot(x);
+    A_.reset();
+    JRLQP_DEBUG_ONLY(work_R_.setZero());
 
-  A_.reset();
-  JRLQP_DEBUG_ONLY(work_R_.setZero());
-
-  // Adding equality constraints
-  initActiveSet();
+    // Adding equality constraints
+    initActiveSet();
+  }
 
   return TerminationStatus::SUCCESS;
 }
@@ -262,6 +278,9 @@ void GoldfarbIdnaniSolver::resize_(int nbVar, int /*nbCstr*/, bool /*useBounds*/
     work_d_.resize(nbVar);
     work_J_.resize(nbVar, nbVar);
     work_R_.resize(nbVar, nbVar);
+    work_tmp_.resize(nbVar);
+    work_hCoeffs_.resize(nbVar);
+    work_bact_.resize(nbVar);
   }
 }
 
@@ -336,4 +355,174 @@ void GoldfarbIdnaniSolver::addInitialConstraint(const internal::SelectedConstrai
     // return TerminationStatus::LINEAR_DEPENDENCY_DETECTED;
   }
 }
+
+internal::TerminationType GoldfarbIdnaniSolver::processMatrixG()
+{
+  auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
+
+  // J = L^-t
+  switch(options_.gFactorization_)
+  {
+    case GFactorization::NONE:
+      [[fallthrough]];
+    case GFactorization::L:
+    {
+      auto L = pb_.G.template triangularView<Eigen::Lower>();
+      J.setIdentity();
+      L.transpose().solveInPlace(J);
+    }
+    break;
+    case GFactorization::L_INV:
+    {
+      auto invL = pb_.G.template triangularView<Eigen::Lower>();
+      J = invL.transpose();
+    }
+    break;
+    case GFactorization::L_TINV:
+    {
+      auto invLT = pb_.G.template triangularView<Eigen::Upper>();
+      J = invLT;
+    }
+    break;
+    case GFactorization::L_TINV_Q:
+    {
+      J = pb_.G;
+    }
+    break;
+    default:
+      assert(false);
+  }
+
+  return TerminationStatus::SUCCESS;
+}
+
+internal::TerminationType GoldfarbIdnaniSolver::processInitialActiveSetWithEqualityOnly()
+{
+  A_.reset();
+
+  // This considers that all equality constraints come first
+  // We stop as soon as we have an inequality constraint.
+  for(int i = 0; i < A_.nbCstr(); ++i)
+  {
+    if(pb_.bl[i] == pb_.bu[i])
+    {
+      A_.activate(i, ActivationStatus::EQUALITY);
+    }
+    else
+      break;
+  }
+  return TerminationStatus::SUCCESS;
+}
+
+internal::TerminationType GoldfarbIdnaniSolver::initializeComputationData()
+{
+  int q = A_.nbActiveCstr();
+  auto N = work_R_.asMatrix(nbVar_, q, nbVar_);
+  auto b_act = work_bact_.asVector(q);
+
+  // J = L^-t
+  processMatrixG();
+  auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
+
+  if(options_.RIsGiven() && options_.equalityFirst())
+  {
+    assert(options_.gFactorization() == GFactorization::L_TINV_Q);
+    for(int i = 0; i < q; ++i)
+    {
+      int cstrIdx = A_[i];
+      b_act[i] = pb_.bl(cstrIdx);
+    }
+  }
+  else
+  {
+    for(int i = 0; i < q; ++i)
+    {
+      int cstrIdx = A_[i];
+      // We have here the code for any kind of activation status while for now only
+      // equality constraints can be activated before reaching this part.
+      switch(A_.activationStatus(cstrIdx))
+      {
+        case ActivationStatus::LOWER:
+          [[fallthrough]];
+        case ActivationStatus::EQUALITY:
+          N.col(i) = pb_.C.col(cstrIdx);
+          b_act[i] = pb_.bl(cstrIdx);
+          break;
+        case ActivationStatus::UPPER:
+          N.col(i) = -pb_.C.col(cstrIdx);
+          b_act[i] = -pb_.bu(cstrIdx);
+          break;
+        case ActivationStatus::LOWER_BOUND:
+          [[fallthrough]];
+        case ActivationStatus::FIXED:
+          N.col(i).setZero();
+          N.col(i)[cstrIdx - A_.nbCstr()] = 1;
+          b_act[i] = pb_.xl(cstrIdx - A_.nbCstr());
+          break;
+        case ActivationStatus::UPPER_BOUND:
+          N.col(i).setZero();
+          N.col(i)[cstrIdx - A_.nbCstr()] = -1;
+          b_act[i] = -pb_.xu(cstrIdx - A_.nbCstr());
+          break;
+        default:
+          break;
+      }
+    }
+
+    // B = L^-1 N
+    auto L = pb_.G.template triangularView<Eigen::Lower>();
+    L.solveInPlace(N); // [OPTIM] There are other possible ways to do this:
+                       //  - use solveInPlace while filling N
+                       //  - multiply N by J^T = L^-1 (this would require that multiplication by triangular matrix can
+                       //  be done in place with Eigen)
+
+    // QR in place
+    Eigen::Map<Eigen::VectorXd> hCoeffs(work_hCoeffs_.asVector(q).data(),
+                                        q); // Should be simply hCoeffs = work_hCoeffs_.asVector(q), but his does
+                                            // compile with householder_qr_inplace_blocked
+    WVector tmp = work_tmp_.asVector(nbVar_);
+    bool b = Eigen::internal::is_malloc_allowed();
+    Eigen::internal::set_is_malloc_allowed(true);
+    Eigen::internal::householder_qr_inplace_blocked<decltype(N), decltype(hCoeffs)>::run(N, hCoeffs, 48, tmp.data());
+
+    // J = J*Q
+    Eigen::HouseholderSequence Q(N, hCoeffs);
+    Q.applyThisOnTheRight(J, tmp);
+    Eigen::internal::set_is_malloc_allowed(b);
+
+    // Set lower part of R to 0
+    JRLQP_DEBUG_ONLY(for(int i = 0; i < q; ++i) N.col(i).tail(nbVar_ - i - 1).setZero(););
+  }
+
+  JRLQP_LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, N, J, b_act);
+
+  return TerminationStatus::SUCCESS;
+}
+
+internal::TerminationType GoldfarbIdnaniSolver::initializePrimalDualPoints()
+{
+  int q = A_.nbActiveCstr();
+  auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
+  auto R = work_R_.asMatrix(q, q, nbVar_).template triangularView<Eigen::Upper>();
+  WVector b_act = work_bact_.asVector(q);
+  WVector alpha = work_tmp_.asVector(nbVar_);
+  WVector beta = work_r_.asVector(q);
+  WVector x = work_x_.asVector(nbVar_);
+  WVector u = work_u_.asVector(q);
+  auto alpha1 = alpha.head(q);
+  auto alpha2 = alpha.tail(nbVar_ - q);
+
+  alpha.noalias() = J.transpose() * pb_.a;
+  beta = R.transpose().solve(b_act);
+  x.noalias() = J.leftCols(q) * beta - J.rightCols(nbVar_ - q) * alpha2;
+  u = alpha1 + beta;
+  R.solveInPlace(u);
+
+  f_ = beta.dot(0.5 * beta + alpha1) - 0.5 * alpha2.squaredNorm();
+
+  JRLQP_LOG(log_, LogFlags::INIT | LogFlags::NO_ITER, alpha, beta, x, u, f_);
+
+  return TerminationStatus::SUCCESS;
+}
+
 } // namespace jrl::qp
