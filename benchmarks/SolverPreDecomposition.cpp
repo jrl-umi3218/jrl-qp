@@ -59,8 +59,11 @@ private:
 };
 
 using test0 = ProblemFixture<1000, 0>;
+using test30 = ProblemFixture<1000, 30>;
 using test50 = ProblemFixture<1000, 50>;
+using test65 = ProblemFixture<1000, 65>;
 
+#if 0
 BENCHMARK_DEFINE_F(test0, LLT_INTERNAL)(benchmark::State & st)
 {
   for(auto _ : st)
@@ -103,6 +106,7 @@ BENCHMARK_DEFINE_F(test0, LLT_PREALLOC)(benchmark::State & st)
   }
 }
 BENCHMARK_REGISTER_F(test0, LLT_PREALLOC)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);
+#endif \\0
 
 #define BENCH_DECOMP(fixture)                                                                           \
   BENCHMARK_DEFINE_F(fixture, NO_PRE_DECOMP)(benchmark::State & st)                                     \
@@ -174,7 +178,138 @@ BENCHMARK_REGISTER_F(test0, LLT_PREALLOC)->Unit(benchmark::kMicrosecond)->DenseR
   }                                                                                                     \
   BENCHMARK_REGISTER_F(fixture, DECOMP_TINV)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);
 
-BENCH_DECOMP(test0)
-BENCH_DECOMP(test50)
+#define BENCH_FULL_DECOMP(fixture)                                                                        \
+  BENCHMARK_DEFINE_F(fixture, FULL_DECOMP_0)(benchmark::State & st)                                       \
+  {                                                                                                       \
+    int n = static_cast<int>(st.range(0));                                                                \
+    int neq = fixture::nEq(n);                                                                            \
+    GoldfarbIdnaniSolver solver(n, neq, false);                                                           \
+    MatrixXd J(n, n);                                                                                     \
+    Eigen::VectorXd tmp(n);                                                                               \
+    Eigen::MatrixXd B(n, neq);                                                                            \
+    Eigen::HouseholderQR<Eigen::MatrixXd> qr(n, neq);                                                     \
+                                                                                                          \
+    for(auto _ : st)                                                                                      \
+    {                                                                                                     \
+      auto & pb = getGIPb();                                                                              \
+      Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb.G);                                  \
+    }                                                                                                     \
+  }                                                                                                       \
+  BENCHMARK_REGISTER_F(fixture, FULL_DECOMP_0)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);   \
+  BENCHMARK_DEFINE_F(fixture, FULL_DECOMP_1)(benchmark::State & st)                                       \
+  {                                                                                                       \
+    int n = static_cast<int>(st.range(0));                                                                \
+    int neq = fixture::nEq(n);                                                                            \
+    GoldfarbIdnaniSolver solver(n, neq, false);                                                           \
+    MatrixXd J(n, n);                                                                                     \
+    Eigen::VectorXd tmp(n);                                                                               \
+    Eigen::MatrixXd B(n, neq);                                                                            \
+    Eigen::HouseholderQR<Eigen::MatrixXd> qr(n, neq);                                                     \
+                                                                                                          \
+    for(auto _ : st)                                                                                      \
+    {                                                                                                     \
+      auto & pb = getGIPb();                                                                              \
+      Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb.G);                                  \
+      auto L = pb.G.template triangularView<Eigen::Lower>();                                              \
+      J.setIdentity();                                                                                    \
+      L.transpose().solveInPlace(J);                                                                      \
+    }                                                                                                     \
+  }                                                                                                       \
+  BENCHMARK_REGISTER_F(fixture, FULL_DECOMP_1)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);   \
+  BENCHMARK_DEFINE_F(fixture, FULL_DECOMP_2)(benchmark::State & st)                                       \
+  {                                                                                                       \
+    int n = static_cast<int>(st.range(0));                                                                \
+    int neq = fixture::nEq(n);                                                                            \
+    GoldfarbIdnaniSolver solver(n, neq, false);                                                           \
+    MatrixXd J(n, n);                                                                                     \
+    Eigen::VectorXd tmp(n);                                                                               \
+    Eigen::MatrixXd B(n, neq);                                                                            \
+    Eigen::HouseholderQR<Eigen::MatrixXd> qr(n, neq);                                                     \
+                                                                                                          \
+    for(auto _ : st)                                                                                      \
+    {                                                                                                     \
+      auto & pb = getGIPb();                                                                              \
+      Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb.G);                                  \
+      auto L = pb.G.template triangularView<Eigen::Lower>();                                              \
+      J.setIdentity();                                                                                    \
+      L.transpose().solveInPlace(J);                                                                      \
+      B.noalias() = J.template triangularView<Eigen::Upper>().transpose() * pb.C.leftCols(neq);           \
+    }                                                                                                     \
+  }                                                                                                       \
+  BENCHMARK_REGISTER_F(fixture, FULL_DECOMP_2)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);   \
+  BENCHMARK_DEFINE_F(fixture, FULL_DECOMP_3)(benchmark::State & st)                                       \
+  {                                                                                                       \
+    int n = static_cast<int>(st.range(0));                                                                \
+    int neq = fixture::nEq(n);                                                                            \
+    GoldfarbIdnaniSolver solver(n, neq, false);                                                           \
+    MatrixXd J(n, n);                                                                                     \
+    Eigen::VectorXd tmp(n);                                                                               \
+    Eigen::MatrixXd B(n, neq);                                                                            \
+    Eigen::HouseholderQR<Eigen::MatrixXd> qr(n, neq);                                                     \
+                                                                                                          \
+    for(auto _ : st)                                                                                      \
+    {                                                                                                     \
+      auto & pb = getGIPb();                                                                              \
+      Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb.G);                                  \
+      auto L = pb.G.template triangularView<Eigen::Lower>();                                              \
+      J.setIdentity();                                                                                    \
+      L.transpose().solveInPlace(J);                                                                      \
+      B.noalias() = J.template triangularView<Eigen::Upper>().transpose() * pb.C.leftCols(neq);           \
+      qr.compute(B);                                                                                      \
+    }                                                                                                     \
+  }                                                                                                       \
+  BENCHMARK_REGISTER_F(fixture, FULL_DECOMP_3)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);   \
+  BENCHMARK_DEFINE_F(fixture, FULL_DECOMP_4)(benchmark::State & st)                                       \
+  {                                                                                                       \
+    int n = static_cast<int>(st.range(0));                                                                \
+    int neq = fixture::nEq(n);                                                                            \
+    GoldfarbIdnaniSolver solver(n, neq, false);                                                           \
+    MatrixXd J(n, n);                                                                                     \
+    Eigen::VectorXd tmp(n);                                                                               \
+    Eigen::MatrixXd B(n, neq);                                                                            \
+    Eigen::HouseholderQR<Eigen::MatrixXd> qr(n, neq);                                                     \
+                                                                                                          \
+    for(auto _ : st)                                                                                      \
+    {                                                                                                     \
+      auto & pb = getGIPb();                                                                              \
+      Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb.G);                                  \
+      auto L = pb.G.template triangularView<Eigen::Lower>();                                              \
+      J.setIdentity();                                                                                    \
+      L.transpose().solveInPlace(J);                                                                      \
+      B.noalias() = J.template triangularView<Eigen::Upper>().transpose() * pb.C.leftCols(neq);           \
+      qr.compute(B);                                                                                      \
+      qr.householderQ().applyThisOnTheRight(J, tmp);                                                      \
+    }                                                                                                     \
+  }                                                                                                       \
+  BENCHMARK_REGISTER_F(fixture, FULL_DECOMP_4)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);   \
+  BENCHMARK_DEFINE_F(fixture, FULL_DECOMP_VAR)(benchmark::State & st)                                     \
+  {                                                                                                       \
+    int n = static_cast<int>(st.range(0));                                                                \
+    int neq = fixture::nEq(n);                                                                            \
+    GoldfarbIdnaniSolver solver(n, neq, false);                                                           \
+    MatrixXd J(n, n);                                                                                     \
+    Eigen::VectorXd tmp(n);                                                                               \
+    Eigen::MatrixXd B(n, neq);                                                                            \
+    Eigen::HouseholderQR<Eigen::MatrixXd> qr(n, neq);                                                     \
+                                                                                                          \
+    for(auto _ : st)                                                                                      \
+    {                                                                                                     \
+      auto & pb = getGIPb();                                                                              \
+      Eigen::internal::llt_inplace<double, Eigen::Lower>::blocked(pb.G);                                  \
+      auto L = pb.G.template triangularView<Eigen::Lower>();                                              \
+      J.setIdentity();                                                                                    \
+      L.solveInPlace(J);                                                                                  \
+      B.noalias() = J.template triangularView<Eigen::Lower>() * pb.C.leftCols(neq);                       \
+      qr.compute(B);                                                                                      \
+      qr.householderQ().applyThisOnTheLeft(J, tmp);                                                       \
+    }                                                                                                     \
+  }                                                                                                       \
+  BENCHMARK_REGISTER_F(fixture, FULL_DECOMP_VAR)->Unit(benchmark::kMicrosecond)->DenseRange(10, 100, 10);  
+
+//BENCH_DECOMP(test0)
+//BENCH_DECOMP(test50)
+
+BENCH_FULL_DECOMP(test30)
+BENCH_FULL_DECOMP(test65)
 
 BENCHMARK_MAIN();
