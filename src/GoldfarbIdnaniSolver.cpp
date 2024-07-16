@@ -81,6 +81,9 @@ internal::InitTermination GoldfarbIdnaniSolver::init_()
     processInitialActiveSetWithEqualityOnly();
     initializeComputationData();
     initializePrimalDualPoints();
+
+    // Adding remaining equality constraints
+    initActiveSet();
   }
   else
   {
@@ -286,7 +289,7 @@ void GoldfarbIdnaniSolver::resize_(int nbVar, int /*nbCstr*/, bool /*useBounds*/
 
 void GoldfarbIdnaniSolver::initActiveSet()
 {
-  for(int i = 0; i < A_.nbCstr(); ++i)
+  for(int i = A_.nbActiveCstr(); i < A_.nbCstr(); ++i)
   {
     if(pb_.bl[i] == pb_.bu[i])
     {

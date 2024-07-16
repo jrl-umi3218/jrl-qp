@@ -58,7 +58,7 @@ TEST_CASE("Test EqualityFirst")
   for(int i = 0; i < 10; ++i)
   {
     const int neq = 3;
-    auto pb = QPProblem(randomProblem(ProblemCharacteristics(7, 7, neq, 8)));
+    auto pb = QPProblem(randomProblem(ProblemCharacteristics(7, 7, neq, 11-neq)));
     pb.C.transposeInPlace();
 
     for(int i = 0; i < neq; ++i)
@@ -66,6 +66,7 @@ TEST_CASE("Test EqualityFirst")
       REQUIRE_EQ(pb.l[i], pb.u[i]);
     }
 
+    Eigen::MatrixXd G = pb.G;
     auto llt = pb.G.llt();
     Eigen::MatrixXd L = llt.matrixL();
     Eigen::MatrixXd invL = L.inverse();
@@ -74,7 +75,7 @@ TEST_CASE("Test EqualityFirst")
     options.gFactorization(jrl::qp::GFactorization::NONE);
     options.equalityFirst(false);
     solver.options(options);
-    solver.solve(pb.G, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu);
+    solver.solve(G, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu);
     Eigen::VectorXd x0 = solver.solution();
 
     options.equalityFirst(true);
@@ -101,6 +102,44 @@ TEST_CASE("Test EqualityFirst")
     FAST_CHECK_UNARY(x2.isApprox(x0));
     // FAST_CHECK_UNARY(x3.isApprox(x0));
     // FAST_CHECK_UNARY(x4.isApprox(x0));
+  }
+}
+
+TEST_CASE("Test EqualityFirst with additional equalities")
+{
+  jrl::qp::GoldfarbIdnaniSolver solver0(7, 11, false);
+  jrl::qp::GoldfarbIdnaniSolver solver1(7, 11, false);
+  jrl::qp::SolverOptions options;
+
+  for(int i = 0; i < 10; ++i)
+  {
+    const int neq = 4;
+    auto pb = QPProblem(randomProblem(ProblemCharacteristics(7, 7, neq, 11 - neq)));
+    pb.C.transposeInPlace();
+
+    for(int i = 0; i < neq; ++i)
+    {
+      REQUIRE_EQ(pb.l[i], pb.u[i]);
+    }
+
+    //reorganize equality constraints
+    pb.C.col(neq - 2).swap(pb.C.col(9));
+    std::swap(pb.l[neq - 2], pb.l[9]);
+    std::swap(pb.u[neq - 2], pb.u[9]);
+
+    options.gFactorization(jrl::qp::GFactorization::NONE);
+    options.equalityFirst(false);
+    solver0.options(options);
+    Eigen::MatrixXd G = pb.G;
+    solver0.solve(G, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu);
+    Eigen::VectorXd x0 = solver0.solution();
+
+    options.equalityFirst(true);
+    solver1.options(options);
+    solver1.solve(pb.G, pb.a, pb.C, pb.l, pb.u, pb.xl, pb.xu);
+    Eigen::VectorXd x1 = solver1.solution();
+
+    FAST_CHECK_UNARY(x1.isApprox(x0));
   }
 }
 
