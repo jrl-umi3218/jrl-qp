@@ -218,6 +218,32 @@ TEST_CASE("Warm-start")
   FAST_REQUIRE_LT(n_failed, n_allowed_to_fail);
 }
 
+TEST_CASE_TEMPLATE("Iterative Improvements", T, GoldfarbIdnaniSolver)
+{
+  std::vector problems = {randomProblem(ProblemCharacteristics(5, 5)),
+                          randomProblem(ProblemCharacteristics(5, 5).nEq(2))};
+
+  for(const auto & pb : problems)
+  {
+    QPProblem qpp(pb);
+    MatrixXd G = qpp.G; // copy for later check
+    T solver(static_cast<int>(qpp.G.rows()), static_cast<int>(qpp.C.rows()), pb.bounds);
+    // jrl::qp::internal::set_is_malloc_allowed(false);
+    auto ret = solver.solve(qpp.G, qpp.a, qpp.C.transpose(), qpp.l, qpp.u, qpp.xl, qpp.xu);
+    // jrl::qp::internal::set_is_malloc_allowed(true);
+
+    // Perturbed problem
+    double eps = 1e-2;
+    MatrixXd Gp = G + eps * MatrixXd::Random(G.rows(), G.cols());
+    MatrixXd Cp = qpp.C + eps * MatrixXd::Random(qpp.C.rows(), qpp.C.cols());
+    solver.iterativeImprovement(Gp, Cp.transpose(), 50);
+
+    // Checks
+    FAST_CHECK_UNARY(
+        test::testKKT(solver.solution(), solver.multipliers(), Gp, qpp.a, Cp, qpp.l, qpp.u, qpp.xl, qpp.xu, false));
+  }
+}
+
 #ifdef QPS_TESTS_DIR
 template<typename Solver>
 struct ExcludePb

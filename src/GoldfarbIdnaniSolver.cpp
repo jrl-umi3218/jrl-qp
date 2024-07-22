@@ -61,6 +61,70 @@ void GoldfarbIdnaniSolver::setPrecomputedR(MatrixConstRef precompR)
   JRLQP_DEBUG_ONLY(for(int i = 0; i < precompR.cols(); ++i) R.col(i).tail(nbVar_ - i - 1).setZero(););
 }
 
+void GoldfarbIdnaniSolver::iterativeImprovement(const MatrixConstRef & G, const MatrixConstRef & N, int nbIt)
+{
+  int q = A_.nbActiveCstr();
+  auto J = work_J_.asMatrix(nbVar_, nbVar_, nbVar_);
+  auto R = work_R_.asMatrix(q, q, nbVar_).template triangularView<Eigen::Upper>();
+  WVector b_act = work_bact_.asVector(q);
+  WVector alpha = work_tmp_.asVector(nbVar_);
+  WVector beta = work_r_.asVector(q);
+  WVector x = work_x_.asVector(nbVar_);
+  WVector u = work_u_.asVector(q);
+  auto alpha1 = alpha.head(q);
+  auto alpha2 = alpha.tail(nbVar_ - q);
+
+  for(int i = 0; i < q; ++i)
+  {
+    int cstrIdx = A_[i];
+    switch(A_.activationStatus(cstrIdx))
+    {
+      case ActivationStatus::LOWER:
+        [[fallthrough]];
+      case ActivationStatus::EQUALITY:
+        b_act[i] = pb_.bl(cstrIdx);
+        break;
+      case ActivationStatus::UPPER:
+        b_act[i] = -pb_.bu(cstrIdx);
+        break;
+      case ActivationStatus::LOWER_BOUND:
+        [[fallthrough]];
+      case ActivationStatus::FIXED:
+        b_act[i] = pb_.xl(cstrIdx - A_.nbCstr());
+        break;
+      case ActivationStatus::UPPER_BOUND:
+        b_act[i] = -pb_.xu(cstrIdx - A_.nbCstr());
+        break;
+      default:
+        break;
+    }
+  }
+
+  Eigen::VectorXd rx(nbVar_);
+  Eigen::VectorXd ru(q);
+
+  for(int i = 0; i < nbIt; ++i)
+  {
+    rx = pb_.a + G * x - N * u;
+    ru = b_act - N.transpose() * x;
+
+    alpha.noalias() = J.transpose() * rx;
+    beta = R.transpose().solve(ru);
+    x.noalias() += J.leftCols(q) * beta - J.rightCols(nbVar_ - q) * alpha2;
+    alpha1 += beta;
+    R.solveInPlace(alpha1);
+    u += alpha1;
+  }
+
+  //[TODO] update new value of f correctly
+  // f_ = beta.dot(0.5 * beta + alpha1) - 0.5 * alpha2.squaredNorm();
+}
+
+void GoldfarbIdnaniSolver::iterativeImprovementLS(const MatrixConstRef & R, const MatrixConstRef & N, int nbIt)
+{
+  throw std::runtime_error("Not implemented yet");
+}
+
 internal::InitTermination GoldfarbIdnaniSolver::init_()
 {
   // Check options

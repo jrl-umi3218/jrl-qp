@@ -38,6 +38,9 @@ public:
    */
   void setPrecomputedR(MatrixConstRef precompR);
 
+  void iterativeImprovement(const MatrixConstRef & G, const MatrixConstRef & N, int nbIt = 1);
+  void iterativeImprovementLS(const MatrixConstRef & R, const MatrixConstRef & N, int nbIt = 1);
+
 protected:
   /** Structure to gather the problem definition. */
   struct Problem
