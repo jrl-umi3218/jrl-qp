@@ -24,7 +24,7 @@ jobs:
       deps: '["isri-aist/QpSolverCollection"]'
       matrix: |
           {
-            "dist": ["bionic", "focal", "jammy", "noble"],
+            "dist": ["focal", "jammy", "noble"],
             "arch": ["amd64"],
             "include":
             [
