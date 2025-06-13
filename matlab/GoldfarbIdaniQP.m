@@ -8,14 +8,14 @@ classdef GoldfarbIdaniQP < DualQPSolver
         R
         J
     end
-    
+
     methods
         function obj = GoldfarbIdaniQP()
             obj@DualQPSolver();
         end
-        
+
         function [x,f,u] = init_(obj,G,a,C,bl,bu,xl,xu)
-            
+
             assert(isempty(bu));
             assert(isempty(xl));
             assert(isempty(xu));
@@ -23,18 +23,18 @@ classdef GoldfarbIdaniQP < DualQPSolver
             obj.a = a;
             obj.C = C;
             obj.b = bl;
-            
+
             x = -G\a;
             f = 0.5*a'*x;
             u = zeros(0,1);
             obj.A = zeros(1,0);
             obj.act = repmat([ActivationStatus.Inactive],1,obj.m);
-            
+
             obj.L = chol(G)';
             obj.R = zeros(obj.q,obj.q);
             obj.J = inv(obj.L');
         end
-        
+
         function [p,status] = selectViolatedConstraint(obj, x)
             s = obj.C'*x - obj.b;
             [~,p] = min(s);
@@ -45,13 +45,13 @@ classdef GoldfarbIdaniQP < DualQPSolver
                 status = ActivationStatus.Inactive;
             end
         end
-        
+
         function [z,r] = computeStep(obj,np)
             d = obj.J'*np;
             z = obj.J(:,obj.q+1:end)*d(obj.q+1:end);
             r = obj.R\d(1:obj.q);
         end
-        
+
         function [t1,t2,l] = computeStepLength(obj,p,status,x,u,z,r)
             t1 = Inf;
             l = 0;
@@ -70,14 +70,14 @@ classdef GoldfarbIdaniQP < DualQPSolver
                 t2 = Inf;
             end
         end
-        
+
         function u = drop(obj,l,u)
             k = obj.A(l);
             obj.A = obj.A([1:(l-1),(l+1):end]);
             u = u([1:(l-1),(l+1):end]);
             obj.act(k) = ActivationStatus.Inactive;
             obj.q = obj.q - 1;
-            
+
             %update R and J
             obj.R = obj.R(:,[1:(l-1),(l+1):end]);
             for i=l:obj.q
@@ -87,11 +87,11 @@ classdef GoldfarbIdaniQP < DualQPSolver
             end
             obj.R = obj.R(1:obj.q,1:obj.q);
         end
-        
+
         function add(obj,p,np,status)
             obj.A = [obj.A, p];
             obj.act(p) = status;
-            
+
             %update R and J
             d = obj.J'*np; %Todo: duplicate with computeStep
             for i=obj.n-1:-1:obj.q+1

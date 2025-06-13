@@ -18,28 +18,34 @@ include(cmake/msvc-specific.cmake)
 # Disable -Werror on Unix for now.
 set(CXX_DISABLE_WERROR True)
 set(DOXYGEN_USE_MATHJAX "YES")
-# allow to document a group of items and generate a documentation for each of them
+# allow to document a group of items and generate a documentation for each of
+# them
 set(DOXYGEN_DISTRIBUTE_GROUP_DOC YES)
 
 project(jrl-qp LANGUAGES CXX)
 
-# If we were given coverage options, we will only pass them to the core
-# library.
-set(GENERATE_COVERAGE FALSE CACHE BOOL "Generate coverage data")
+# If we were given coverage options, we will only pass them to the core library.
+set(GENERATE_COVERAGE
+    FALSE
+    CACHE BOOL "Generate coverage data")
 if("${CMAKE_CXX_FLAGS}" MATCHES "--coverage")
-  set(GENERATE_COVERAGE TRUE CACHE BOOL "Generate coverage data" FORCE)
+  set(GENERATE_COVERAGE
+      TRUE
+      CACHE BOOL "Generate coverage data" FORCE)
   string(REPLACE "--coverage" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-  string(REPLACE "--coverage" "" CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
-  string(REPLACE "--coverage" "" CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS}")
+  string(REPLACE "--coverage" "" CMAKE_EXE_LINKER_FLAGS
+                 "${CMAKE_EXE_LINKER_FLAGS}")
+  string(REPLACE "--coverage" "" CMAKE_MODULE_LINKER_FLAGS
+                 "${CMAKE_MODULE_LINKER_FLAGS}")
 endif()
 
-#############################
-# - External dependencies - #
-#############################
+# ##############################################################################
+# * External dependencies - #
+# ##############################################################################
 
-#############
-# - Eigen - #
-#############
+# ##############################################################################
+# * Eigen - #
+# ##############################################################################
 find_package(Eigen3 QUIET NO_CMAKE_PACKAGE_REGISTRY)
 if(Eigen3_FOUND)
   add_project_dependency(Eigen3 REQUIRED NO_CMAKE_PACKAGE_REGISTRY)
@@ -47,13 +53,14 @@ else()
   add_project_dependency(Eigen3 MODULE REQUIRED)
 endif()
 
-# For MSVC, set local environment variable to enable finding the built dll
-# of the main library when launching ctest with RUN_TESTS and use solution folders.
+# For MSVC, set local environment variable to enable finding the built dll of
+# the main library when launching ctest with RUN_TESTS and use solution folders.
 if(MSVC)
-  set(CMAKE_MSVCIDE_RUN_PATH "\$(SolutionDir)/src/\$(Configuration);${CMAKE_INSTALL_PREFIX}/bin")
+  set(CMAKE_MSVCIDE_RUN_PATH
+      "\$(SolutionDir)/src/\$(Configuration);${CMAKE_INSTALL_PREFIX}/bin")
 endif(MSVC)
 
-#allow for solution folder
+# allow for solution folder
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 option(BUILD_BENCHMARKS "Build benchmarks" ON)

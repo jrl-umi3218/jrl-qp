@@ -1,6 +1,6 @@
-##########################
+# ##############################################################################
 # -- Google benchmark -- #
-##########################
+# ##############################################################################
 
 # Disable tests
 option(BENCHMARK_ENABLE_TESTING "Enable testing of the benchmark library." OFF)
@@ -11,4 +11,6 @@ if(BUILD_BENCHMARKS)
   add_subdirectory(benchmark EXCLUDE_FROM_ALL)
 endif()
 
-install(FILES effolkronium/random.hpp DESTINATION ${CMAKE_INSTALL_PREFIX}/include/jrl-qp/3rd-party/effolkronium/)
+install(
+  FILES effolkronium/random.hpp
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/jrl-qp/3rd-party/effolkronium/)

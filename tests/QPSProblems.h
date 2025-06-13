@@ -18,7 +18,7 @@ struct QPSPbData
 
 constexpr double Inf = std::numeric_limits<double>::infinity();
 // clang-format off
-const std::vector<QPSPbData> marosMeszarosPbList = 
+const std::vector<QPSPbData> marosMeszarosPbList =
 { //  name      opt. obj value  cond(G) (est.) nbCstr  nbVar    NZ      QN    QNZ
     {"aug2d"   , 1.6874118e+06, Inf          , 10000 , 20200, 40000 , 19800, 0      },
     {"aug2dc"  , 1.8183681e+06, 1            , 10000 , 20200, 40000 , 20200, 0      },

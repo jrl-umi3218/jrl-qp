@@ -13,12 +13,12 @@ classdef DoubleSidedQP < DualQPSolver
         me
         nb %number of bound
     end
-    
+
     methods
         function obj = DoubleSidedQP()
             obj@DualQPSolver();
         end
-        
+
         function [x,f,u] = init_(obj,G,a,C,bl,bu,xl,xu)
             assert(isempty(xl) || length(xl) == obj.n);
             assert(length(xl) == length(xu));
@@ -30,7 +30,7 @@ classdef DoubleSidedQP < DualQPSolver
             obj.bu = bu;
             obj.xl = xl;
             obj.xu = xu;
-            
+
             if isempty(xl)
                 obj.nb = 0;
                 obj.act = repmat([ActivationStatus.Inactive],1,obj.m);
@@ -38,7 +38,7 @@ classdef DoubleSidedQP < DualQPSolver
                 obj.nb = obj.n;
                 obj.act = repmat([ActivationStatus.Inactive],1,obj.m+obj.n);
             end
-            
+
             obj.A = zeros(1,0);
             for i=1:obj.m
                 if bl(i)==bu(i)
@@ -48,17 +48,17 @@ classdef DoubleSidedQP < DualQPSolver
                 end
             end
             obj.me = obj.q;
-            
+
             obj.L = chol(G)';
             [Qb,Rb] = qr(obj.L\obj.C(:,obj.A));
             obj.R = Rb(1:obj.q,1:obj.q);
             obj.J = (obj.L')\Qb;
-            
+
             x = obj.J*[(obj.R')\obj.bl(obj.A'); -obj.J(:,obj.q+1:end)'*a];
             f = x'*(0.5*G*x +a);
             u = obj.R\(obj.J(:,1:obj.q)'*(G*x+a));
         end
-        
+
         function [p,status] = selectViolatedConstraint(obj, x)
             smin = 0;
             p=0;
@@ -96,7 +96,7 @@ classdef DoubleSidedQP < DualQPSolver
                 end
             end
         end
-        
+
         function [z,r] = computeStep(obj,np)
             d = obj.J'*np;
             z = obj.J(:,obj.q+1:end)*d(obj.q+1:end);
@@ -105,7 +105,7 @@ classdef DoubleSidedQP < DualQPSolver
             obj.log(end).R = obj.R;
             obj.log(end).d = d';
         end
-        
+
         function [t1,t2,l] = computeStepLength(obj,p,status,x,u,z,r)
             t1 = Inf;
             l = 0;
@@ -136,14 +136,14 @@ classdef DoubleSidedQP < DualQPSolver
                 t2 = Inf;
             end
         end
-        
+
         function u = drop(obj,l,u)
             k = obj.A(l);
             obj.A = obj.A([1:(l-1),(l+1):end]);
             u = u([1:(l-1),(l+1):end]);
             obj.act(k) = ActivationStatus.Inactive;
             obj.q = obj.q - 1;
-            
+
             %update R and J
             obj.R = obj.R(:,[1:(l-1),(l+1):end]);
             for i=l:obj.q
@@ -153,11 +153,11 @@ classdef DoubleSidedQP < DualQPSolver
             end
             obj.R = obj.R(1:obj.q,1:obj.q);
         end
-        
+
         function add(obj,p,np,status)
             obj.A = [obj.A, p];
             obj.act(p) = status;
-            
+
             %update R and J
             d = obj.J'*np; %Todo: duplicate with computeStep
             for i=obj.n-1:-1:obj.q+1

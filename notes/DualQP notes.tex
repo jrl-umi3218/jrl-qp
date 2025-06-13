@@ -64,7 +64,7 @@ Noting $S = (N^T G^{-1} N)^{-1}$, $N^* = S N^T G^{-1}$\newline and $H = G^{-1} -
 \begin{equation}
 M^{-1} = \BIN H & N^{*T} \\ - N^* & S \BOUT
 \end{equation}
-This leads to 
+This leads to
 \begin{equation}
 	\BIN x \\ u \BOUT = \BIN -H a + N^{*T} b_\act \\ N^* a + S b_\act\BOUT \label{eq:primalDualSol}
 \end{equation}
@@ -117,7 +117,7 @@ Since $(x,u)$ solves \eq{optimPA}, we have that
 
 The first two equations yield
 \begin{equation}
-	\BIN \delta x \\ \delta u \BOUT = \BIN t H n^+ \\ -t N^* n^+ \BOUT 
+	\BIN \delta x \\ \delta u \BOUT = \BIN t H n^+ \\ -t N^* n^+ \BOUT
 \end{equation}
 and the paper notes $z = H n^+$ and $r = N^* n^+$.
 
@@ -129,7 +129,7 @@ Some tedious computations leads to
 \begin{equation}
 	S^+ = \BIN S & 0 \\ 0 & 0 \BOUT + \frac{1}{z^T n^+} \BIN -r \\ 1\BOUT \BIN -r \\ 1\BOUT^T
 \end{equation}
-and 
+and
 \begin{equation}
 	H^+ = H - \frac{z z^T}{z^T n^+}
 \end{equation}

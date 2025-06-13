@@ -1,5 +1,5 @@
 classdef DualQPSolver < handle
-    properties 
+    properties
         n
         m
         A %index of active constraints
@@ -8,7 +8,7 @@ classdef DualQPSolver < handle
         maxIter
         log
     end
-    
+
     methods
         function obj = DualQPSolver()
             obj.n=0;
@@ -16,11 +16,11 @@ classdef DualQPSolver < handle
             obj.maxIter = 50;
             obj.q = 0;
         end
-        
+
         function [x,f,output] = solve(obj, G, a, C, bl, bu, xl, xu)
             skipStep1 = false;
             [x,f,u] = obj.init(G,a,C,bl,bu,xl,xu); %step 0
-            
+
             for it=1:obj.maxIter
                 obj.log(it).it=it;
                 obj.log(it).x = x;
@@ -86,21 +86,21 @@ classdef DualQPSolver < handle
             end
             output = SolverStatus.MaxIter;
         end
-        
+
         function [x,f,u] = init(obj,G,a,C,bl,bu,xl,xu)
             assert(size(a,2)==1);
             assert(size(bl,2)==1);
             assert(isempty(bu) || size(bu,2)==1);
             assert(isempty(xl) || size(xl,2)==1);
             assert(isempty(xu) || size(xu,2)==1);
-            
+
             obj.n = length(a);
-            
+
             assert(size(G,2)==obj.n);
             assert(size(C,1)==obj.n);
-            
+
             obj.m = size(C,2);
-            
+
             [x,f,u] = obj.init_(G,a,C,bl,bu,xl,xu);
         end
     end %methods

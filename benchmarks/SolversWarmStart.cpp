@@ -311,7 +311,7 @@ BENCHMARK_REGISTER_F(fixture, EIQP)->Unit(benchmark::kMicrosecond) otherArgs
 #else
 */
 #define BENCH_QUADPROG(fixture, otherArgs) NOP
-//#endif
+// #endif
 
 #ifdef JRLQP_USE_LSSOL
 #  define BENCH_LSSOL(fixture, otherArgs)                                                 \
@@ -361,7 +361,7 @@ BENCHMARK_REGISTER_F(fixture, EIQP)->Unit(benchmark::kMicrosecond) otherArgs
 #else
 */
 #define BENCH_QLD(fixture, otherArgs) NOP
-//#endif
+// #endif
 
 #define BENCH_ALL(fixture, otherArgs) \
   BENCH_OVERHEAD(fixture, otherArgs); \

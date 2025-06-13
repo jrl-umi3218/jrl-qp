@@ -19,7 +19,7 @@ def read_csv(filename):
 		for row in csv_reader:
 			vals = {key:val for key,val in row.items() if key!='name' and val}
 			bench[row['name']] = vals
-			
+
 	return bench
 
 
@@ -27,7 +27,7 @@ def parse_name(name):
 	"""Parse the name of a benchmark"""
 	s = name.split('/')
 	return [s[0], [int(i) for i in s[1:]]]
-	
+
 
 def rearrange_by_name(dict):
 	"""
@@ -44,7 +44,7 @@ def rearrange_by_name(dict):
 		else:
 			family[n] = {k:[v] for k,v in val.items()}
 			family[n]['param'] = [x]
-	
+
 	#we sort the parameters and reorganize the other values accordingly
 	for name, val in family.items():
 		n = len(val['param'])
@@ -56,7 +56,7 @@ def rearrange_by_name(dict):
 				val[k] = [float(val[k][i]) for i in idx]
 			else:
 				val[k] = [val[k][i] for i in idx]
-		
+
 	return family
 
 
@@ -70,11 +70,11 @@ def match_name(s, l):
 	""" Return if s matches l, where s can include wildcards '*'."""
 	assert(isinstance(s,str))
 	assert(isinstance(l,str))
-		
+
 	spl = s.split('*')
 	if not l.find(spl[0])==0:
 		return False
-		
+
 	start = len(spl[0])
 	for si in spl[1:]:
 		idx = l.find(si,start)
@@ -82,17 +82,17 @@ def match_name(s, l):
 			return False
 		else:
 			start = idx + len(si)
-			
+
 	return start==len(l) or spl[-1]==''
-	
-	
+
+
 def match_names(s, l):
 	""" Return all elements of l that match s, where s can include wildcards '*'."""
 	if isinstance(l,str):
 		l = [l]
-		
+
 	return [li for li in l if match_name(s,li)]
-	
+
 
 def match_all_names(s, l):
 	""" Return all elements of l that match an element of s, where s[i] can include wildcards '*'."""
@@ -104,13 +104,13 @@ def match_all_names(s, l):
 	all = []
 	for si in s:
 		all.extend(match_names(si,l))
-		
+
 	return list(set(all))
-	
-	
+
+
 def plot_curves(data, names, category='cpu_time', title=None, logx = False, logy = False, filename = None, filetype='png'):
 	l = match_all_names(names, data.keys())
-	
+
 	plt.figure()
 	for n in l:
 		plt.plot(data[n]['param'], data[n][category], label=n, marker='.')
@@ -127,10 +127,10 @@ def plot_curves(data, names, category='cpu_time', title=None, logx = False, logy
 
 def plot_relative_curves(data, names, baseline, category='cpu_time', title=None, logx = False, logy = False, filename = None, filetype='png'):
 	l = match_all_names(names, data.keys())
-	
+
 	if not title:
 		title = 'Comparison with ' + baseline
-	
+
 	plt.figure()
 	for n in l:
 		plt.plot(data[n]['param'], [a/b for a,b in zip(data[n][category],data[baseline][category])], label=n, marker='.')
