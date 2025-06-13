@@ -355,7 +355,8 @@ internal::TerminationType BlockGISolver::processInitialActiveSet()
     if(A_.nbActiveEquality() + A_.nbFixedVariable() > nbVar_) return TerminationStatus::OVERCONSTRAINED_PROBLEM;
 
     // Lambda testing if the l-th activated constraint is an equality constraint or fixed variable.
-    auto isEqualityOrFixed = [this](int i) {
+    auto isEqualityOrFixed = [this](int i)
+    {
       auto a = A_.activationStatus(A_[i]);
       return a == ActivationStatus::EQUALITY || a == ActivationStatus::FIXED;
     };
