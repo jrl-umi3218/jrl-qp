@@ -1,23 +1,23 @@
 var hierarchy =
 [
     [ "jrl::qp::internal::ActiveSet", "classjrl_1_1qp_1_1internal_1_1ActiveSet.html", null ],
-    [ "conditional_t", null, [
-      [ "jrl::qp::test::LeastSquareProblem< Separated >", "structjrl_1_1qp_1_1test_1_1LeastSquareProblem.html", null ],
-      [ "jrl::qp::test::QPProblem< Separated >", "structjrl_1_1qp_1_1test_1_1QPProblem.html", null ],
+    [ "std::conditional_t", null, [
       [ "jrl::qp::test::LeastSquareProblem< true >", "structjrl_1_1qp_1_1test_1_1LeastSquareProblem.html", [
         [ "jrl::qp::test::RandomLeastSquare", "structjrl_1_1qp_1_1test_1_1RandomLeastSquare.html", null ]
-      ] ]
+      ] ],
+      [ "jrl::qp::test::LeastSquareProblem< Separated >", "structjrl_1_1qp_1_1test_1_1LeastSquareProblem.html", null ],
+      [ "jrl::qp::test::QPProblem< Separated >", "structjrl_1_1qp_1_1test_1_1QPProblem.html", null ]
     ] ],
     [ "jrl::qp::internal::ConstraintNormal", "classjrl_1_1qp_1_1internal_1_1ConstraintNormal.html", null ],
     [ "jrl::qp::DualSolver", "classjrl_1_1qp_1_1DualSolver.html", [
+      [ "jrl::qp::GoldfarbIdnaniSolver", "classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html", null ],
       [ "jrl::qp::experimental::BlockGISolver", "classjrl_1_1qp_1_1experimental_1_1BlockGISolver.html", null ],
       [ "jrl::qp::experimental::GoldfarbIdnaniSolver", "classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html", [
         [ "jrl::qp::experimental::BoxAndSingleConstraintSolver", "classjrl_1_1qp_1_1experimental_1_1BoxAndSingleConstraintSolver.html", null ]
-      ] ],
-      [ "jrl::qp::GoldfarbIdnaniSolver", "classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html", null ]
+      ] ]
     ] ],
     [ "jrl::qp::internal::ElemOrthonormalSequence", "classjrl_1_1qp_1_1internal_1_1ElemOrthonormalSequence.html", null ],
-    [ "false_type", null, [
+    [ "std::false_type", null, [
       [ "jrl::qp::internal::always_false< T >", "classjrl_1_1qp_1_1internal_1_1always__false.html", null ]
     ] ],
     [ "jrl::qp::test::FeasibilityConstraints", "structjrl_1_1qp_1_1test_1_1FeasibilityConstraints.html", [
@@ -31,8 +31,8 @@ var hierarchy =
     [ "jrl::qp::internal::OrthonormalSequence", "classjrl_1_1qp_1_1internal_1_1OrthonormalSequence.html", null ],
     [ "jrl::qp::internal::PartitionnedQ", "classjrl_1_1qp_1_1internal_1_1PartitionnedQ.html", null ],
     [ "jrl::qp::experimental::BlockGISolver::Problem", "structjrl_1_1qp_1_1experimental_1_1BlockGISolver_1_1Problem.html", null ],
-    [ "jrl::qp::GoldfarbIdnaniSolver::Problem", "structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html", null ],
     [ "jrl::qp::experimental::GoldfarbIdnaniSolver::Problem", "structjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver_1_1Problem.html", null ],
+    [ "jrl::qp::GoldfarbIdnaniSolver::Problem", "structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html", null ],
     [ "jrl::qp::test::ProblemCharacteristics", "structjrl_1_1qp_1_1test_1_1ProblemCharacteristics.html", null ],
     [ "jrl::qp::test::scalar_normal_random_op< Scalar >", "structjrl_1_1qp_1_1test_1_1scalar__normal__random__op.html", null ],
     [ "jrl::qp::internal::SelectedConstraint", "classjrl_1_1qp_1_1internal_1_1SelectedConstraint.html", null ],
@@ -48,7 +48,7 @@ var hierarchy =
     ] ],
     [ "jrl::qp::internal::to_underlying_type", "structjrl_1_1qp_1_1internal_1_1to__underlying__type.html", null ],
     [ "jrl::qp::utils::toMatlab", "classjrl_1_1qp_1_1utils_1_1toMatlab.html", null ],
-    [ "true_type", null, [
+    [ "std::true_type", null, [
       [ "jrl::qp::internal::always_true< T >", "classjrl_1_1qp_1_1internal_1_1always__true.html", null ]
     ] ],
     [ "jrl::qp::internal::Workspace< Scalar >", "classjrl_1_1qp_1_1internal_1_1Workspace.html", null ]

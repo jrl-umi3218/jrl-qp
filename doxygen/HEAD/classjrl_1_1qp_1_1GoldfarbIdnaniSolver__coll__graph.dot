@@ -15,7 +15,7 @@ digraph "jrl::qp::GoldfarbIdnaniSolver"
   Node5 [label="jrl::qp::utils::Logger",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classjrl_1_1qp_1_1utils_1_1Logger.html",tooltip=" "];
   Node6 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" options_" ,fontname="Helvetica"];
   Node6 [label="jrl::qp::SolverOptions",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structjrl_1_1qp_1_1SolverOptions.html",tooltip=" "];
-  Node3 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" work_R_\nwork_d_\nwork_J_" ,fontname="Helvetica"];
+  Node3 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" work_J_\nwork_R_\nwork_d_" ,fontname="Helvetica"];
   Node7 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" pb_" ,fontname="Helvetica"];
   Node7 [label="jrl::qp::GoldfarbIdnaniSolver\l::Problem",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html",tooltip=" "];
 }

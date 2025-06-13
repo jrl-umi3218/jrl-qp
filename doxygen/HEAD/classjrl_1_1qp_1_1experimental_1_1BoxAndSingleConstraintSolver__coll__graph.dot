@@ -19,5 +19,5 @@ digraph "jrl::qp::experimental::BoxAndSingleConstraintSolver"
   Node7 [label="jrl::qp::SolverOptions",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structjrl_1_1qp_1_1SolverOptions.html",tooltip=" "];
   Node8 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" pb_" ,fontname="Helvetica"];
   Node8 [label="jrl::qp::experimental\l::GoldfarbIdnaniSolver\l::Problem",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver_1_1Problem.html",tooltip=" "];
-  Node4 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" work_R_\nwork_tmp_\nwork_d_\nwork_J_\nwork_bact_\nwork_hCoeffs_" ,fontname="Helvetica"];
+  Node4 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" work_J_\nwork_R_\nwork_bact_\nwork_d_\nwork_hCoeffs\l_\nwork_tmp_" ,fontname="Helvetica"];
 }

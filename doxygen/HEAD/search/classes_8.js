@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['kkt_420',['KKT',['../structjrl_1_1qp_1_1test_1_1RandomLeastSquare_1_1KKT.html',1,'jrl::qp::test::RandomLeastSquare']]]
+  ['kkt_427',['KKT',['../structjrl_1_1qp_1_1test_1_1RandomLeastSquare_1_1KKT.html',1,'jrl::qp::test::RandomLeastSquare']]]
 ];

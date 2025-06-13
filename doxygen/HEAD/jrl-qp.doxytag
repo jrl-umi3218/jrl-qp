@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
-<tagfile>
+<tagfile doxygen_version="1.9.1">
   <compound kind="file">
     <name>api.h</name>
     <path>/home/runner/work/jrl-qp/jrl-qp/include/jrl-qp/</path>
@@ -2319,138 +2319,6 @@
     </member>
   </compound>
   <compound kind="class">
-    <name>jrl::qp::GoldfarbIdnaniSolver</name>
-    <filename>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</filename>
-    <base>jrl::qp::DualSolver</base>
-    <class kind="struct">jrl::qp::GoldfarbIdnaniSolver::Problem</class>
-    <member kind="function">
-      <type></type>
-      <name>GoldfarbIdnaniSolver</name>
-      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>ac1fdba1a92382cc2e7cebe38769719a7</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type></type>
-      <name>GoldfarbIdnaniSolver</name>
-      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>a9db2ca628b591d77426e1f5e8599db96</anchor>
-      <arglist>(int nbVar, int nbCstr, bool useBounds)</arglist>
-    </member>
-    <member kind="function" virtualness="virtual">
-      <type>virtual</type>
-      <name>~GoldfarbIdnaniSolver</name>
-      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>a0b84a7d72b6ae5abaa176f55c3456403</anchor>
-      <arglist>()=default</arglist>
-    </member>
-    <member kind="function">
-      <type>TerminationStatus</type>
-      <name>solve</name>
-      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>a95f9b9b2572a4b4cf4d77e07b35f838f</anchor>
-      <arglist>(MatrixRef G, const VectorConstRef &amp;a, const MatrixConstRef &amp;C, const VectorConstRef &amp;bl, const VectorConstRef &amp;bu, const VectorConstRef &amp;xl, const VectorConstRef &amp;xu)</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>internal::InitTermination</type>
-      <name>init_</name>
-      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>a35b3b430bd78e338b15b69f12f6db56f</anchor>
-      <arglist>() override</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>internal::SelectedConstraint</type>
-      <name>selectViolatedConstraint_</name>
-      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>a0d6707d7cb9d3d75314f30e7a8130e49</anchor>
-      <arglist>(const VectorConstRef &amp;x) const override</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>void</type>
-      <name>computeStep_</name>
-      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>ae264d405b14a29c934a9b97d8eb56e38</anchor>
-      <arglist>(VectorRef z, VectorRef r, const internal::SelectedConstraint &amp;sc) const override</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>StepLength</type>
-      <name>computeStepLength_</name>
-      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>aa0ad60b2a7814cbe6b1be041cf778888</anchor>
-      <arglist>(const internal::SelectedConstraint &amp;sc, const VectorConstRef &amp;x, const VectorConstRef &amp;u, const VectorConstRef &amp;z, const VectorConstRef &amp;r) const override</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>bool</type>
-      <name>addConstraint_</name>
-      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>abc0df95f057531189f1d20b79468c600</anchor>
-      <arglist>(const internal::SelectedConstraint &amp;sc) override</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>bool</type>
-      <name>removeConstraint_</name>
-      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>a4bf239a70d1ac5a703909663461edfc2</anchor>
-      <arglist>(int l) override</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>double</type>
-      <name>dot_</name>
-      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>a7457ce5af79fb547fa9550e264cbe468</anchor>
-      <arglist>(const internal::SelectedConstraint &amp;sc, const VectorConstRef &amp;z) override</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>void</type>
-      <name>resize_</name>
-      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>ae83cdfd022dccd94939154b03c3ad5fc</anchor>
-      <arglist>(int nbVar, int nbCstr, bool useBounds) override</arglist>
-    </member>
-    <member kind="function" protection="protected" virtualness="virtual">
-      <type>virtual void</type>
-      <name>initActiveSet</name>
-      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>a0b360071537172a8b4704a65909cc3d4</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function" protection="protected">
-      <type>void</type>
-      <name>addInitialConstraint</name>
-      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>afc1ad095c4f5b8a2fcb0959584008143</anchor>
-      <arglist>(const internal::SelectedConstraint &amp;sc)</arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>internal::Workspace</type>
-      <name>work_d_</name>
-      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>a8636bab2c2e903da46f103676540377c</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>internal::Workspace</type>
-      <name>work_J_</name>
-      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>a04fedf966338973ebeae278da2a50493</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>internal::Workspace</type>
-      <name>work_R_</name>
-      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>a08f0190c08088e39e04c4d3aec396a2c</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable" protection="protected">
-      <type>Problem</type>
-      <name>pb_</name>
-      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
-      <anchor>aca6570e82f9917e4fc0f7e5a56b12059</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="class">
     <name>jrl::qp::experimental::GoldfarbIdnaniSolver</name>
     <filename>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</filename>
     <base>jrl::qp::DualSolver</base>
@@ -2607,6 +2475,138 @@
       <name>pb_</name>
       <anchorfile>classjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver.html</anchorfile>
       <anchor>a5cc3e85ef061d1dc7dc2296ff8b09f6f</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="class">
+    <name>jrl::qp::GoldfarbIdnaniSolver</name>
+    <filename>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</filename>
+    <base>jrl::qp::DualSolver</base>
+    <class kind="struct">jrl::qp::GoldfarbIdnaniSolver::Problem</class>
+    <member kind="function">
+      <type></type>
+      <name>GoldfarbIdnaniSolver</name>
+      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>ac1fdba1a92382cc2e7cebe38769719a7</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type></type>
+      <name>GoldfarbIdnaniSolver</name>
+      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a9db2ca628b591d77426e1f5e8599db96</anchor>
+      <arglist>(int nbVar, int nbCstr, bool useBounds)</arglist>
+    </member>
+    <member kind="function" virtualness="virtual">
+      <type>virtual</type>
+      <name>~GoldfarbIdnaniSolver</name>
+      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a0b84a7d72b6ae5abaa176f55c3456403</anchor>
+      <arglist>()=default</arglist>
+    </member>
+    <member kind="function">
+      <type>TerminationStatus</type>
+      <name>solve</name>
+      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a95f9b9b2572a4b4cf4d77e07b35f838f</anchor>
+      <arglist>(MatrixRef G, const VectorConstRef &amp;a, const MatrixConstRef &amp;C, const VectorConstRef &amp;bl, const VectorConstRef &amp;bu, const VectorConstRef &amp;xl, const VectorConstRef &amp;xu)</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>internal::InitTermination</type>
+      <name>init_</name>
+      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a35b3b430bd78e338b15b69f12f6db56f</anchor>
+      <arglist>() override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>internal::SelectedConstraint</type>
+      <name>selectViolatedConstraint_</name>
+      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a0d6707d7cb9d3d75314f30e7a8130e49</anchor>
+      <arglist>(const VectorConstRef &amp;x) const override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>computeStep_</name>
+      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>ae264d405b14a29c934a9b97d8eb56e38</anchor>
+      <arglist>(VectorRef z, VectorRef r, const internal::SelectedConstraint &amp;sc) const override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>StepLength</type>
+      <name>computeStepLength_</name>
+      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>aa0ad60b2a7814cbe6b1be041cf778888</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc, const VectorConstRef &amp;x, const VectorConstRef &amp;u, const VectorConstRef &amp;z, const VectorConstRef &amp;r) const override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>bool</type>
+      <name>addConstraint_</name>
+      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>abc0df95f057531189f1d20b79468c600</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc) override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>bool</type>
+      <name>removeConstraint_</name>
+      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a4bf239a70d1ac5a703909663461edfc2</anchor>
+      <arglist>(int l) override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>double</type>
+      <name>dot_</name>
+      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a7457ce5af79fb547fa9550e264cbe468</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc, const VectorConstRef &amp;z) override</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>resize_</name>
+      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>ae83cdfd022dccd94939154b03c3ad5fc</anchor>
+      <arglist>(int nbVar, int nbCstr, bool useBounds) override</arglist>
+    </member>
+    <member kind="function" protection="protected" virtualness="virtual">
+      <type>virtual void</type>
+      <name>initActiveSet</name>
+      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a0b360071537172a8b4704a65909cc3d4</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function" protection="protected">
+      <type>void</type>
+      <name>addInitialConstraint</name>
+      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>afc1ad095c4f5b8a2fcb0959584008143</anchor>
+      <arglist>(const internal::SelectedConstraint &amp;sc)</arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>internal::Workspace</type>
+      <name>work_d_</name>
+      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a8636bab2c2e903da46f103676540377c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>internal::Workspace</type>
+      <name>work_J_</name>
+      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a04fedf966338973ebeae278da2a50493</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>internal::Workspace</type>
+      <name>work_R_</name>
+      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>a08f0190c08088e39e04c4d3aec396a2c</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable" protection="protected">
+      <type>Problem</type>
+      <name>pb_</name>
+      <anchorfile>classjrl_1_1qp_1_1GoldfarbIdnaniSolver.html</anchorfile>
+      <anchor>aca6570e82f9917e4fc0f7e5a56b12059</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -3036,73 +3036,6 @@
     </member>
   </compound>
   <compound kind="struct">
-    <name>jrl::qp::GoldfarbIdnaniSolver::Problem</name>
-    <filename>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</filename>
-    <member kind="function">
-      <type></type>
-      <name>Problem</name>
-      <anchorfile>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
-      <anchor>aed46f99e13b25911bc04af6fa5da4768</anchor>
-      <arglist>()</arglist>
-    </member>
-    <member kind="function">
-      <type>Problem &amp;</type>
-      <name>operator=</name>
-      <anchorfile>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
-      <anchor>a0b48055fd080c42c5c8c111bf04cbcd9</anchor>
-      <arglist>(const Problem &amp;)=delete</arglist>
-    </member>
-    <member kind="variable">
-      <type>MatrixRef</type>
-      <name>G</name>
-      <anchorfile>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
-      <anchor>a450c487458c0f23bc9666b68c2980fd4</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>VectorConstRef</type>
-      <name>a</name>
-      <anchorfile>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
-      <anchor>ae62dafac52da475d3f725be786fa28a3</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>MatrixConstRef</type>
-      <name>C</name>
-      <anchorfile>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
-      <anchor>ad32ed673325361820ae0921688c12eaa</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>VectorConstRef</type>
-      <name>bl</name>
-      <anchorfile>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
-      <anchor>a4a90fb4bb4570ed90549c65986cb9e30</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>VectorConstRef</type>
-      <name>bu</name>
-      <anchorfile>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
-      <anchor>a355c8f1bf3a95a9817ebbb2767e1cde1</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>VectorConstRef</type>
-      <name>xl</name>
-      <anchorfile>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
-      <anchor>a40ba79029181cf9f1e9b763ca445627f</anchor>
-      <arglist></arglist>
-    </member>
-    <member kind="variable">
-      <type>VectorConstRef</type>
-      <name>xu</name>
-      <anchorfile>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
-      <anchor>a8e53da99f1b731e5feaf2f0bf5b0f335</anchor>
-      <arglist></arglist>
-    </member>
-  </compound>
-  <compound kind="struct">
     <name>jrl::qp::experimental::GoldfarbIdnaniSolver::Problem</name>
     <filename>structjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver_1_1Problem.html</filename>
     <member kind="function">
@@ -3173,6 +3106,73 @@
       <name>as</name>
       <anchorfile>structjrl_1_1qp_1_1experimental_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
       <anchor>a41fafcf9acbc4bdd88255d200e0ac105</anchor>
+      <arglist></arglist>
+    </member>
+  </compound>
+  <compound kind="struct">
+    <name>jrl::qp::GoldfarbIdnaniSolver::Problem</name>
+    <filename>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</filename>
+    <member kind="function">
+      <type></type>
+      <name>Problem</name>
+      <anchorfile>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
+      <anchor>aed46f99e13b25911bc04af6fa5da4768</anchor>
+      <arglist>()</arglist>
+    </member>
+    <member kind="function">
+      <type>Problem &amp;</type>
+      <name>operator=</name>
+      <anchorfile>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
+      <anchor>a0b48055fd080c42c5c8c111bf04cbcd9</anchor>
+      <arglist>(const Problem &amp;)=delete</arglist>
+    </member>
+    <member kind="variable">
+      <type>MatrixRef</type>
+      <name>G</name>
+      <anchorfile>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
+      <anchor>a450c487458c0f23bc9666b68c2980fd4</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>VectorConstRef</type>
+      <name>a</name>
+      <anchorfile>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
+      <anchor>ae62dafac52da475d3f725be786fa28a3</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>MatrixConstRef</type>
+      <name>C</name>
+      <anchorfile>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
+      <anchor>ad32ed673325361820ae0921688c12eaa</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>VectorConstRef</type>
+      <name>bl</name>
+      <anchorfile>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
+      <anchor>a4a90fb4bb4570ed90549c65986cb9e30</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>VectorConstRef</type>
+      <name>bu</name>
+      <anchorfile>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
+      <anchor>a355c8f1bf3a95a9817ebbb2767e1cde1</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>VectorConstRef</type>
+      <name>xl</name>
+      <anchorfile>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
+      <anchor>a40ba79029181cf9f1e9b763ca445627f</anchor>
+      <arglist></arglist>
+    </member>
+    <member kind="variable">
+      <type>VectorConstRef</type>
+      <name>xu</name>
+      <anchorfile>structjrl_1_1qp_1_1GoldfarbIdnaniSolver_1_1Problem.html</anchorfile>
+      <anchor>a8e53da99f1b731e5feaf2f0bf5b0f335</anchor>
       <arglist></arglist>
     </member>
   </compound>
@@ -4626,20 +4626,20 @@
     <name>jrl::qp::internal</name>
     <filename>namespacejrl_1_1qp_1_1internal.html</filename>
     <class kind="class">jrl::qp::internal::ActiveSet</class>
-    <class kind="class">jrl::qp::internal::always_false</class>
-    <class kind="class">jrl::qp::internal::always_true</class>
     <class kind="class">jrl::qp::internal::ConstraintNormal</class>
-    <class kind="class">jrl::qp::internal::ElemOrthonormalSequence</class>
-    <class kind="struct">jrl::qp::internal::identity</class>
-    <class kind="class">jrl::qp::internal::InitTermination</class>
     <class kind="struct">jrl::qp::internal::is_base</class>
-    <class kind="struct">jrl::qp::internal::NotConst</class>
+    <class kind="class">jrl::qp::internal::always_true</class>
+    <class kind="class">jrl::qp::internal::always_false</class>
+    <class kind="struct">jrl::qp::internal::identity</class>
+    <class kind="struct">jrl::qp::internal::to_underlying_type</class>
+    <class kind="class">jrl::qp::internal::ElemOrthonormalSequence</class>
     <class kind="class">jrl::qp::internal::OrthonormalSequence</class>
     <class kind="class">jrl::qp::internal::PartitionnedQ</class>
     <class kind="class">jrl::qp::internal::SelectedConstraint</class>
     <class kind="class">jrl::qp::internal::SingleNZSegmentVector</class>
     <class kind="class">jrl::qp::internal::TerminationType</class>
-    <class kind="struct">jrl::qp::internal::to_underlying_type</class>
+    <class kind="class">jrl::qp::internal::InitTermination</class>
+    <class kind="struct">jrl::qp::internal::NotConst</class>
     <class kind="class">jrl::qp::internal::Workspace</class>
     <member kind="typedef">
       <type>std::enable_if_t&lt;(...||(std::is_same_v&lt; T, Base &gt;||derives_from&lt; T, Base &gt;())), int &gt;</type>
@@ -4720,12 +4720,12 @@
     <name>jrl::qp::test</name>
     <filename>namespacejrl_1_1qp_1_1test.html</filename>
     <class kind="struct">jrl::qp::test::FeasibilityConstraints</class>
-    <class kind="struct">jrl::qp::test::LeastSquareProblem</class>
-    <class kind="struct">jrl::qp::test::ProblemCharacteristics</class>
-    <class kind="struct">jrl::qp::test::QPProblem</class>
-    <class kind="struct">jrl::qp::test::RandomLeastSquare</class>
-    <class kind="struct">jrl::qp::test::scalar_normal_random_op</class>
     <class kind="struct">jrl::qp::test::SeparatedFeasibilityConstraints</class>
+    <class kind="struct">jrl::qp::test::LeastSquareProblem</class>
+    <class kind="struct">jrl::qp::test::QPProblem</class>
+    <class kind="struct">jrl::qp::test::scalar_normal_random_op</class>
+    <class kind="struct">jrl::qp::test::ProblemCharacteristics</class>
+    <class kind="struct">jrl::qp::test::RandomLeastSquare</class>
     <member kind="function">
       <type>LeastSquareProblem JRLQP_DLLAPI</type>
       <name>generateBoxAndSingleConstraintProblem</name>
