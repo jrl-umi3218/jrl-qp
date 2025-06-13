@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1.3)
+cmake_minimum_required(VERSION 3.10)
 
 set(PROJECT_NAME jrl-qp)
 set(PROJECT_DESCRIPTION "...")
